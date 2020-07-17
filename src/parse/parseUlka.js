@@ -30,7 +30,6 @@ const parseUlka = (ulkaTemplate, values) => {
     globalInfo,
     $importUlka: filePath => $importUlka(filePath, values)
   }
-
   return {
     html: parse(ulkaTemplate, values)
   }

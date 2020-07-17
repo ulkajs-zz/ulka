@@ -1,6 +1,6 @@
 {
   "name": "ulka",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Ulka - static site generator",
   "bin": {
     "ulka": "bin/index.js"
@@ -22,10 +22,12 @@
   },
   "homepage": "https://github.com/acharyaroshanji/ulka#readme",
   "dependencies": {
+    "chokidar": "^3.4.1",
     "commander": "^5.1.0",
     "front-matter": "^4.0.2",
     "remarkable": "^2.0.1",
-    "ulka-parser": "^0.2.1"
+    "ulka-parser": "^0.2.1",
+    "ws": "^7.3.1"
   },
   "devDependencies": {
     "eslint": "^7.4.0",

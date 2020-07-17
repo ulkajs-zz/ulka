@@ -1,11 +1,13 @@
 const generateFromMd = require('../src/generate/generateMd')
 const generateFromUlka = require('../src/generate/generateUlka')
 const copyAssets = require('../src/fs/copyAssets')
+const globalInfo = require('../src')
 
-function build() {
-  generateFromMd()
-  generateFromUlka()
-  copyAssets()
+async function build() {
+  globalInfo.contentFiles = []
+  await generateFromMd()
+  await generateFromUlka()
+  await copyAssets()
 }
 
 module.exports = build

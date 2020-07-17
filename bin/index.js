@@ -8,4 +8,9 @@ program.version(version)
 
 program.command('build').action(require('./build'))
 
+program.command('serve').action(async () => {
+  await require('./build')()
+  require('./serve')()
+})
+
 program.parse(process.argv)

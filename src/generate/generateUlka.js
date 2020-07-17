@@ -7,7 +7,7 @@ const configs = require('../parse/parseConfig')
 const absolutePath = require('../utils/absolutePath')
 const dataFromPath = require('../utils/dataFromPath')
 
-function generateFromUlka() {
+async function generateFromUlka() {
   // Get all files having .ulka extension
   let files
   try {
@@ -24,7 +24,9 @@ function generateFromUlka() {
     relativePath: path.relative(process.cwd(), fileData.path)
   }))
 
-  fileDatas.forEach(ufd => {
+  for (let i = 0; i < fileDatas.length; i++) {
+    const ufd = fileDatas[i]
+
     try {
       // For eg: \index.ulka or folder\file.ulka
       const [, filePath] = ufd.path.split(path.join('src', configs.pagesPath))
@@ -49,7 +51,7 @@ function generateFromUlka() {
         `${createFilePath}/${parsedPath.name}.html`
       )
 
-      mkdir(createFilePath).then(_ =>
+      await mkdir(createFilePath).then(_ =>
         fs.writeFileSync(absoluteFilePath, ufd.data.html)
       )
     } catch (e) {
@@ -57,7 +59,7 @@ function generateFromUlka() {
       console.log('>>', e.message)
       process.exit(1)
     }
-  })
+  }
 }
 
 generateFromUlka()

@@ -11,7 +11,7 @@ const globalInfo = require('../index')
 
 const { contents, templatesPath } = configs
 
-function generateFromMd() {
+async function generateFromMd() {
   // Get all files having .md extension from contentsPath
   let files
   try {
@@ -28,7 +28,9 @@ function generateFromMd() {
     relativePath: path.relative(process.cwd(), fileData.path)
   }))
 
-  fileDatas.forEach(mfd => {
+  for (let i = 0; i < fileDatas.length; i++) {
+    const mfd = fileDatas[i]
+
     //  For eg: \index.md or folder\file.md
     const [, filePath] = mfd.path.split(path.join('src', contents.path))
 
@@ -64,10 +66,10 @@ function generateFromMd() {
       frontMatter: mfd.data.frontMatter
     })
 
-    mkdir(createFilePath).then(() => {
+    await mkdir(createFilePath).then(() => {
       fs.writeFileSync(absoluteFilePath, templateData.html)
     })
-  })
+  }
 }
 
 module.exports = generateFromMd

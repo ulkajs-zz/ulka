@@ -1,4 +1,4 @@
 .prettierrc
 .prettierignore
 .eslintignore
-.eslintrc.json
+.eslintrc.js

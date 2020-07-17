@@ -16,7 +16,6 @@ const markdownImageRender = markdown => {
 
 const parseMd = markdown => {
   const data = frontmatter(markdown)
-  console.log(data)
   const toHtml = parseMarkdown(markdownImageRender(data.body))
   return {
     frontMatter: data.attributes,
