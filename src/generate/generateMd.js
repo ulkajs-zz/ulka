@@ -21,13 +21,13 @@ function generateFromMd() {
   }
 
   // Get contents inside .md files and parse them
-  const fileDatas = files.map(dataFromPath).map((fileData) => ({
+  const fileDatas = files.map(dataFromPath).map(fileData => ({
     ...fileData,
     data: parseMd(fileData.data),
     relativePath: path.relative(process.cwd(), fileData.path)
   }))
 
-  fileDatas.forEach((mfd) => {
+  fileDatas.forEach(mfd => {
     //  For eg: \index.md or folder\file.md
     const [, filePath] = mfd.path.split(path.join('src', contents.path))
 
