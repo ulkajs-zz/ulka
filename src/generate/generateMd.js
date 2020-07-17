@@ -7,6 +7,7 @@ const parseUlka = require('../parse/parseUlka')
 const configs = require('../parse/parseConfig')
 const absolutePath = require('../utils/absolutePath')
 const dataFromPath = require('../utils/dataFromPath')
+const globalInfo = require('../index')
 
 const { contents, templatesPath } = configs
 
@@ -40,7 +41,6 @@ function generateFromMd() {
     const markdownTemplatePath = absolutePath(
       `src/${templatesPath}/${contents.template}`
     )
-
     const templateUlkaData = fs.readFileSync(markdownTemplatePath, 'utf-8')
 
     if (parsedPath.name !== 'index') {
@@ -57,8 +57,14 @@ function generateFromMd() {
       ...configs
     })
 
+    globalInfo.contentFiles.push({
+      createFilePath,
+      absoluteFilePath,
+      html: templateData.html,
+      frontMatter: mfd.data.frontMatter
+    })
+
     mkdir(createFilePath).then(() => {
-      console.log(createFilePath, absoluteFilePath, templateData)
       fs.writeFileSync(absoluteFilePath, templateData.html)
     })
   })

@@ -6,7 +6,6 @@ try {
   ulkaConfigs = require(path.join(process.cwd(), 'ulka-config.js'))
 } catch (e) {
   console.log("\n>> Can't find ulka-config.js file in root directory")
-  console.log('>> Please run `npx ulka --init` or create ulka-config.js')
   process.exit(1)
 }
 

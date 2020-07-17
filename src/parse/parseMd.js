@@ -16,7 +16,8 @@ const markdownImageRender = markdown => {
 
 const parseMd = markdown => {
   const data = frontmatter(markdown)
-  const toHtml = parseMarkdown(markdownImageRender(markdown))
+  console.log(data)
+  const toHtml = parseMarkdown(markdownImageRender(data.body))
   return {
     frontMatter: data.attributes,
     html: parseUlka(toHtml.trim()).html
