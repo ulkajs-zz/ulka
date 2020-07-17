@@ -21,9 +21,10 @@ const defaultConfigs = {
   contents: {
     path: 'contents',
     generatePath: 'blog',
-    template: 'blog.ulka'
-  },
-  plugins: []
+    template: 'blog.ulka',
+    preParse: [],
+    postParse: []
+  }
 }
 
 module.exports = {
