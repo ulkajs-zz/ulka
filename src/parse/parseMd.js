@@ -1,17 +1,25 @@
 const frontmatter = require('front-matter')
 const { Remarkable } = require('remarkable')
+
 const configs = require('./parseConfig')
+const parseUlka = require('./parseUlka')
 
 const md = new Remarkable({
   html: true
 })
 
+const markdownImageRender = markdown => {
+  return markdown.replace(/!\[(.*?)\]\((.*?)\)/, (...args) => {
+    return `<img src="{% $assets('${args[2]}') %}" alt="${args[1]}" />`
+  })
+}
+
 const parseMd = markdown => {
   const data = frontmatter(markdown)
-  const toHtml = parseMarkdown(markdown)
+  const toHtml = parseMarkdown(markdownImageRender(markdown))
   return {
     frontMatter: data.attributes,
-    html: toHtml.trim()
+    html: parseUlka(toHtml.trim()).html
   }
 }
 
