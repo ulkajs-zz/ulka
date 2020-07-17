@@ -17,6 +17,12 @@ const defaultConfigs = {
   },
   buildPath: "build",
   pagesPath: "pages",
+  templatesPath: "templates",
+  contents: {
+    path: "contents",
+    generatePath: "blog",
+    template: "blog.ulka",
+  },
 };
 
 // TODO: REQUIRE PLUGINS AND PROCESSS

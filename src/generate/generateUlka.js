@@ -1,37 +1,50 @@
 const fs = require("fs");
 const path = require("path");
-const configs = require("../parse/parseConfig");
+const mkdir = require("../fs/mkdir");
 const allFiles = require("../fs/allFiles");
+const parseUlka = require("../parse/parseUlka");
+const configs = require("../parse/parseConfig");
 const absolutePath = require("../utils/absolutePath");
 const dataFromPath = require("../utils/dataFromPath");
-const parseUlka = require("../parse/parseUlka");
-const mkdir = require("../fs/mkdir");
-
-let files;
-try {
-  files = allFiles(absolutePath(`src/${configs.pagesPath}`), ".ulka");
-} catch (e) {
-  console.log("\n>>", e.message);
-  process.exit(1);
-}
-
-const fileDatas = files.map(dataFromPath).map((fileData) => ({
-  ...fileData,
-  data: parseUlka(fileData.data, { ...configs }),
-  relativePath: path.relative(process.cwd(), fileData.path),
-}));
 
 function generateFromUlka() {
-  fileDatas.map((ufd) => {
+  // Get all files having .ulka extension
+  let files;
+  try {
+    files = allFiles(absolutePath(`src/${configs.pagesPath}`), ".ulka");
+  } catch (e) {
+    console.log("\n>>", e.message);
+    process.exit(1);
+  }
+
+  // Get contents inside .ulka files and parse them
+  const fileDatas = files.map(dataFromPath).map((fileData) => ({
+    ...fileData,
+    data: parseUlka(fileData.data, { ...configs }),
+    relativePath: path.relative(process.cwd(), fileData.path),
+  }));
+
+  fileDatas.forEach((ufd) => {
     try {
+      // For eg: \index.ulka or folder\file.ulka
       const [, filePath] = ufd.path.split(path.join("src", configs.pagesPath));
+
       const parsedPath = path.parse(filePath);
+
+      // For eg: build\folder
       let createFilePath = configs.buildPath + parsedPath.dir;
 
+      /*
+       * Check if the file name is indexIf not make a folder with filename
+       * and change filename to index
+       *
+       * For eg: blog.ulka => blog/index.html, index.ulka => index.html
+       */
       if (parsedPath.name !== "index") {
         createFilePath += "/" + parsedPath.name;
         parsedPath.name = "index";
       }
+
       const absoluteFilePath = absolutePath(
         `${createFilePath}/${parsedPath.name}.html`
       );
