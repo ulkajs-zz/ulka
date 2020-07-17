@@ -2,7 +2,9 @@
   "name": "ulka",
   "version": "0.1.0",
   "description": "Ulka - static site generator",
-  "main": "src/index.js",
+  "bin": {
+    "ulka": "bin/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "eslint": "eslint .",
@@ -20,6 +22,7 @@
   },
   "homepage": "https://github.com/acharyaroshanji/ulka#readme",
   "dependencies": {
+    "commander": "^5.1.0",
     "front-matter": "^4.0.2",
     "remarkable": "^2.0.1",
     "ulka-parser": "^0.2.1"
