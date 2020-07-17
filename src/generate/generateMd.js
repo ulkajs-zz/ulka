@@ -43,12 +43,6 @@ function generateFromMd() {
 
     const templateUlkaData = fs.readFileSync(markdownTemplatePath, 'utf-8')
 
-    const templateData = parseUlka(templateUlkaData, {
-      frontMatter: mfd.data.frontMatter,
-      data: mfd.data.html,
-      ...configs
-    })
-
     if (parsedPath.name !== 'index') {
       createFilePath += '/' + parsedPath.name
       parsedPath.name = 'index'
@@ -57,7 +51,14 @@ function generateFromMd() {
       `${createFilePath}/${parsedPath.name}.html`
     )
 
+    const templateData = parseUlka(templateUlkaData, {
+      frontMatter: mfd.data.frontMatter,
+      data: mfd.data.html,
+      ...configs
+    })
+
     mkdir(createFilePath).then(() => {
+      console.log(createFilePath, absoluteFilePath, templateData)
       fs.writeFileSync(absoluteFilePath, templateData.html)
     })
   })
