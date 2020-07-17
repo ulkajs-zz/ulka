@@ -1,0 +1,24 @@
+{
+  "name": "ulka",
+  "version": "0.1.0",
+  "description": "Ulka - static site generator",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acharyaroshanji/ulka.git"
+  },
+  "author": "Roshan Acharya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/acharyaroshanji/ulka/issues"
+  },
+  "homepage": "https://github.com/acharyaroshanji/ulka#readme",
+  "dependencies": {
+    "front-matter": "^4.0.2",
+    "remarkable": "^2.0.1",
+    "ulka-parser": "^0.2.1"
+  }
+}
