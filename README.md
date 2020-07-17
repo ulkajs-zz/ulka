@@ -1,1 +1,4 @@
-# ulka
+# Ulka - SSG
+
+DO NOT USE IT YET
+NOT READY
