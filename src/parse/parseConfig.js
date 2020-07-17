@@ -22,10 +22,9 @@ const defaultConfigs = {
     path: 'contents',
     generatePath: 'blog',
     template: 'blog.ulka'
-  }
+  },
+  plugins: []
 }
-
-// TODO: REQUIRE PLUGINS AND PROCESSS
 
 module.exports = {
   ...defaultConfigs,
