@@ -1,6 +1,6 @@
 const fs = require("fs/promises");
 const path = require("path");
-const { absolutePath } = require("../utils");
+const absolutePath = require("../utils/absolutePath");
 
 const removeDirectories = async (pathname) => {
   pathname = pathname.replace(/^\.*\/|\/?[^\/]+\.[a-z]+|\/$/g, "");
