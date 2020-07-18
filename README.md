@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./images/cover.png" alt="logo">
+    <img width="500" src="./images/cover.png" alt="logo">
 </p>
 <p align="center">
 <a><img alt="npm" src="https://img.shields.io/npm/v/ulka?style=for-the-badge&labelColor=black&color=darkred&logo=npm&label=Ulka"></a>&nbsp;
