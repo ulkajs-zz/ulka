@@ -7,7 +7,6 @@ const fs = require('fs')
 const path = require('path')
 const configs = require('../src/parse/parseConfig')
 const mimeType = require('../src/utils/mimeTypes')
-const build = require('./build')
 
 const port = 5000
 
@@ -86,15 +85,14 @@ const liveServer = () => {
     .on('change', chokidarEvent)
     .on('unlink', chokidarEvent)
 
-  function chokidarEvent(e) {
+  async function chokidarEvent(e) {
     if (!socket) return
     console.log(path.parse(e).ext)
     console.log('>> File change detected')
-    build().then(() => {
-      path.parse(e).ext === '.css'
-        ? socket.send('refresh-css')
-        : socket.send('reload-page')
-    })
+
+    path.parse(e).ext === '.css'
+      ? socket.send('refresh-css')
+      : socket.send('reload-page')
   }
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 const fs = require('fs')
 // const path = require('path')
 const absolutePath = require('../utils/absolutePath')

@@ -5,9 +5,9 @@ const globalInfo = require('../src')
 
 async function build() {
   globalInfo.contentFiles = []
+  await copyAssets()
   await generateFromMd()
   await generateFromUlka()
-  await copyAssets()
 }
 
 module.exports = build
