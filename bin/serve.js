@@ -39,12 +39,21 @@ const createServer = (req, res) => {
     if (ext === '.html') {
       data += `
         <script>
+        if ('WebSocket' in window) {
             const ws = new WebSocket('ws://localhost:${port}');
             ws.addEventListener('message', e => {
-              if (e.data === 'reload-page') {
-                location.reload();
+              if (e.data === 'refresh-css') {
+                const links = document.querySelectorAll("link[rel='stylesheet']");
+                links.forEach(link => {
+                  link.href += "";
+                })
               }
+
+              if(e.data === "reload-page") location.reload()
             });
+        }else {
+          console.warn("Your browser doesn't support websockets, so can't live reload")
+        }
         </script>  
         `
     }
@@ -77,11 +86,14 @@ const liveServer = () => {
     .on('change', chokidarEvent)
     .on('unlink', chokidarEvent)
 
-  function chokidarEvent() {
+  function chokidarEvent(e) {
     if (!socket) return
+    console.log(path.parse(e).ext)
     console.log('>> File change detected')
     build().then(() => {
-      socket.send('reload-page')
+      path.parse(e).ext === '.css'
+        ? socket.send('refresh-css')
+        : socket.send('reload-page')
     })
   }
 }

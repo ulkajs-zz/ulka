@@ -18,7 +18,6 @@ const copyAssets = (dir = path.join(process.cwd(), 'src'), to) => {
               '/__assets__/' +
               generateFileName(f.dir + f.name + f.ext)
           ) + f.ext
-        console.log(writePath)
         fs.writeFileSync(writePath, fs.readFileSync(path.format(f)))
       })
     return files
