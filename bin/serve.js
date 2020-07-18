@@ -3,6 +3,7 @@ const WebSocket = require('ws')
 const chokidar = require('chokidar')
 const http = require('http')
 const url = require('url')
+const build = require('./build')
 const fs = require('fs')
 const path = require('path')
 const configs = require('../src/parse/parseConfig')
@@ -39,7 +40,9 @@ const createServer = (req, res) => {
       data += `
         <script>
         if ('WebSocket' in window) {
-            const ws = new WebSocket('ws://localhost:${port}');
+            const protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+            const address = protocol + window.location.host + window.location.pathname;
+            const ws = new WebSocket(address);
             ws.addEventListener('message', e => {
               if (e.data === 'refresh-css') {
                 const links = document.querySelectorAll("link[rel='stylesheet']");
@@ -86,13 +89,12 @@ const liveServer = () => {
     .on('unlink', chokidarEvent)
 
   async function chokidarEvent(e) {
-    if (!socket) return
-    console.log(path.parse(e).ext)
+    await build()
     console.log('>> File change detected')
-
-    path.parse(e).ext === '.css'
-      ? socket.send('refresh-css')
-      : socket.send('reload-page')
+    if (socket)
+      path.parse(e).ext === '.css'
+        ? socket.send('refresh-css')
+        : socket.send('reload-page')
   }
 }
 
