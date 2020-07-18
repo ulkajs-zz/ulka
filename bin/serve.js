@@ -20,7 +20,7 @@ const createServer = (req, res) => {
       .normalize(parsedUrl.pathname)
       .replace(/^(\.\.[\/\\])+/, '')
 
-    let pathname = path.join(process.cwd(), 'build', sanitizePath)
+    let pathname = path.join(process.cwd(), configs.buildPath, sanitizePath)
 
     if (!fs.existsSync(pathname)) {
       res.statusCode = 404
