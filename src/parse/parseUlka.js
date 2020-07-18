@@ -14,7 +14,10 @@ const $assets = filePath => {
         path.parse(filePath).ext
     )
   )
-  return path.join(path.sep, '__assets__', fileName) + path.parse(filePath).ext
+  const ext =
+    path.parse(filePath).ext === '.ucss' ? '.css' : path.parse(filePath).ext
+
+  return path.join(path.sep, '__assets__', fileName) + ext
 }
 
 const $importUlka = (filePath, values) => {
@@ -23,7 +26,7 @@ const $importUlka = (filePath, values) => {
     .html
 }
 
-const parseUlka = (ulkaTemplate, values) => {
+const parseUlka = (ulkaTemplate, values = {}) => {
   values = {
     ...values,
     $assets,
