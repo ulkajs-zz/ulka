@@ -1,5 +1,5 @@
 <p align="center">
-    <img width="500" src="./images/cover.png" alt="logo">
+    <img width="500" src="https://i.imgur.com/coa1q5T.png" alt="logo">
 </p>
 <p align="center">
 <a><img alt="NPM" src="https://img.shields.io/npm/v/ulka?style=for-the-badge&labelColor=black&color=darkred&logo=npm&label=npm" /></a>&nbsp;
@@ -10,5 +10,3 @@
 <p align="center">
     Ulka is a free and open source static site generator that helps you create static sites from markdown and ulka files.
 </p>
-
-# Guide and docs coming soon
