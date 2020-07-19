@@ -7,6 +7,22 @@ const absolutePath = require('../utils/absolutePath')
 const generateFileName = require('../utils/generateName')
 const parseUlka = require('../parse/parseUlka')
 
+const parseUrlPath = css => {
+  return css.replace(/ url\((.*?)\)/gs, (...args) => {
+    const pathGiven = args[1].replace(/'|"/gs, '')
+    const fileName = generateFileName(
+      path.join(
+        process.cwd(),
+        path.parse(pathGiven).dir +
+          path.parse(pathGiven).name +
+          path.parse(pathGiven).ext
+      )
+    )
+
+    return ` url("${fileName + path.parse(pathGiven).ext}")`
+  })
+}
+
 const copyAssets = async (dir = path.join(process.cwd(), 'src'), to) => {
   await mkdir('build/__assets__')
   const files = allFiles(dir)
@@ -23,6 +39,8 @@ const copyAssets = async (dir = path.join(process.cwd(), 'src'), to) => {
 
       let readAssetsFile = fs.readFileSync(path.format(f), 'utf-8')
       if (f.ext === '.ucss') readAssetsFile = parseUlka(readAssetsFile).html
+
+      if (assetExt === '.css') readAssetsFile = parseUrlPath(readAssetsFile)
       fs.writeFileSync(writePath, readAssetsFile)
     })
   return files
