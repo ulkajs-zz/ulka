@@ -60,10 +60,9 @@ async function generateFromMd() {
     })
 
     const link = createFilePath.split(configs.buildPath)[1]
-
     globalInfo.contentFiles.push({
       createFilePath,
-      link,
+      link: path.join(link, ''),
       html: templateData.html,
       frontMatter: mfd.data.frontMatter
     })

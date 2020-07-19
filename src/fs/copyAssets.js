@@ -37,10 +37,15 @@ const copyAssets = async (dir = path.join(process.cwd(), 'src'), to) => {
             generateFileName(f.dir + f.name + f.ext)
         ) + assetExt
 
-      let readAssetsFile = fs.readFileSync(path.format(f), 'utf-8')
-      if (f.ext === '.ucss') readAssetsFile = parseUlka(readAssetsFile).html
+      let readAssetsFile
+      if (assetExt === '.css') {
+        readAssetsFile = parseUlka(fs.readFileSync(path.format(f), 'utf-8'))
+          .html
+        readAssetsFile = parseUrlPath(readAssetsFile, 'utf-8')
+      } else {
+        readAssetsFile = fs.readFileSync(path.format(f))
+      }
 
-      if (assetExt === '.css') readAssetsFile = parseUrlPath(readAssetsFile)
       fs.writeFileSync(writePath, readAssetsFile)
     })
   return files
