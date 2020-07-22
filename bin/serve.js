@@ -8,6 +8,7 @@ const fs = require('fs')
 const path = require('path')
 const configs = require('../src/parse/parseConfig')
 const mimeType = require('../src/utils/mimeTypes')
+const portfinder = require('portfinder')
 
 const port = 5000
 
@@ -67,35 +68,38 @@ const createServer = (req, res) => {
 }
 
 const liveServer = () => {
-  const server = http.createServer(createServer)
+  // Generates available port
+  portfinder.getPort(function (err, port) {
+    const server = http.createServer(createServer)
 
-  const wss = new WebSocket.Server({ server: server.listen(port) })
-  console.log(`Server listening on port ${port}`)
-  let socket
-  wss.on('connection', ws => {
-    socket = ws
-  })
-
-  chokidar
-    .watch(path.join(process.cwd(), 'src'), {
-      ignoreInitial: true,
-      awaitWriteFinish: {
-        pollInterval: 400,
-        stabilityThreshold: 400
-      }
+    const wss = new WebSocket.Server({ server: server.listen(port) })
+    console.log(`Server listening on port ${port}`)
+    let socket
+    wss.on('connection', ws => {
+      socket = ws
     })
-    .on('add', chokidarEvent)
-    .on('change', chokidarEvent)
-    .on('unlink', chokidarEvent)
 
-  async function chokidarEvent(e) {
-    await build()
-    console.log('>> File change detected')
-    if (socket)
-      path.parse(e).ext === '.css'
-        ? socket.send('refresh-css')
-        : socket.send('reload-page')
-  }
+    chokidar
+      .watch(path.join(process.cwd(), 'src'), {
+        ignoreInitial: true,
+        awaitWriteFinish: {
+          pollInterval: 400,
+          stabilityThreshold: 400
+        }
+      })
+      .on('add', chokidarEvent)
+      .on('change', chokidarEvent)
+      .on('unlink', chokidarEvent)
+
+    async function chokidarEvent(e) {
+      await build()
+      console.log('>> File change detected')
+      if (socket)
+        path.parse(e).ext === '.css'
+          ? socket.send('refresh-css')
+          : socket.send('reload-page')
+    }
+  })
 }
 
 module.exports = liveServer
