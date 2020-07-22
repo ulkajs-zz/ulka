@@ -17,7 +17,7 @@
 1. Create new ulka site
 
    ```
-   npx create-ulka-app <app-name> <template-name>
+   npx create-ulka-app <app-name>
    ```
 
 2. Navigate to app name and start server
