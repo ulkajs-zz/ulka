@@ -13,12 +13,15 @@ const $assets = (rPath, filePath) => {
   return path.join(path.sep, '__assets__', fileName) + ext
 }
 
-const $importUlka = async (filePath, values) => {
-  const ulkaFile = absolutePath(filePath)
-  return await parseUlka(
-    fs.readFileSync(ulkaFile, 'utf-8'),
-    { $assets, ...values },
-    ulkaFile
+const $importUlka = async (rPath, values, filePath) => {
+  // const ulkaFile = absolutePath(rPath)
+  const ulkaFile = path.join(path.parse(filePath).dir, rPath)
+  return (
+    await parseUlka(
+      fs.readFileSync(ulkaFile, 'utf-8'),
+      { $assets, ...values },
+      ulkaFile
+    )
   ).html
 }
 
@@ -27,7 +30,7 @@ const parseUlka = async (ulkaTemplate, values = {}, filePath) => {
     ...values,
     $assets: rPath => $assets(rPath, filePath),
     globalInfo,
-    $importUlka: filePath => $importUlka(filePath, values)
+    $importUlka: rPath => $importUlka(rPath, values, filePath)
   }
   return {
     html: await parse(ulkaTemplate, values)

@@ -12,7 +12,7 @@ const parseUrlPath = (css, f) => {
   return css.replace(/ url\((.*?)\)/gs, (...args) => {
     const pathGiven = args[1].replace(/'|"/gs, '')
 
-    if (pathGiven.startsWith('http')) return pathGiven
+    if (pathGiven.startsWith('http')) return ` url("${pathGiven}")`
 
     const fileName = generateFileName(path.join(f, pathGiven))
 
