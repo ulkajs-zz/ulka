@@ -1,11 +1,13 @@
 const fs = require('fs')
 const path = require('path')
 const mkdir = require('../fs/mkdir')
+const globalInfo = require('../index')
 const allFiles = require('../fs/allFiles')
 const parseUlka = require('../parse/parseUlka')
-const configs = require('../parse/parseConfig')
 const absolutePath = require('../utils/absolutePath')
 const dataFromPath = require('../utils/dataFromPath')
+
+const configs = globalInfo.configs
 
 async function generateFromUlka() {
   // Get all files having .ulka extension
@@ -20,7 +22,7 @@ async function generateFromUlka() {
   // Get contents inside .ulka files and parse them
   const fileDatas = files.map(dataFromPath).map(fileData => ({
     ...fileData,
-    data: parseUlka(fileData.data, { ...configs }),
+    data: parseUlka(fileData.data, { ...configs }, fileData.path),
     relativePath: path.relative(process.cwd(), fileData.path)
   }))
 
@@ -51,8 +53,9 @@ async function generateFromUlka() {
         `${createFilePath}/${parsedPath.name}.html`
       )
 
+      const html = (await ufd.data).html
       await mkdir(createFilePath).then(_ =>
-        fs.writeFileSync(absoluteFilePath, ufd.data.html)
+        fs.writeFileSync(absoluteFilePath, html)
       )
     } catch (e) {
       console.log('\n>> Error while generating ', ufd.path)

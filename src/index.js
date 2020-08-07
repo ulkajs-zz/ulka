@@ -1,5 +1,8 @@
+const configs = require('./parse/parseConfig')
+
 const globalInfo = {
-  contentFiles: []
+  contentFiles: [],
+  configs
 }
 
 module.exports = globalInfo
