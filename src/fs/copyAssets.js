@@ -24,8 +24,11 @@ const parseUrlPath = css => {
   })
 }
 
-const copyAssets = async (dir = path.join(process.cwd(), 'src'), to) => {
-  await mkdir('build/__assets__')
+const copyAssets = async (
+  dir = path.join(process.cwd(), 'src'),
+  to = 'build'
+) => {
+  await mkdir(`${to}/__assets__`)
   const files = allFiles(dir)
     .map(f => path.parse(f))
     .filter(f => f.ext !== '.ulka' && f.ext !== '.md')
