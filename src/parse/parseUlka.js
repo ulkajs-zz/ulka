@@ -3,7 +3,6 @@ const path = require('path')
 const { parse } = require('ulka-parser')
 const generateFileName = require('../utils/generateName')
 const globalInfo = require('../index')
-const absolutePath = require('../utils/absolutePath')
 
 const $assets = (rPath, filePath) => {
   const fileName = generateFileName(path.join(path.parse(filePath).dir, rPath))
@@ -14,7 +13,6 @@ const $assets = (rPath, filePath) => {
 }
 
 const $importUlka = async (rPath, values, filePath) => {
-  // const ulkaFile = absolutePath(rPath)
   const ulkaFile = path.join(path.parse(filePath).dir, rPath)
   return (
     await parseUlka(
