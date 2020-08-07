@@ -53,18 +53,22 @@ async function generateFromMd() {
       `${createFilePath}/${parsedPath.name}.html`
     )
 
-    const templateData = parseUlka(templateUlkaData, {
-      frontMatter: mfd.data.frontMatter,
-      data: mfd.data.html,
+    const templateData = await parseUlka(templateUlkaData, {
+      frontMatter: (await mfd.data).frontMatter,
+      data: (await mfd.data).html,
       ...configs
     })
 
     const link = createFilePath.split(configs.buildPath)[1]
+
+    const html = templateData.html
+    const frontMatter = (await mfd.data).frontMatter
+
     globalInfo.contentFiles.push({
       createFilePath,
       link: path.join(link, ''),
-      html: templateData.html,
-      frontMatter: mfd.data.frontMatter
+      html,
+      frontMatter
     })
 
     await mkdir(createFilePath).then(() => {

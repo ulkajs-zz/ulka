@@ -51,8 +51,9 @@ async function generateFromUlka() {
         `${createFilePath}/${parsedPath.name}.html`
       )
 
+      const html = (await ufd.data).html
       await mkdir(createFilePath).then(_ =>
-        fs.writeFileSync(absoluteFilePath, ufd.data.html)
+        fs.writeFileSync(absoluteFilePath, html)
       )
     } catch (e) {
       console.log('\n>> Error while generating ', ufd.path)

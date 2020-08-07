@@ -10,8 +10,6 @@ const configs = require('../src/parse/parseConfig')
 const mimeType = require('../src/utils/mimeTypes')
 const portfinder = require('portfinder')
 
-const port = 5000
-
 const createServer = (req, res) => {
   try {
     console.log(`${req.method} ${req.url}`)

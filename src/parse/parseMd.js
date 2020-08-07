@@ -14,12 +14,12 @@ const markdownImageRender = markdown => {
   })
 }
 
-const parseMd = markdown => {
+const parseMd = async markdown => {
   const data = frontmatter(markdown)
   const toHtml = parseMarkdown(markdownImageRender(data.body))
   return {
     frontMatter: data.attributes,
-    html: parseUlka(toHtml.trim()).html
+    html: (await parseUlka(toHtml.trim())).html
   }
 }
 
