@@ -6,6 +6,7 @@ const allFiles = require('./allFiles')
 const absolutePath = require('../utils/absolutePath')
 const generateFileName = require('../utils/generateName')
 const parseUlka = require('../parse/parseUlka')
+const globalInfo = require('..')
 
 const parseUrlPath = css => {
   return css.replace(/ url\((.*?)\)/gs, (...args) => {
@@ -28,7 +29,7 @@ const copyAssets = async (dir = path.join(process.cwd(), 'src'), to) => {
   const files = allFiles(dir)
     .map(f => path.parse(f))
     .filter(f => f.ext !== '.ulka' && f.ext !== '.md')
-    .forEach(f => {
+    .forEach(async f => {
       const assetExt = f.ext === '.ucss' ? '.css' : f.ext
       const writePath =
         absolutePath(
@@ -39,8 +40,13 @@ const copyAssets = async (dir = path.join(process.cwd(), 'src'), to) => {
 
       let readAssetsFile
       if (assetExt === '.css') {
-        readAssetsFile = parseUlka(fs.readFileSync(path.format(f), 'utf-8'))
-          .html
+        readAssetsFile = (
+          await parseUlka(
+            fs.readFileSync(path.format(f), 'utf-8'),
+            globalInfo,
+            writePath
+          )
+        ).html
         readAssetsFile = parseUrlPath(readAssetsFile, 'utf-8')
       } else {
         readAssetsFile = fs.readFileSync(path.format(f))

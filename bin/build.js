@@ -12,7 +12,7 @@ async function build() {
     await generateFromMd()
     await generateFromUlka()
   } catch (e) {
-    console.log(e.message)
+    console.log(e)
     console.log('\n>> Build Failed:\n ')
     await removeDirectories(configs.buildPath)
     process.exit(0)
