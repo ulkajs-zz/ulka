@@ -8,34 +8,32 @@ const generateFileName = require('../utils/generateName')
 const parseUlka = require('../parse/parseUlka')
 const globalInfo = require('..')
 
-const parseUrlPath = css => {
+const parseUrlPath = (css, f) => {
   return css.replace(/ url\((.*?)\)/gs, (...args) => {
     const pathGiven = args[1].replace(/'|"/gs, '')
-    const fileName = generateFileName(
-      path.join(
-        process.cwd(),
-        path.parse(pathGiven).dir +
-          path.parse(pathGiven).name +
-          path.parse(pathGiven).ext
-      )
-    )
+
+    if (pathGiven.startsWith('http')) return ` url("${pathGiven}")`
+
+    const fileName = generateFileName(path.join(f, pathGiven))
 
     return ` url("${fileName + path.parse(pathGiven).ext}")`
   })
 }
 
-const copyAssets = async (dir = path.join(process.cwd(), 'src'), to) => {
-  await mkdir('build/__assets__')
+const copyAssets = async (
+  dir = path.join(process.cwd(), 'src'),
+  to = 'build'
+) => {
+  await mkdir(`${to}/__assets__`)
   const files = allFiles(dir)
     .map(f => path.parse(f))
     .filter(f => f.ext !== '.ulka' && f.ext !== '.md')
     .forEach(async f => {
       const assetExt = f.ext === '.ucss' ? '.css' : f.ext
+
       const writePath =
         absolutePath(
-          configs.buildPath +
-            '/__assets__/' +
-            generateFileName(f.dir + f.name + f.ext)
+          configs.buildPath + '/__assets__/' + generateFileName(path.format(f))
         ) + assetExt
 
       let readAssetsFile
@@ -47,7 +45,7 @@ const copyAssets = async (dir = path.join(process.cwd(), 'src'), to) => {
             writePath
           )
         ).html
-        readAssetsFile = parseUrlPath(readAssetsFile, 'utf-8')
+        readAssetsFile = parseUrlPath(readAssetsFile, f.dir)
       } else {
         readAssetsFile = fs.readFileSync(path.format(f))
       }
