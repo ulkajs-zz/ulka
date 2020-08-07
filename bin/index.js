@@ -12,9 +12,9 @@ const { version } = require('../package.json')
 
 program.version(version)
 program.command('build').action(async () => {
-  console.log('\n>> Building static sites')
+  console.log('\n>> Building static sites\n')
   await build()
-  console.log('\n>> Build finished')
+  console.log('\n>> Build finished\n')
 })
 program.command('serve').action(async () => {
   await build()

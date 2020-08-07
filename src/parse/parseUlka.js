@@ -5,17 +5,10 @@ const generateFileName = require('../utils/generateName')
 const globalInfo = require('../index')
 const absolutePath = require('../utils/absolutePath')
 
-const $assets = filePath => {
-  const fileName = generateFileName(
-    path.join(
-      process.cwd(),
-      path.parse(filePath).dir +
-        path.parse(filePath).name +
-        path.parse(filePath).ext
-    )
-  )
-  const ext =
-    path.parse(filePath).ext === '.ucss' ? '.css' : path.parse(filePath).ext
+const $assets = (rPath, filePath) => {
+  const fileName = generateFileName(path.join(path.parse(filePath).dir, rPath))
+
+  const ext = path.parse(rPath).ext === '.ucss' ? '.css' : path.parse(rPath).ext
 
   return path.join(path.sep, '__assets__', fileName) + ext
 }
@@ -32,11 +25,10 @@ const $importUlka = async (filePath, values) => {
 const parseUlka = async (ulkaTemplate, values = {}, filePath) => {
   values = {
     ...values,
-    $assets,
+    $assets: rPath => $assets(rPath, filePath),
     globalInfo,
     $importUlka: filePath => $importUlka(filePath, values)
   }
-  console.log(filePath)
   return {
     html: await parse(ulkaTemplate, values)
   }
