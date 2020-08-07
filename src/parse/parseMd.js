@@ -3,6 +3,7 @@ const { Remarkable } = require('remarkable')
 
 const configs = require('./parseConfig')
 const parseUlka = require('./parseUlka')
+const globalInfo = require('..')
 
 const md = new Remarkable({
   html: true
@@ -14,12 +15,12 @@ const markdownImageRender = markdown => {
   })
 }
 
-const parseMd = async markdown => {
+const parseMd = async (markdown, filePath) => {
   const data = frontmatter(markdown)
   const toHtml = parseMarkdown(markdownImageRender(data.body))
   return {
     frontMatter: data.attributes,
-    html: (await parseUlka(toHtml.trim())).html
+    html: (await parseUlka(toHtml.trim(), globalInfo, filePath)).html
   }
 }
 

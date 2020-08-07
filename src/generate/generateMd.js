@@ -1,14 +1,15 @@
 const fs = require('fs')
 const path = require('path')
+
 const mkdir = require('../fs/mkdir')
+const globalInfo = require('../index')
 const allFiles = require('../fs/allFiles')
 const parseMd = require('../parse/parseMd')
 const parseUlka = require('../parse/parseUlka')
-const configs = require('../parse/parseConfig')
 const absolutePath = require('../utils/absolutePath')
 const dataFromPath = require('../utils/dataFromPath')
-const globalInfo = require('../index')
 
+const configs = globalInfo.configs
 const { contents, templatesPath } = configs
 
 async function generateFromMd() {
@@ -24,7 +25,7 @@ async function generateFromMd() {
   // Get contents inside .md files and parse them
   const fileDatas = files.map(dataFromPath).map(fileData => ({
     ...fileData,
-    data: parseMd(fileData.data),
+    data: parseMd(fileData.data, fileData.path),
     relativePath: path.relative(process.cwd(), fileData.path)
   }))
 
@@ -53,11 +54,15 @@ async function generateFromMd() {
       `${createFilePath}/${parsedPath.name}.html`
     )
 
-    const templateData = await parseUlka(templateUlkaData, {
-      frontMatter: (await mfd.data).frontMatter,
-      data: (await mfd.data).html,
-      ...configs
-    })
+    const templateData = await parseUlka(
+      templateUlkaData,
+      {
+        frontMatter: (await mfd.data).frontMatter,
+        data: (await mfd.data).html,
+        ...configs
+      },
+      markdownTemplatePath
+    )
 
     const link = createFilePath.split(configs.buildPath)[1]
 

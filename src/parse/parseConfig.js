@@ -1,12 +1,15 @@
 const path = require('path')
+const fs = require('fs')
 
-let ulkaConfigs
+let ulkaConfigs = {}
 
 try {
-  ulkaConfigs = require(path.join(process.cwd(), 'ulka-config.js'))
+  const configExists = fs.existsSync(path.join(process.cwd(), 'ulka-config.js'))
+  if (configExists) {
+    ulkaConfigs = require(path.join(process.cwd(), 'ulka-config.js'))
+  }
 } catch (e) {
-  console.log("\n>> Can't find ulka-config.js file in root directory")
-  process.exit(1)
+  console.log('>> ', e.message)
 }
 
 const defaultConfigs = {

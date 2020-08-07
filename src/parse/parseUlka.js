@@ -22,19 +22,21 @@ const $assets = filePath => {
 
 const $importUlka = async (filePath, values) => {
   const ulkaFile = absolutePath(filePath)
-  return await parseUlka(fs.readFileSync(ulkaFile, 'utf-8'), {
-    $assets,
-    ...values
-  }).html
+  return await parseUlka(
+    fs.readFileSync(ulkaFile, 'utf-8'),
+    { $assets, ...values },
+    ulkaFile
+  ).html
 }
 
-const parseUlka = async (ulkaTemplate, values = {}) => {
+const parseUlka = async (ulkaTemplate, values = {}, filePath) => {
   values = {
     ...values,
     $assets,
     globalInfo,
     $importUlka: filePath => $importUlka(filePath, values)
   }
+  console.log(filePath)
   return {
     html: await parse(ulkaTemplate, values)
   }
