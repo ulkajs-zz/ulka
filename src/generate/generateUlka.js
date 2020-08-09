@@ -58,9 +58,8 @@ async function generateFromUlka() {
         fs.writeFileSync(absoluteFilePath, html)
       )
     } catch (e) {
-      console.log(`\n>> ${e.message}`.red)
       console.log(`>> Error while generating ${ufd.path}`.red)
-      process.exit(0)
+      throw e
     }
   }
 }

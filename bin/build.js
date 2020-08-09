@@ -18,9 +18,12 @@ async function build() {
     console.log('>> Generating from ulka files'.green)
     await generateFromUlka()
   } catch (e) {
-    console.log(`>> ${e.message}\n`.red, e)
+    console.log(`>> ${e.toString()}\n`.red)
+
+    if (e.name !== 'ReferenceError') console.log(e)
+
     console.log('>> Build Failed'.red)
-    console.log(`>> Removing ${globalInfo.configs.buildPath}`)
+    console.log(`>> Removing ${globalInfo.configs.buildPath} folder`.red)
     await removeDirectories(globalInfo.configs.buildPath)
     process.exit(0)
   }

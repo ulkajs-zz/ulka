@@ -13,9 +13,16 @@ const { version } = require('../package.json')
 
 program.version(version)
 program.command('build').action(async () => {
-  console.log('>> Building static sites'.green)
+  console.log('>> Building static files\n'.green)
+
+  const startBuild = new Date().getTime()
   await build()
-  console.log('>> Build finished'.green)
+  const finishBuild = new Date().getTime()
+
+  console.log(
+    `\n>> Build finished in`.green,
+    `${finishBuild - startBuild} ms`.green.bold
+  )
 })
 program.command('serve').action(async () => {
   await build()

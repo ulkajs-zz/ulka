@@ -10,6 +10,9 @@ const portfinder = require('portfinder')
 const build = require('./build')
 const configs = require('../src/parse/parseConfig')
 const mimeType = require('../src/utils/mimeTypes')
+const copyAssets = require('../src/fs/copyAssets')
+const removeDirectories = require('../src/fs/rmdir')
+const globalInfo = require('../src')
 
 const createServer = (req, res) => {
   try {
@@ -67,13 +70,12 @@ const createServer = (req, res) => {
 }
 
 const liveServer = async () => {
-  // Generates available port
-  const port = await portfinder.getPortPromise({ startPort: 3000 })
+  const port = await portfinder.getPortPromise({ port: 3000 })
 
   const server = http.createServer(createServer)
 
   const wss = new WebSocket.Server({ server: server.listen(port) })
-  console.log(`\n>> Server listening on port ${port}`.green)
+  console.log(`\n>> Server listening on port ${port}`.yellow)
 
   let socket
   wss.on('connection', ws => {
@@ -88,17 +90,32 @@ const liveServer = async () => {
         stabilityThreshold: 400
       }
     })
-    .on('add', chokidarEvent)
     .on('change', chokidarEvent)
-    .on('unlink', chokidarEvent)
+    .on('add', chokidarEvent)
+    .on('unlink', async (p, s) => {
+      const assetsPath = path.join(globalInfo.configs.buildPath, '__assets__')
+      await removeDirectories(assetsPath)
+      await chokidarEvent(p, s)
+    })
 
-  async function chokidarEvent(e) {
-    await build()
-    console.log('\n>> File change detected'.green)
-    if (socket)
-      path.parse(e).ext === '.css'
-        ? socket.send('refresh-css')
-        : socket.send('reload-page')
+  async function chokidarEvent(p) {
+    console.log('\n>> File change detected'.yellow)
+
+    const ext = path.parse(p).ext
+
+    if (ext === '.css') {
+      console.log('>> Copying assets'.green)
+      await copyAssets()
+      if (socket) socket.send('refresh-css')
+    } else {
+      await build()
+      if (socket) socket.send('reload-page')
+    }
+    // await build()
+    // if (socket)
+    //   path.parse(p).ext === '.css'
+    //     ? socket.send('refresh-css')
+    //     : socket.send('reload-page')
   }
 }
 

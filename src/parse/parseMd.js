@@ -18,9 +18,10 @@ const markdownImageRender = markdown => {
 const parseMd = async (markdown, filePath) => {
   const data = frontmatter(markdown)
   const toHtml = parseMarkdown(markdownImageRender(data.body))
+  const ulkaPrase = await parseUlka(toHtml.trim(), globalInfo, filePath)
   return {
     frontMatter: data.attributes,
-    html: (await parseUlka(toHtml.trim(), globalInfo, filePath)).html
+    html: ulkaPrase.html
   }
 }
 

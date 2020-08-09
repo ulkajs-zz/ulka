@@ -55,11 +55,13 @@ async function generateFromMd() {
         `${createFilePath}/${parsedPath.name}.html`
       )
 
+      const mfdData = await mfd.data
+
       const templateData = await parseUlka(
         templateUlkaData,
         {
-          frontMatter: (await mfd.data).frontMatter,
-          data: (await mfd.data).html,
+          frontMatter: mfdData.frontMatter,
+          data: mfdData.html,
           ...configs
         },
         markdownTemplatePath
@@ -68,7 +70,7 @@ async function generateFromMd() {
       const link = createFilePath.split(configs.buildPath)[1]
 
       const html = templateData.html
-      const frontMatter = (await mfd.data).frontMatter
+      const frontMatter = mfdData.frontMatter
 
       globalInfo.contentFiles.push({
         createFilePath,
@@ -82,7 +84,7 @@ async function generateFromMd() {
       })
     } catch (e) {
       console.log(`\n>> Error while generating ${mfd.path}`.red)
-      process.exit(0)
+      throw e
     }
   }
 }
