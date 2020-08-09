@@ -30,8 +30,12 @@ const parseUlka = async (ulkaTemplate, values = {}, filePath) => {
     globalInfo,
     $importUlka: rPath => $importUlka(rPath, values, filePath)
   }
+
   return {
-    html: await parse(ulkaTemplate, values, { base: process.cwd() })
+    html: await parse(ulkaTemplate, values, {
+      base: path.parse(filePath).dir,
+      logError: false
+    })
   }
 }
 

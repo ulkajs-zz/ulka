@@ -13,7 +13,7 @@ const mimeType = require('../src/utils/mimeTypes')
 
 const createServer = (req, res) => {
   try {
-    console.log(`${req.method} ${req.url}`)
+    // console.log(`${req.method} ${req.url}`)
 
     const parsedUrl = url.parse(req.url)
     const sanitizePath = path
@@ -73,7 +73,7 @@ const liveServer = async () => {
   const server = http.createServer(createServer)
 
   const wss = new WebSocket.Server({ server: server.listen(port) })
-  console.log(`Server listening on port ${port}`)
+  console.log(`\n>> Server listening on port ${port}`.green)
 
   let socket
   wss.on('connection', ws => {
@@ -94,7 +94,7 @@ const liveServer = async () => {
 
   async function chokidarEvent(e) {
     await build()
-    console.log('>> File change detected')
+    console.log('\n>> File change detected'.green)
     if (socket)
       path.parse(e).ext === '.css'
         ? socket.send('refresh-css')

@@ -15,8 +15,8 @@ async function generateFromUlka() {
   try {
     files = allFiles(absolutePath(`src/${configs.pagesPath}`), '.ulka')
   } catch (e) {
-    console.log('\n>>', e.message)
-    process.exit(1)
+    console.log(`\n>> ${e.message}`.red)
+    process.exit(0)
   }
 
   // Get contents inside .ulka files and parse them
@@ -58,13 +58,11 @@ async function generateFromUlka() {
         fs.writeFileSync(absoluteFilePath, html)
       )
     } catch (e) {
-      console.log('\n>> Error while generating ', ufd.path)
-      console.log('>>', e.message)
-      process.exit(1)
+      console.log(`\n>> ${e.message}`.red)
+      console.log(`>> Error while generating ${ufd.path}`.red)
+      process.exit(0)
     }
   }
 }
-
-generateFromUlka()
 
 module.exports = generateFromUlka

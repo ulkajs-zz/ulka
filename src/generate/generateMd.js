@@ -18,8 +18,8 @@ async function generateFromMd() {
   try {
     files = allFiles(absolutePath(`src/${contents.path}`), '.md')
   } catch (e) {
-    console.log('\n>>', e.message)
-    process.exit(1)
+    console.log(`\n>> ${e.message}`.red)
+    process.exit(0)
   }
 
   // Get contents inside .md files and parse them
@@ -32,53 +32,58 @@ async function generateFromMd() {
   for (let i = 0; i < fileDatas.length; i++) {
     const mfd = fileDatas[i]
 
-    //  For eg: \index.md or folder\file.md
-    const [, filePath] = mfd.path.split(path.join('src', contents.path))
+    try {
+      //  For eg: \index.md or folder\file.md
+      const [, filePath] = mfd.path.split(path.join('src', contents.path))
 
-    const parsedPath = path.parse(filePath)
+      const parsedPath = path.parse(filePath)
 
-    // For eg: build/blog/post-1/
-    let createFilePath =
-      configs.buildPath + '/' + contents.generatePath + parsedPath.dir
+      // For eg: build/blog/post-1/
+      let createFilePath =
+        configs.buildPath + '/' + contents.generatePath + parsedPath.dir
 
-    const markdownTemplatePath = absolutePath(
-      `src/${templatesPath}/${contents.template}`
-    )
-    const templateUlkaData = fs.readFileSync(markdownTemplatePath, 'utf-8')
+      const markdownTemplatePath = absolutePath(
+        `src/${templatesPath}/${contents.template}`
+      )
+      const templateUlkaData = fs.readFileSync(markdownTemplatePath, 'utf-8')
 
-    if (parsedPath.name !== 'index') {
-      createFilePath += '/' + parsedPath.name
-      parsedPath.name = 'index'
+      if (parsedPath.name !== 'index') {
+        createFilePath += '/' + parsedPath.name
+        parsedPath.name = 'index'
+      }
+      const absoluteFilePath = absolutePath(
+        `${createFilePath}/${parsedPath.name}.html`
+      )
+
+      const templateData = await parseUlka(
+        templateUlkaData,
+        {
+          frontMatter: (await mfd.data).frontMatter,
+          data: (await mfd.data).html,
+          ...configs
+        },
+        markdownTemplatePath
+      )
+
+      const link = createFilePath.split(configs.buildPath)[1]
+
+      const html = templateData.html
+      const frontMatter = (await mfd.data).frontMatter
+
+      globalInfo.contentFiles.push({
+        createFilePath,
+        link: path.join(link, ''),
+        html,
+        frontMatter
+      })
+
+      await mkdir(createFilePath).then(() => {
+        fs.writeFileSync(absoluteFilePath, templateData.html)
+      })
+    } catch (e) {
+      console.log(`\n>> Error while generating ${mfd.path}`.red)
+      process.exit(0)
     }
-    const absoluteFilePath = absolutePath(
-      `${createFilePath}/${parsedPath.name}.html`
-    )
-
-    const templateData = await parseUlka(
-      templateUlkaData,
-      {
-        frontMatter: (await mfd.data).frontMatter,
-        data: (await mfd.data).html,
-        ...configs
-      },
-      markdownTemplatePath
-    )
-
-    const link = createFilePath.split(configs.buildPath)[1]
-
-    const html = templateData.html
-    const frontMatter = (await mfd.data).frontMatter
-
-    globalInfo.contentFiles.push({
-      createFilePath,
-      link: path.join(link, ''),
-      html,
-      frontMatter
-    })
-
-    await mkdir(createFilePath).then(() => {
-      fs.writeFileSync(absoluteFilePath, templateData.html)
-    })
   }
 }
 

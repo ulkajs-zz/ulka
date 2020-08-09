@@ -5,6 +5,7 @@
 // const removeDirectories = require('../src/fs/rmdir')
 
 const { program } = require('commander')
+require('colors')
 
 const build = require('./build')
 const serve = require('./serve')
@@ -12,9 +13,9 @@ const { version } = require('../package.json')
 
 program.version(version)
 program.command('build').action(async () => {
-  console.log('\n>> Building static sites\n')
+  console.log('>> Building static sites'.green)
   await build()
-  console.log('\n>> Build finished\n')
+  console.log('>> Build finished'.green)
 })
 program.command('serve').action(async () => {
   await build()
