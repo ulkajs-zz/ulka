@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/acharyaroshanji/ulka.git"
+    "url": "git+https://github.com/ulkajs/ulka.git"
   },
   "author": "Roshan Acharya",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/acharyaroshanji/ulka/issues"
+    "url": "https://github.com/ulkajs/ulka/issues"
   },
-  "homepage": "https://github.com/acharyaroshanji/ulka#readme",
+  "homepage": "https://github.com/ulkajs/ulka#readme",
   "dependencies": {
     "better-opn": "^2.0.0",
     "chokidar": "^3.4.1",
