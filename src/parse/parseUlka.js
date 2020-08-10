@@ -23,7 +23,11 @@ const $importUlka = async (rPath, values, filePath) => {
   ).html
 }
 
-const parseUlka = async (ulkaTemplate, values = {}, filePath) => {
+const parseUlka = async (
+  ulkaTemplate,
+  values = {},
+  filePath = process.cwd()
+) => {
   values = {
     ...values,
     $assets: rPath => $assets(rPath, filePath),

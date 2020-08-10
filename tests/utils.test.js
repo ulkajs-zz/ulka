@@ -17,14 +17,9 @@ describe('AbsolutePath function', () => {
     })
   })
 
-  describe('on given nothing', () => {
+  describe('on given other than string', () => {
     test('should throw error', () => {
       expect(absolutePath).toThrow('Path provided should be string')
-    })
-  })
-
-  describe('on given number', () => {
-    test('should throw error', () => {
       expect(() => absolutePath(1)).toThrow('Path provided should be string')
     })
   })

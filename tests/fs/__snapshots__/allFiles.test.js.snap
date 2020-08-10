@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`all Files function should return all files in a folder 1`] = `
+Array [
+  "tests/resources/fs_allfiles_test/file1.js",
+  "tests/resources/fs_allfiles_test/file1.ulka",
+  "tests/resources/fs_allfiles_test/file2.js",
+  "tests/resources/fs_allfiles_test/file2.ulka",
+  "tests/resources/fs_allfiles_test/folder1/folder1-file1.ulka",
+  "tests/resources/fs_allfiles_test/folder1/folder2-file2.ulka",
+]
+`;
+
+exports[`all Files function should return js files only 1`] = `
+Array [
+  "tests/resources/fs_allfiles_test/file1.js",
+  "tests/resources/fs_allfiles_test/file2.js",
+]
+`;
+
+exports[`all Files function should return ulka files only 1`] = `
+Array [
+  "tests/resources/fs_allfiles_test/file1.ulka",
+  "tests/resources/fs_allfiles_test/file2.ulka",
+  "tests/resources/fs_allfiles_test/folder1/folder1-file1.ulka",
+  "tests/resources/fs_allfiles_test/folder1/folder2-file2.ulka",
+]
+`;
