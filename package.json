@@ -10,7 +10,8 @@
     "test": "jest",
     "eslint": "eslint .",
     "prettier": "prettier --write \"**/*.js\"",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "prepublishOnly": "npm run eslint && npm run test"
   },
   "repository": {
     "type": "git",
@@ -52,7 +53,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-staged"
+      "pre-commit": "npm run lint-staged && npm run test"
     }
   }
 }
