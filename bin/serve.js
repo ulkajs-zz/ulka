@@ -6,6 +6,7 @@ const path = require('path')
 const WebSocket = require('ws')
 const chokidar = require('chokidar')
 const portfinder = require('portfinder')
+const betterOpen = require('better-opn')
 
 const build = require('./build')
 const configs = require('../src/parse/parseConfig')
@@ -13,6 +14,7 @@ const mimeType = require('../src/utils/mimeTypes')
 const copyAssets = require('../src/fs/copyAssets')
 const removeDirectories = require('../src/fs/rmdir')
 const globalInfo = require('../src')
+const linePrint = require('../src/utils/linePrint')
 
 const createServer = (req, res) => {
   try {
@@ -75,12 +77,15 @@ const liveServer = async () => {
   const server = http.createServer(createServer)
 
   const wss = new WebSocket.Server({ server: server.listen(port) })
-  console.log(`\n>> Server listening on port ${port}`.yellow)
+
+  linePrint(`>> Server is listening on port ${port}`, 'yellow')
 
   let socket
   wss.on('connection', ws => {
     socket = ws
   })
+
+  if (!socket) await betterOpen(`http://localhost:${port}`)
 
   chokidar
     .watch(path.join(process.cwd(), 'src'), {
@@ -99,8 +104,8 @@ const liveServer = async () => {
     })
 
   async function chokidarEvent(p) {
-    console.log('\n>> File change detected'.yellow)
-
+    console.clear()
+    linePrint('>> File change detected', 'yellow')
     const ext = path.parse(p).ext
 
     if (ext === '.css') {
@@ -111,11 +116,8 @@ const liveServer = async () => {
       await build()
       if (socket) socket.send('reload-page')
     }
-    // await build()
-    // if (socket)
-    //   path.parse(p).ext === '.css'
-    //     ? socket.send('refresh-css')
-    //     : socket.send('reload-page')
+
+    linePrint(`>> Server is listening on port ${port}`, 'yellow')
   }
 }
 

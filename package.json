@@ -1,6 +1,6 @@
 {
   "name": "ulka",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "Ulka - static site generator",
   "main": "./src/index.js",
   "bin": {
@@ -14,15 +14,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/acharyaroshanji/ulka.git"
+    "url": "git+https://github.com/ulkajs/ulka.git"
   },
   "author": "Roshan Acharya",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/acharyaroshanji/ulka/issues"
+    "url": "https://github.com/ulkajs/ulka/issues"
   },
-  "homepage": "https://github.com/acharyaroshanji/ulka#readme",
+  "homepage": "https://github.com/ulkajs/ulka#readme",
   "dependencies": {
+    "better-opn": "^2.0.0",
     "chokidar": "^3.4.1",
     "colors": "^1.4.0",
     "commander": "^5.1.0",
