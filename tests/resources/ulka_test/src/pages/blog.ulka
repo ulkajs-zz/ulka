@@ -1,0 +1,13 @@
+{% globalInfo.contentFiles.slice().sort((a, b) => new Date(b.frontMatter.date) - new Date(a.frontMatter.date)).map(cf => {
+    return `
+        <div class="blog-item">
+            <a href="${cf.link}">
+                <div class="blog-title">${cf.frontMatter.title}</div>
+            </a>
+            <div class="blog-desc">
+                ${cf.frontMatter.description}
+            </div>
+            <div class="blog-date">${new Date(cf.frontMatter.date).toDateString() }</div>
+        </div>
+    `
+}).join("\n") %}

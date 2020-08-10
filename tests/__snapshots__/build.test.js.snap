@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`build function:  globalInfo should have info about content files 1`] = `
+Array [
+  Object {
+    "frontMatter": Object {
+      "title": "Post 1",
+    },
+    "html": "<html>
+    <head>
+        <title>Ulka Js</title>
+    </head>
+    <body>
+        <h1>This is post one</h1>
+    </body>
+</html>",
+  },
+  Object {
+    "frontMatter": Object {
+      "title": "Post 2",
+    },
+    "html": "<html>
+    <head>
+        <title>Ulka Js</title>
+    </head>
+    <body>
+        <h1>Post 2</h1>
+    </body>
+</html>",
+  },
+]
+`;
