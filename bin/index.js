@@ -1,9 +1,5 @@
 #!/usr/bin/env node
 
-// const path = require('path')
-// const globalInfo = require('../src/index')
-// const removeDirectories = require('../src/fs/rmdir')
-
 const { program } = require('commander')
 require('colors')
 
@@ -13,15 +9,15 @@ const { version } = require('../package.json')
 
 program.version(version)
 program.command('build').action(async () => {
-  console.log('>> Building static files\n'.green)
+  console.log('\n>> Building static files'.yellow)
 
   const startBuild = new Date().getTime()
   await build()
   const finishBuild = new Date().getTime()
 
   console.log(
-    `\n>> Build finished in`.green,
-    `${finishBuild - startBuild} ms`.green.bold
+    `>> Build finished in`.yellow,
+    `${finishBuild - startBuild} ms`.yellow.bold
   )
 })
 program.command('serve').action(async () => {

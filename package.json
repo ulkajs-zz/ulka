@@ -1,6 +1,6 @@
 {
   "name": "ulka",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "Ulka - static site generator",
   "main": "./src/index.js",
   "bin": {
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/acharyaroshanji/ulka#readme",
   "dependencies": {
+    "better-opn": "^2.0.0",
     "chokidar": "^3.4.1",
     "colors": "^1.4.0",
     "commander": "^5.1.0",
