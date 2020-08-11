@@ -9,7 +9,8 @@ try {
     ulkaConfigs = require(path.join(process.cwd(), 'ulka-config.js'))
   }
 } catch (e) {
-  console.log('>> ', e.message)
+  console.log(`>> ${e.message}`.red)
+  throw e
 }
 
 const defaultConfigs = {
