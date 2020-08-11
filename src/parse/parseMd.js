@@ -36,14 +36,14 @@ function parseMarkdown(markdown) {
   const beforeParse = configs.contents.preParse || []
   const afterParse = configs.contents.postParse || []
 
-  beforeParse.forEach(plugins => {
-    markdown = plugins(markdown)
+  beforeParse.forEach(fnc => {
+    markdown = fnc(markdown)
   })
 
   let toHtml = md.render(markdown)
 
-  afterParse.forEach(plugins => {
-    toHtml = plugins(toHtml)
+  afterParse.forEach(fnc => {
+    toHtml = fnc(toHtml)
   })
 
   return toHtml

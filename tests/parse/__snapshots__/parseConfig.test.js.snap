@@ -11,6 +11,7 @@ Object {
     "template": "blog.ulka",
   },
   "pagesPath": "pages",
+  "plugins": Array [],
   "siteMetaData": Object {
     "desription": "UlkaJs - static site generator",
     "title": "Ulka.Js",
