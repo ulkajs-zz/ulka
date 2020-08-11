@@ -5,6 +5,7 @@ Object {
   "buildPath": "build",
   "contents": Object {
     "generatePath": "blog",
+    "parseFrontMatter": Array [],
     "path": "contents",
     "postParse": Array [],
     "preParse": Array [],

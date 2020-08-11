@@ -16,25 +16,29 @@ const markdownImageRender = markdown => {
 }
 
 const parseMd = async (markdown, filePath = process.cwd()) => {
-  // Parse fontmatter
   const data = frontmatter(markdown)
 
   // parseMarkdown and markdown's image tag
-  const toHtml = parseMarkdown(markdownImageRender(data.body))
+  const { toHtml, prasedFrontMatter } = parseMarkdown(
+    markdownImageRender(data.body),
+    data.attributes
+  )
 
   // Prase ulka if any ulka syntax
   const ulkaPrase = await parseUlka(toHtml.trim(), globalInfo, filePath)
+
   return {
-    frontMatter: data.attributes,
+    frontMatter: prasedFrontMatter,
     html: ulkaPrase.html
   }
 }
 
-function parseMarkdown(markdown) {
+function parseMarkdown(markdown, frontMatter) {
   if (!configs.contents) return markdown
 
   const beforeParse = configs.contents.preParse || []
   const afterParse = configs.contents.postParse || []
+  const parseFrontMatter = configs.contents.parseFrontMatter || []
 
   beforeParse.forEach(fnc => {
     markdown = fnc(markdown)
@@ -46,7 +50,14 @@ function parseMarkdown(markdown) {
     toHtml = fnc(toHtml)
   })
 
-  return toHtml
+  parseFrontMatter.map(fnc => {
+    frontMatter = fnc(frontMatter)
+  })
+
+  return {
+    toHtml,
+    prasedFrontMatter: frontMatter
+  }
 }
 
 module.exports = parseMd

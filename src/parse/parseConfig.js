@@ -26,10 +26,12 @@ const defaultConfigs = {
     path: 'contents',
     generatePath: 'blog',
     template: 'blog.ulka',
-    // Pre parse run before parsing markdown to html
+    // Array of functions that takes markdown as arg and returns markdown
     preParse: [],
-    // post parse runs after parsing markdown to html
-    postParse: []
+    // Array of functions that takes html as arg and return html
+    postParse: [],
+    // Array of functions that takes frontmatter as arg and return frontMatter
+    parseFrontMatter: []
   }
 }
 
