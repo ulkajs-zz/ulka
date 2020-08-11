@@ -3,6 +3,7 @@
 exports[`build function:  globalInfo should have info about content files 1`] = `
 Array [
   Object {
+    "absoluteFilePath": "C:\\\\Users\\\\rosha\\\\Desktop\\\\ulka-org\\\\ulka\\\\tests\\\\resources\\\\ulka_test\\\\build\\\\blog\\\\post-1\\\\index.html",
     "frontMatter": Object {
       "title": "Post 1",
     },
@@ -16,6 +17,7 @@ Array [
 </html>",
   },
   Object {
+    "absoluteFilePath": "C:\\\\Users\\\\rosha\\\\Desktop\\\\ulka-org\\\\ulka\\\\tests\\\\resources\\\\ulka_test\\\\build\\\\blog\\\\post-2\\\\index.html",
     "frontMatter": Object {
       "title": "Post 2",
     },

@@ -32,56 +32,62 @@ async function generateFromMd() {
   for (let i = 0; i < fileDatas.length; i++) {
     const mfd = fileDatas[i]
 
+    const filePath = mfd.path.split(path.join('src', contents.path))[1]
+    const parsedPath = path.parse(filePath)
+    let createFilePath =
+      configs.buildPath + '/' + contents.generatePath + parsedPath.dir
+
+    if (parsedPath.name !== 'index') {
+      createFilePath += '/' + parsedPath.name
+      parsedPath.name = 'index'
+    }
+
+    const link = createFilePath.split(configs.buildPath)[1]
+    const mfdData = await mfd.data
+
+    const absoluteFilePath = absolutePath(
+      `${createFilePath}/${parsedPath.name}.html`
+    )
+
+    globalInfo.contentFiles.push({
+      html: mfdData.html,
+      frontMatter: mfdData.frontMatter,
+      link: path.join(link, ''),
+      createFilePath,
+      absoluteFilePath
+    })
+  }
+
+  for (let i = 0; i < fileDatas.length; i++) {
+    const mfd = fileDatas[i]
+
     try {
-      //  For eg: \index.md or folder\file.md
-      const [, filePath] = mfd.path.split(path.join('src', contents.path))
-
-      const parsedPath = path.parse(filePath)
-
-      // For eg: build/blog/post-1/
-      let createFilePath =
-        configs.buildPath + '/' + contents.generatePath + parsedPath.dir
-
       const markdownTemplatePath = absolutePath(
         `src/${templatesPath}/${contents.template}`
       )
       const templateUlkaData = fs.readFileSync(markdownTemplatePath, 'utf-8')
 
-      if (parsedPath.name !== 'index') {
-        createFilePath += '/' + parsedPath.name
-        parsedPath.name = 'index'
-      }
-      const absoluteFilePath = absolutePath(
-        `${createFilePath}/${parsedPath.name}.html`
-      )
-
-      const mfdData = await mfd.data
+      const mfdData = globalInfo.contentFiles[i]
 
       const templateData = await parseUlka(
         templateUlkaData,
         {
           frontMatter: mfdData.frontMatter,
           data: mfdData.html,
-          ...configs
+          globalInfo
         },
         markdownTemplatePath
       )
 
-      const link = createFilePath.split(configs.buildPath)[1]
-
       const html = templateData.html
-      const frontMatter = mfdData.frontMatter
 
-      globalInfo.contentFiles.push({
-        createFilePath,
-        link: path.join(link, ''),
-        html,
-        frontMatter
-      })
+      globalInfo.contentFiles[i] = {
+        ...mfdData,
+        html
+      }
 
-      await mkdir(createFilePath).then(() => {
-        fs.writeFileSync(absoluteFilePath, templateData.html)
-      })
+      await mkdir(mfdData.createFilePath)
+      fs.writeFileSync(mfdData.absoluteFilePath, templateData.html)
     } catch (e) {
       console.log(`\n>> Error while generating ${mfd.path}`.red)
       throw e
