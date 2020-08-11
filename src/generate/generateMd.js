@@ -10,19 +10,21 @@ const absolutePath = require('../utils/absolutePath')
 const dataFromPath = require('../utils/dataFromPath')
 
 const configs = globalInfo.configs
-const { contents, templatesPath } = configs
 
 async function generateFromMd() {
-  // Get all files having .md extension from contentsPath
+  // Get all markdown files' path from contents path
   let files
   try {
-    files = allFiles(absolutePath(`src/${contents.path}`), '.md')
+    files = allFiles(absolutePath(`src/${configs.contents.path}`), '.md')
   } catch (e) {
     console.log(`\n>> ${e.message}`.red)
     process.exit(0)
   }
 
-  // Get contents inside .md files and parse them
+  /**
+   * Get Data from filepath
+   * Prase data using parseMd function
+   */
   const fileDatas = files.map(dataFromPath).map(fileData => ({
     ...fileData,
     data: parseMd(fileData.data, fileData.path),
@@ -32,56 +34,75 @@ async function generateFromMd() {
   for (let i = 0; i < fileDatas.length; i++) {
     const mfd = fileDatas[i]
 
+    // Get filepath eg: \index.md, \post-1\index.md
+    const filePath = mfd.path.split(path.join('src', configs.contents.path))[1]
+
+    // Prase filepath
+    const parsedPath = path.parse(filePath)
+
+    // filePath to create .html files
+    let createFilePath =
+      configs.buildPath + '/' + configs.contents.generatePath + parsedPath.dir
+
+    // If name of file is not index, then create folder with fileName and change fileName to index
+    if (parsedPath.name !== 'index') {
+      createFilePath += '/' + parsedPath.name
+      parsedPath.name = 'index'
+    }
+
+    // Data after parsing markdown
+    const mfdData = await mfd.data
+    // Url link to the file
+    const link = createFilePath.split(configs.buildPath)[1]
+
+    // Absolute Filepath to create html files
+    const absoluteFilePath = absolutePath(
+      `${createFilePath}/${parsedPath.name}.html`
+    )
+
+    // Push parsed datas info globalInfo
+    globalInfo.contentFiles.push({
+      html: mfdData.html,
+      frontMatter: mfdData.frontMatter,
+      link: path.join(link, ''),
+      createFilePath,
+      absoluteFilePath
+    })
+  }
+
+  for (let i = 0; i < fileDatas.length; i++) {
+    const mfd = fileDatas[i]
+
     try {
-      //  For eg: \index.md or folder\file.md
-      const [, filePath] = mfd.path.split(path.join('src', contents.path))
-
-      const parsedPath = path.parse(filePath)
-
-      // For eg: build/blog/post-1/
-      let createFilePath =
-        configs.buildPath + '/' + contents.generatePath + parsedPath.dir
-
+      // Path to the template of markdown files
       const markdownTemplatePath = absolutePath(
-        `src/${templatesPath}/${contents.template}`
+        `src/${configs.templatesPath}/${configs.contents.template}`
       )
+      // Templatefile data
       const templateUlkaData = fs.readFileSync(markdownTemplatePath, 'utf-8')
 
-      if (parsedPath.name !== 'index') {
-        createFilePath += '/' + parsedPath.name
-        parsedPath.name = 'index'
-      }
-      const absoluteFilePath = absolutePath(
-        `${createFilePath}/${parsedPath.name}.html`
-      )
+      // Previosly parsed data that was pushed to globalInfo
+      const mfdData = globalInfo.contentFiles[i]
 
-      const mfdData = await mfd.data
-
+      // Prase template ulka file with the value of parsed markdown
       const templateData = await parseUlka(
         templateUlkaData,
         {
           frontMatter: mfdData.frontMatter,
           data: mfdData.html,
-          ...configs
+          globalInfo
         },
         markdownTemplatePath
       )
 
-      const link = createFilePath.split(configs.buildPath)[1]
+      // Rewrite html to the parsed html from templates
+      globalInfo.contentFiles[i].html = templateData.html
 
-      const html = templateData.html
-      const frontMatter = mfdData.frontMatter
+      // Create folder to generate html file
+      await mkdir(mfdData.createFilePath)
 
-      globalInfo.contentFiles.push({
-        createFilePath,
-        link: path.join(link, ''),
-        html,
-        frontMatter
-      })
-
-      await mkdir(createFilePath).then(() => {
-        fs.writeFileSync(absoluteFilePath, templateData.html)
-      })
+      // Create html files
+      fs.writeFileSync(mfdData.absoluteFilePath, templateData.html)
     } catch (e) {
       console.log(`\n>> Error while generating ${mfd.path}`.red)
       throw e

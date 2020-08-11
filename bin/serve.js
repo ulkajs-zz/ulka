@@ -71,8 +71,8 @@ const createServer = (req, res) => {
   }
 }
 
-const liveServer = async () => {
-  const port = await portfinder.getPortPromise({ port: 3000 })
+const liveServer = async (usersPort = 3000) => {
+  const port = await portfinder.getPortPromise({ port: usersPort })
 
   const server = http.createServer(createServer)
 
