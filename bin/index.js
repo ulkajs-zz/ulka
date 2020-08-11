@@ -26,11 +26,11 @@ program
   })
 
 program
-  .command('serve')
+  .command('serve [port]')
   .description('Creates live server and serve static sites')
-  .action(async () => {
+  .action(async port => {
     await build()
-    await serve()
+    await serve(port)
   })
 
 program
