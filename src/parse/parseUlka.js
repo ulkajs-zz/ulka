@@ -51,7 +51,7 @@ const parseWithPlugins = async (ulkaTemplate, values, options) => {
   for (let i = 0; i < beforeUlkaParse.length; i++) {
     const plugin = beforeUlkaParse[i]
 
-    const data = await plugin(ulkaTemplate, values) // => { ulkaTemplate, values }
+    const data = await plugin(ulkaTemplate, values, options) // => { ulkaTemplate, values }
 
     ulkaTemplate = data.ulkaTemplate
     values = { ...values, ...data.values }
