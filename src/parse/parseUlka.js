@@ -5,10 +5,13 @@ const generateFileName = require('../utils/generateName')
 const globalInfo = require('../index')
 
 const $assets = (rPath, filePath) => {
+  // Generate hash of required file
   const fileName = generateFileName(path.join(path.parse(filePath).dir, rPath))
 
+  // Check extension of required file
   const ext = path.parse(rPath).ext === '.ucss' ? '.css' : path.parse(rPath).ext
 
+  // Return hashed fileName path
   return path.join(path.sep, '__assets__', fileName) + ext
 }
 

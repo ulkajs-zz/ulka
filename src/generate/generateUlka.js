@@ -10,7 +10,7 @@ const dataFromPath = require('../utils/dataFromPath')
 const configs = globalInfo.configs
 
 async function generateFromUlka() {
-  // Get all files having .ulka extension
+  // Get all ulka files' path from pages path
   let files
   try {
     files = allFiles(absolutePath(`src/${configs.pagesPath}`), '.ulka')
@@ -19,7 +19,10 @@ async function generateFromUlka() {
     process.exit(0)
   }
 
-  // Get contents inside .ulka files and parse them
+  /**
+   * Get Data from filepath
+   * Prase data using parseUlka function
+   */
   const fileDatas = files.map(dataFromPath).map(fileData => ({
     ...fileData,
     data: parseUlka(fileData.data, { ...configs }, fileData.path),
@@ -30,33 +33,34 @@ async function generateFromUlka() {
     const ufd = fileDatas[i]
 
     try {
-      // For eg: \index.ulka or folder\file.ulka
-      const [, filePath] = ufd.path.split(path.join('src', configs.pagesPath))
+      // Get filepath eg: \index.ulka or folder\file.ulka
+      const filePath = ufd.path.split(path.join('src', configs.pagesPath))[1]
 
+      // Prase filepath
       const parsedPath = path.parse(filePath)
 
-      // For eg: build\folder
+      // filePath to create .html files eg: build\folder
       let createFilePath = configs.buildPath + parsedPath.dir
 
-      /*
-       * Check if the file name is indexIf not make a folder with filename
-       * and change filename to index
-       *
-       * For eg: blog.ulka => blog/index.html, index.ulka => index.html
-       */
+      // If name of file is not index, then create folder with fileName and change fileName to index
       if (parsedPath.name !== 'index') {
         createFilePath += '/' + parsedPath.name
         parsedPath.name = 'index'
       }
 
+      // Absolute Filepath to create html files
       const absoluteFilePath = absolutePath(
         `${createFilePath}/${parsedPath.name}.html`
       )
 
+      // Prased html data
       const html = (await ufd.data).html
-      await mkdir(createFilePath).then(_ =>
-        fs.writeFileSync(absoluteFilePath, html)
-      )
+
+      // Create folder to generate html files
+      await mkdir(createFilePath)
+
+      // Create html files
+      fs.writeFileSync(absoluteFilePath, html)
     } catch (e) {
       console.log(`>> Error while generating ${ufd.path}`.red)
       throw e

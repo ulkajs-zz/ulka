@@ -16,8 +16,13 @@ const markdownImageRender = markdown => {
 }
 
 const parseMd = async (markdown, filePath = process.cwd()) => {
+  // Parse fontmatter
   const data = frontmatter(markdown)
+
+  // parseMarkdown and markdown's image tag
   const toHtml = parseMarkdown(markdownImageRender(data.body))
+
+  // Prase ulka if any ulka syntax
   const ulkaPrase = await parseUlka(toHtml.trim(), globalInfo, filePath)
   return {
     frontMatter: data.attributes,
