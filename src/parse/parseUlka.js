@@ -1,9 +1,8 @@
 const fs = require('fs')
 const path = require('path')
-const { parse } = require('ulka-parser')
 const generateFileName = require('../utils/generateName')
 const globalInfo = require('../index')
-const { beforeUlkaParse, afterUlkaParse } = require('./parsePlugins')
+const parseUlkaWithPlugins = require('../utils/ulka-parser-util')
 
 const $assets = (rPath, filePath) => {
   // Generate hash of required file
@@ -40,31 +39,11 @@ const parseUlka = async (
   }
 
   return {
-    html: await parseWithPlugins(ulkaTemplate, values, {
+    html: await parseUlkaWithPlugins(ulkaTemplate, values, {
       base: path.parse(filePath).dir,
       logError: false
     })
   }
-}
-
-const parseWithPlugins = async (ulkaTemplate, values, options) => {
-  for (let i = 0; i < beforeUlkaParse.length; i++) {
-    const plugin = beforeUlkaParse[i]
-
-    const data = await plugin(ulkaTemplate, values, options) // => { ulkaTemplate, values }
-
-    ulkaTemplate = data.ulkaTemplate
-    values = { ...values, ...data.values }
-  }
-
-  ulkaTemplate = await parse(ulkaTemplate, values, options)
-
-  for (let i = 0; i < afterUlkaParse.length; i++) {
-    const plugin = afterUlkaParse[i]
-    ulkaTemplate = await plugin(ulkaTemplate, values, options) // => string (html)
-  }
-
-  return ulkaTemplate
 }
 
 module.exports = parseUlka
