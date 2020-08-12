@@ -2,6 +2,11 @@ const frontmatter = require('front-matter')
 
 const parseUlka = require('./parseUlka')
 const globalInfo = require('../globalInfo')
+const {
+  beforeMdParse,
+  afterMdParse,
+  frontMatterParse
+} = require('./parsePlugins')
 const parseMarkdownWithPlugins = require('../utils/md-parser-util')
 
 const markdownImageRender = markdown => {
@@ -14,9 +19,13 @@ const parseMd = async (markdown, filePath = process.cwd()) => {
   const data = frontmatter(markdown)
 
   // parseMarkdown and markdown's image tag
-  const { toHtml, prasedFrontMatter } = await parseMarkdownWithPlugins(
+  const {
+    toHtml,
+    prasedFrontMatter
+  } = await parseMarkdownWithPlugins(
     markdownImageRender(data.body),
-    data.attributes
+    data.attributes,
+    { beforeMdParse, afterMdParse, frontMatterParse }
   )
 
   // Prase ulka if any ulka syntax

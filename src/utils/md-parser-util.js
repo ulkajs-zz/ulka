@@ -1,17 +1,16 @@
 const { Remarkable } = require('remarkable')
 
 const globalInfo = require('../globalInfo')
-const {
-  beforeMdParse,
-  afterMdParse,
-  frontMatterParse
-} = require('../parse/parsePlugins')
 
 const md = new Remarkable({
   html: true
 })
 
-async function parseMarkdownWithPlugins(markdown, frontMatter) {
+async function parseMarkdownWithPlugins(
+  markdown,
+  frontMatter,
+  { beforeMdParse, afterMdParse, frontMatterParse }
+) {
   if (!globalInfo.configs.contents) return markdown
 
   // Use frontmatter parse plugins
