@@ -20,6 +20,7 @@ describe('build function: ', () => {
     const contentFiles = globalInfo.contentFiles.map(f => {
       delete f.createFilePath
       delete f.link
+      delete f.absoluteFilePath
       return f
     })
 
