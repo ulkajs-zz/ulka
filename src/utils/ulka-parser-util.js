@@ -1,7 +1,11 @@
-const { beforeUlkaParse, afterUlkaParse } = require('../parse/parsePlugins')
 const { parse } = require('ulka-parser')
 
-const parseUlkaWithPlugins = async (ulkaTemplate, values, options) => {
+const parseUlkaWithPlugins = async (
+  ulkaTemplate,
+  values,
+  options,
+  { beforeUlkaParse, afterUlkaParse }
+) => {
   for (let i = 0; i < beforeUlkaParse.length; i++) {
     const plugin = beforeUlkaParse[i]
 
