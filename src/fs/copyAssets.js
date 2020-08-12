@@ -5,7 +5,7 @@ const allFiles = require('./allFiles')
 const absolutePath = require('../utils/absolutePath')
 const generateFileName = require('../utils/generateName')
 const parseUlka = require('../parse/parseUlka')
-const globalInfo = require('..')
+const globalInfo = require('../globalInfo')
 
 const configs = globalInfo.configs
 

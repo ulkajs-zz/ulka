@@ -7,7 +7,7 @@ const build = require('./build')
 const serve = require('./serve')
 const { version } = require('../package.json')
 const create = require('./create')
-const globalInfo = require('../src')
+const globalInfo = require('../src/globalInfo')
 const { beforeBuild, afterBuild } = require('../src/parse/parsePlugins')
 
 program.version(version)

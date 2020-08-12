@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 
 const mkdir = require('../fs/mkdir')
-const globalInfo = require('../index')
+const globalInfo = require('../globalInfo')
 const allFiles = require('../fs/allFiles')
 const parseMd = require('../parse/parseMd')
 const parseUlka = require('../parse/parseUlka')

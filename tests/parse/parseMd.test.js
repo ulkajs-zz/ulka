@@ -1,5 +1,5 @@
 const parseMd = require('../../src/parse/parseMd')
-const { configs } = require('../../src')
+const { configs } = require('../../src/globalInfo')
 
 describe('on given markdown', () => {
   test('should return proper html', async () => {

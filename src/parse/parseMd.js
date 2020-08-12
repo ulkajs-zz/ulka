@@ -2,7 +2,7 @@ const frontmatter = require('front-matter')
 const { Remarkable } = require('remarkable')
 
 const parseUlka = require('./parseUlka')
-const globalInfo = require('..')
+const globalInfo = require('../globalInfo')
 
 const md = new Remarkable({
   html: true

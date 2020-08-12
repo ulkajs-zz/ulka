@@ -12,7 +12,7 @@ const build = require('./build')
 const mimeType = require('../src/utils/mimeTypes')
 const copyAssets = require('../src/fs/copyAssets')
 const removeDirectories = require('../src/fs/rmdir')
-const globalInfo = require('../src')
+const globalInfo = require('../src/globalInfo')
 const linePrint = require('../src/utils/linePrint')
 
 const configs = globalInfo.configs

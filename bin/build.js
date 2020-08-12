@@ -1,5 +1,5 @@
 const path = require('path')
-const globalInfo = require('../src')
+const globalInfo = require('../src/globalInfo')
 const copyAssets = require('../src/fs/copyAssets')
 const removeDirectories = require('../src/fs/rmdir')
 const generateFromMd = require('../src/generate/generateMd')

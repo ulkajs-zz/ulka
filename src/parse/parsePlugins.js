@@ -1,4 +1,4 @@
-const globalInfo = require('..')
+const globalInfo = require('../globalInfo')
 
 const plugins = globalInfo.configs.plugins
 

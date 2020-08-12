@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const generateFileName = require('../utils/generateName')
-const globalInfo = require('../index')
+const globalInfo = require('../globalInfo')
 const parseUlkaWithPlugins = require('../utils/ulka-parser-util')
 
 const $assets = (rPath, filePath) => {
