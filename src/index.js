@@ -1,11 +1,19 @@
 const globalInfo = require('./globalInfo')
-const parseUlka = require('./parse/parseUlka')
-const parseMd = require('./parse/parseMd')
-const copyAssets = require('./fs/copyAssets')
+const rmDir = require('./fs/rmdir')
+const mkdir = require('./fs/mkdir')
+const allFiles = require('./fs/allFiles')
+const dataFromPath = require('./utils/dataFromPath')
+const generateName = require('./utils/generateName')
 
 module.exports = {
   globalInfo,
-  parseUlka,
-  parseMd,
-  copyAssets
+  fs: {
+    rmDir,
+    mkdir,
+    allFiles
+  },
+  utils: {
+    dataFromPath,
+    generateName
+  }
 }

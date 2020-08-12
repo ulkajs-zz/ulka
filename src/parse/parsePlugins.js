@@ -1,9 +1,7 @@
 const globalInfo = require('../globalInfo')
 
-const plugins = globalInfo.configs.plugins
-
 function getPlugins(funcName) {
-  return plugins
+  return globalInfo.configs.plugins
     .filter(plugin => Object.prototype.hasOwnProperty.call(plugin, funcName))
     .map(plugin => plugin[funcName])
 }

@@ -9,7 +9,6 @@ const parseUlkaWithPlugins = async (ulkaTemplate, values, options) => {
 
     ulkaTemplate = data.ulkaTemplate || ulkaTemplate
     const newValues = data.values || {}
-
     values = { ...values, ...newValues }
   }
 
