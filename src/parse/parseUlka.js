@@ -1,8 +1,9 @@
 const fs = require('fs')
 const path = require('path')
-const { parse } = require('ulka-parser')
+const globalInfo = require('../globalInfo')
 const generateFileName = require('../utils/generateName')
-const globalInfo = require('../index')
+const parseUlkaWithPlugins = require('../utils/ulka-parser-util')
+const { beforeUlkaParse, afterUlkaParse } = require('./parsePlugins')
 
 const $assets = (rPath, filePath) => {
   // Generate hash of required file
@@ -39,10 +40,15 @@ const parseUlka = async (
   }
 
   return {
-    html: await parse(ulkaTemplate, values, {
-      base: path.parse(filePath).dir,
-      logError: false
-    })
+    html: await parseUlkaWithPlugins(
+      ulkaTemplate,
+      values,
+      {
+        base: path.parse(filePath).dir,
+        logError: false
+      },
+      { beforeUlkaParse, afterUlkaParse }
+    )
   }
 }
 

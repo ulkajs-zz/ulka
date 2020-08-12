@@ -7,6 +7,8 @@ const build = require('./build')
 const serve = require('./serve')
 const { version } = require('../package.json')
 const create = require('./create')
+const globalInfo = require('../src/globalInfo')
+const { beforeBuild, afterBuild } = require('../src/parse/parsePlugins')
 
 program.version(version)
 program
@@ -15,9 +17,19 @@ program
   .action(async () => {
     console.log('\n>> Building static files'.yellow)
 
+    for (let i = 0; i < beforeBuild.length; i++) {
+      const plugin = beforeBuild[i]
+      await plugin(globalInfo)
+    }
+
     const startBuild = new Date().getTime()
     await build()
     const finishBuild = new Date().getTime()
+
+    for (let i = 0; i < afterBuild.length; i++) {
+      const plugin = afterBuild[i]
+      await plugin(globalInfo)
+    }
 
     console.log(
       `>> Build finished in`.yellow,

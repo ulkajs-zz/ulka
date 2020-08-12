@@ -2,7 +2,7 @@ require('colors')
 const fs = require('fs')
 const build = require('../bin/build')
 const absolutePath = require('../src/utils/absolutePath')
-const globalInfo = require('../src')
+const globalInfo = require('../src/globalInfo')
 
 const curDir = process.cwd()
 

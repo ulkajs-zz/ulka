@@ -2,8 +2,8 @@ const fs = require('fs')
 const path = require('path')
 
 const mkdir = require('../fs/mkdir')
-const globalInfo = require('../index')
 const allFiles = require('../fs/allFiles')
+const globalInfo = require('../globalInfo')
 const parseMd = require('../parse/parseMd')
 const parseUlka = require('../parse/parseUlka')
 const absolutePath = require('../utils/absolutePath')
@@ -11,38 +11,40 @@ const dataFromPath = require('../utils/dataFromPath')
 
 const configs = globalInfo.configs
 
-async function generateFromMd() {
-  // Get all markdown files' path from contents path
-  let files
+const getAllMdFilesData = contentsPath => {
   try {
-    files = allFiles(absolutePath(`src/${configs.contents.path}`), '.md')
+    return allFiles(absolutePath(`src/${contentsPath}`), '.md')
+      .map(dataFromPath)
+      .map(fileData => ({
+        ...fileData,
+        data: parseMd(fileData.data, fileData.path),
+        relativePath: path.relative(process.cwd(), fileData.path)
+      }))
   } catch (e) {
     console.log(`\n>> ${e.message}`.red)
     process.exit(0)
   }
+}
 
-  /**
-   * Get Data from filepath
-   * Prase data using parseMd function
-   */
-  const fileDatas = files.map(dataFromPath).map(fileData => ({
-    ...fileData,
-    data: parseMd(fileData.data, fileData.path),
-    relativePath: path.relative(process.cwd(), fileData.path)
-  }))
+async function generateFromMd(ctDir, ctIndex) {
+  const contentsDir = ctDir || configs.contents
+
+  // Get all md files data from contentspath
+  const fileDatas = getAllMdFilesData(contentsDir.path)
+
+  if (ctIndex !== undefined) globalInfo.contentFiles[ctIndex] = []
 
   for (let i = 0; i < fileDatas.length; i++) {
     const mfd = fileDatas[i]
 
     // Get filepath eg: \index.md, \post-1\index.md
-    const filePath = mfd.path.split(path.join('src', configs.contents.path))[1]
+    const filePath = mfd.path.split(path.join('src', contentsDir.path))[1]
 
-    // Prase filepath
     const parsedPath = path.parse(filePath)
 
     // filePath to create .html files
     let createFilePath =
-      configs.buildPath + '/' + configs.contents.generatePath + parsedPath.dir
+      configs.buildPath + '/' + contentsDir.generatePath + parsedPath.dir
 
     // If name of file is not index, then create folder with fileName and change fileName to index
     if (parsedPath.name !== 'index') {
@@ -52,6 +54,7 @@ async function generateFromMd() {
 
     // Data after parsing markdown
     const mfdData = await mfd.data
+
     // Url link to the file
     const link = createFilePath.split(configs.buildPath)[1]
 
@@ -60,14 +63,20 @@ async function generateFromMd() {
       `${createFilePath}/${parsedPath.name}.html`
     )
 
-    // Push parsed datas info globalInfo
-    globalInfo.contentFiles.push({
+    const contentData = {
       html: mfdData.html,
       frontMatter: mfdData.frontMatter,
       link: path.join(link, ''),
       createFilePath,
-      absoluteFilePath
-    })
+      absoluteFilePath,
+      contentsName: contentsDir.name || contentsDir.path
+    }
+
+    if (ctIndex !== undefined) {
+      globalInfo.contentFiles[ctIndex].push(contentData)
+    } else {
+      globalInfo.contentFiles.push(contentData)
+    }
   }
 
   for (let i = 0; i < fileDatas.length; i++) {
@@ -76,13 +85,19 @@ async function generateFromMd() {
     try {
       // Path to the template of markdown files
       const markdownTemplatePath = absolutePath(
-        `src/${configs.templatesPath}/${configs.contents.template}`
+        `src/${configs.templatesPath}/${contentsDir.template}`
       )
       // Templatefile data
       const templateUlkaData = fs.readFileSync(markdownTemplatePath, 'utf-8')
 
       // Previosly parsed data that was pushed to globalInfo
-      const mfdData = globalInfo.contentFiles[i]
+      let mfdData
+
+      if (ctIndex !== undefined) {
+        mfdData = globalInfo.contentFiles[ctIndex][i]
+      } else {
+        mfdData = globalInfo.contentFiles[i]
+      }
 
       // Prase template ulka file with the value of parsed markdown
       const templateData = await parseUlka(
@@ -96,7 +111,11 @@ async function generateFromMd() {
       )
 
       // Rewrite html to the parsed html from templates
-      globalInfo.contentFiles[i].html = templateData.html
+      if (ctIndex !== undefined) {
+        globalInfo.contentFiles[ctIndex][i].html = templateData.html
+      } else {
+        globalInfo.contentFiles[i].html = templateData.html
+      }
 
       // Create folder to generate html file
       await mkdir(mfdData.createFilePath)

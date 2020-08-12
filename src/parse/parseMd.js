@@ -1,13 +1,13 @@
 const frontmatter = require('front-matter')
-const { Remarkable } = require('remarkable')
 
-const configs = require('./parseConfig')
 const parseUlka = require('./parseUlka')
-const globalInfo = require('..')
-
-const md = new Remarkable({
-  html: true
-})
+const globalInfo = require('../globalInfo')
+const {
+  beforeMdParse,
+  afterMdParse,
+  frontMatterParse
+} = require('./parsePlugins')
+const parseMarkdownWithPlugins = require('../utils/md-parser-util')
 
 const markdownImageRender = markdown => {
   return markdown.replace(/!\[(.*?)\]\((.*?)\)/, (...args) => {
@@ -16,37 +16,25 @@ const markdownImageRender = markdown => {
 }
 
 const parseMd = async (markdown, filePath = process.cwd()) => {
-  // Parse fontmatter
   const data = frontmatter(markdown)
 
   // parseMarkdown and markdown's image tag
-  const toHtml = parseMarkdown(markdownImageRender(data.body))
+  const {
+    toHtml,
+    prasedFrontMatter
+  } = await parseMarkdownWithPlugins(
+    markdownImageRender(data.body),
+    data.attributes,
+    { beforeMdParse, afterMdParse, frontMatterParse }
+  )
 
   // Prase ulka if any ulka syntax
   const ulkaPrase = await parseUlka(toHtml.trim(), globalInfo, filePath)
+
   return {
-    frontMatter: data.attributes,
+    frontMatter: prasedFrontMatter,
     html: ulkaPrase.html
   }
-}
-
-function parseMarkdown(markdown) {
-  if (!configs.contents) return markdown
-
-  const beforeParse = configs.contents.preParse || []
-  const afterParse = configs.contents.postParse || []
-
-  beforeParse.forEach(plugins => {
-    markdown = plugins(markdown)
-  })
-
-  let toHtml = md.render(markdown)
-
-  afterParse.forEach(plugins => {
-    toHtml = plugins(toHtml)
-  })
-
-  return toHtml
 }
 
 module.exports = parseMd

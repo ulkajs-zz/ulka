@@ -21,20 +21,17 @@ const defaultConfigs = {
   buildPath: 'build',
   pagesPath: 'pages',
   templatesPath: 'templates',
+  plugins: [],
   contents: {
     path: 'contents',
     generatePath: 'blog',
     template: 'blog.ulka',
-    /**
-     * You may not need this preparse and postparse feature but
-     * if you, pass function to these arrays.
-     * function takes one arg which is markdown for preparse and html for postparse
-     * and function should return the value after changing the markdown or html
-     */
-    // Pre parse run before parsing markdown to html
+    // Array of functions that takes markdown as arg and returns markdown
     preParse: [],
-    // post parse runs after parsing markdown to html
-    postParse: []
+    // Array of functions that takes html as arg and return html
+    postParse: [],
+    // Array of functions that takes frontmatter as arg and return frontMatter
+    parseFrontMatter: []
   }
 }
 

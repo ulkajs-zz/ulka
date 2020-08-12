@@ -8,6 +8,4 @@ const createDirectories = async pathname => {
   })
 }
 
-createDirectories('src/pages')
-
 module.exports = createDirectories

@@ -5,12 +5,14 @@ Object {
   "buildPath": "build",
   "contents": Object {
     "generatePath": "blog",
+    "parseFrontMatter": Array [],
     "path": "contents",
     "postParse": Array [],
     "preParse": Array [],
     "template": "blog.ulka",
   },
   "pagesPath": "pages",
+  "plugins": Array [],
   "siteMetaData": Object {
     "desription": "UlkaJs - static site generator",
     "title": "Ulka.Js",
