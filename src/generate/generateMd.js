@@ -11,20 +11,22 @@ const dataFromPath = require('../utils/dataFromPath')
 
 const configs = globalInfo.configs
 
-async function generateFromMd() {
-  // Get all markdown files' path from contents path
-  let files
+const getAllMdFiles = contentsPath => {
   try {
-    files = allFiles(absolutePath(`src/${configs.contents.path}`), '.md')
+    return allFiles(absolutePath(`src/${contentsPath}`), '.md')
   } catch (e) {
     console.log(`\n>> ${e.message}`.red)
     process.exit(0)
   }
+}
 
-  /**
-   * Get Data from filepath
-   * Prase data using parseMd function
-   */
+async function generateFromMd() {
+  const contentsPath = configs.contents
+
+  // Get all markdown files' path from src/contents path
+  const files = getAllMdFiles(contentsPath.path)
+
+  // Get data from filepath and parse using parseMd
   const fileDatas = files.map(dataFromPath).map(fileData => ({
     ...fileData,
     data: parseMd(fileData.data, fileData.path),
@@ -35,14 +37,14 @@ async function generateFromMd() {
     const mfd = fileDatas[i]
 
     // Get filepath eg: \index.md, \post-1\index.md
-    const filePath = mfd.path.split(path.join('src', configs.contents.path))[1]
+    const filePath = mfd.path.split(path.join('src', contentsPath.path))[1]
 
     // Prase filepath
     const parsedPath = path.parse(filePath)
 
     // filePath to create .html files
     let createFilePath =
-      configs.buildPath + '/' + configs.contents.generatePath + parsedPath.dir
+      configs.buildPath + '/' + contentsPath.generatePath + parsedPath.dir
 
     // If name of file is not index, then create folder with fileName and change fileName to index
     if (parsedPath.name !== 'index') {
@@ -76,7 +78,7 @@ async function generateFromMd() {
     try {
       // Path to the template of markdown files
       const markdownTemplatePath = absolutePath(
-        `src/${configs.templatesPath}/${configs.contents.template}`
+        `src/${configs.templatesPath}/${contentsPath.template}`
       )
       // Templatefile data
       const templateUlkaData = fs.readFileSync(markdownTemplatePath, 'utf-8')
