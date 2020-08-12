@@ -14,21 +14,25 @@ const md = new Remarkable({
 async function parseMarkdownWithPlugins(markdown, frontMatter) {
   if (!globalInfo.configs.contents) return markdown
 
-  for (let i = 0; i < beforeMdParse.length; i++) {
-    const plugin = beforeMdParse[i]
-    markdown = await plugin(markdown)
-  }
-
-  let toHtml = md.render(markdown)
-
-  for (let i = 0; i < afterMdParse.length; i++) {
-    const plugin = afterMdParse[i]
-    toHtml = await plugin(toHtml)
-  }
-
+  // Use frontmatter parse plugins
   for (let i = 0; i < frontMatterParse.length; i++) {
     const plugin = frontMatterParse[i]
-    frontMatter = plugin(frontMatter)
+    frontMatter = (await plugin(frontMatter)) || frontMatter
+  }
+
+  // Use before markdown parse plugins
+  for (let i = 0; i < beforeMdParse.length; i++) {
+    const plugin = beforeMdParse[i]
+    markdown = (await plugin(markdown)) || markdown
+  }
+
+  // Parse markdown to html
+  let toHtml = md.render(markdown)
+
+  // Use after markdown parse plugins
+  for (let i = 0; i < afterMdParse.length; i++) {
+    const plugin = afterMdParse[i]
+    toHtml = (await plugin(toHtml)) || toHtml
   }
 
   return {
