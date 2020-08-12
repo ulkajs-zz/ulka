@@ -14,7 +14,18 @@ async function build() {
       globalInfo.configs.buildPath
     )
     console.log('>> Generating from markdown files'.green)
-    await generateFromMd()
+
+    const contentsIsArray = Array.isArray(globalInfo.configs.contents)
+
+    if (contentsIsArray) {
+      for (let i = 0; i < globalInfo.configs.contents.length; i++) {
+        const contentsDir = globalInfo.configs.contents[i]
+        await generateFromMd(contentsDir, i)
+      }
+    } else {
+      await generateFromMd(globalInfo.configs.contents)
+    }
+
     console.log('>> Generating from ulka files'.green)
     await generateFromUlka()
   } catch (e) {
