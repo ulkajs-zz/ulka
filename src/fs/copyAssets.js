@@ -1,12 +1,13 @@
 const fs = require('fs')
 const path = require('path')
 const mkdir = require('./mkdir')
-const configs = require('../parse/parseConfig')
 const allFiles = require('./allFiles')
 const absolutePath = require('../utils/absolutePath')
 const generateFileName = require('../utils/generateName')
 const parseUlka = require('../parse/parseUlka')
 const globalInfo = require('..')
+
+const configs = globalInfo.configs
 
 const parseUrlPath = (css, f) => {
   return css.replace(/ url\((.*?)\)/gs, (...args) => {

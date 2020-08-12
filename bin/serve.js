@@ -9,12 +9,13 @@ const portfinder = require('portfinder')
 const betterOpen = require('better-opn')
 
 const build = require('./build')
-const configs = require('../src/parse/parseConfig')
 const mimeType = require('../src/utils/mimeTypes')
 const copyAssets = require('../src/fs/copyAssets')
 const removeDirectories = require('../src/fs/rmdir')
 const globalInfo = require('../src')
 const linePrint = require('../src/utils/linePrint')
+
+const configs = globalInfo.configs
 
 const createServer = (req, res) => {
   try {

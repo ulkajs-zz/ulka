@@ -1,13 +1,14 @@
 const frontmatter = require('front-matter')
 const { Remarkable } = require('remarkable')
 
-const configs = require('./parseConfig')
 const parseUlka = require('./parseUlka')
 const globalInfo = require('..')
 
 const md = new Remarkable({
   html: true
 })
+
+const configs = globalInfo.configs
 
 const markdownImageRender = markdown => {
   return markdown.replace(/!\[(.*?)\]\((.*?)\)/, (...args) => {
