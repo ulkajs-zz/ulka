@@ -2,6 +2,7 @@ const globalInfo = require('../globalInfo')
 
 function getPlugins(funcName) {
   return globalInfo.configs.plugins
+    .map(plugin => (typeof plugin === 'string' ? require(plugin) : plugin))
     .filter(plugin => Object.prototype.hasOwnProperty.call(plugin, funcName))
     .map(plugin => plugin[funcName])
 }
