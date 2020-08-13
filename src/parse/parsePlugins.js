@@ -16,13 +16,13 @@ const afterMdParse = getPlugins('afterMdParse')
 const beforeBuild = getPlugins('beforeBuild')
 const afterBuild = getPlugins('afterBuild')
 
-const frontMatterParse = getPlugins('frontMatterParse')
+const remarkPlugins = getPlugins('remarkablePlugins')
 
 module.exports = {
-  frontMatterParse,
   beforeUlkaParse,
   afterUlkaParse,
   beforeMdParse,
+  remarkPlugins,
   afterMdParse,
   beforeBuild,
   afterBuild
