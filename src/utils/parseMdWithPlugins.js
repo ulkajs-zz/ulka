@@ -14,7 +14,7 @@ async function parseMarkdownWithPlugins(
   if (!globalInfo.configs.contents) return markdown
 
   for (let i = 0; i < remarkPlugins.length; i++) {
-    const { plugin, options } = remarkPlugins[i]
+    const { plugin, options } = remarkPlugins[i]()
     md.use(plugin, options)
   }
 

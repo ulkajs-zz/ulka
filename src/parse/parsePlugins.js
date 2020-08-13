@@ -16,7 +16,7 @@ const afterMdParse = getPlugins('afterMdParse')
 const beforeBuild = getPlugins('beforeBuild')
 const afterBuild = getPlugins('afterBuild')
 
-const remarkPlugins = getPlugins('remarkablePlugins')
+const remarkPlugins = getPlugins('remarkablePlugin')
 
 module.exports = {
   beforeUlkaParse,
