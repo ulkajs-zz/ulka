@@ -68,6 +68,11 @@ async function buildFromUlka(ufd) {
   // Create folder to generate html files
   await mkdir(createFilePath)
 
+  globalInfo.pagesFiles.push({
+    html,
+    createFilePath
+  })
+
   // Create html files
   fs.writeFileSync(absoluteFilePath, html)
 }
