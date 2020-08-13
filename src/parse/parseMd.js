@@ -2,12 +2,8 @@ const frontmatter = require('front-matter')
 
 const parseUlka = require('./parseUlka')
 const globalInfo = require('../globalInfo')
-const {
-  beforeMdParse,
-  afterMdParse,
-  frontMatterParse
-} = require('./parsePlugins')
-const parseMarkdownWithPlugins = require('../utils/md-parser-util')
+const { beforeMdParse, afterMdParse, remarkPlugins } = require('./parsePlugins')
+const parseMarkdownWithPlugins = require('../utils/parseMdWithPlugins')
 
 const markdownImageRender = markdown => {
   return markdown.replace(/!\[(.*?)\]\((.*?)\)/, (...args) => {
@@ -18,14 +14,12 @@ const markdownImageRender = markdown => {
 const parseMd = async (markdown, filePath = process.cwd()) => {
   const data = frontmatter(markdown)
 
-  // parseMarkdown and markdown's image tag
-  const {
-    toHtml,
-    prasedFrontMatter
-  } = await parseMarkdownWithPlugins(
-    markdownImageRender(data.body),
+  markdown = markdownImageRender(data.body)
+
+  const { toHtml, prasedFrontMatter } = await parseMarkdownWithPlugins(
+    markdown,
     data.attributes,
-    { beforeMdParse, afterMdParse, frontMatterParse }
+    { beforeMdParse, afterMdParse, remarkPlugins }
   )
 
   // Prase ulka if any ulka syntax

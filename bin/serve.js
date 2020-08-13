@@ -14,6 +14,8 @@ const copyAssets = require('../src/fs/copyAssets')
 const removeDirectories = require('../src/fs/rmdir')
 const globalInfo = require('../src/globalInfo')
 const linePrint = require('../src/utils/linePrint')
+const generateFromUlka = require('../src/generate/generateUlka')
+const generateFromMd = require('../src/generate/generateMd')
 
 const configs = globalInfo.configs
 
@@ -114,7 +116,12 @@ const liveServer = async (usersPort = 3000) => {
       await copyAssets()
       if (socket) socket.send('refresh-css')
     } else {
-      await build()
+      if (ext === '.ulka' && !p.includes(globalInfo.configs.templatesPath)) {
+        console.log('>> Generating from ulka files'.green)
+        await generateFromUlka()
+      } else if (ext === '.md') {
+        await build()
+      }
       if (socket) socket.send('reload-page')
     }
 

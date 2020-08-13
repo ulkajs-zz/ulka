@@ -1,21 +1,25 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs')
+const path = require('path')
 
 const allFiles = function (dirPath, ext, arrayOfFiles) {
-  const files = fs.readdirSync(dirPath);
+  if (!fs.statSync(dirPath).isDirectory()) {
+    return [dirPath]
+  }
 
-  arrayOfFiles = arrayOfFiles || [];
+  const files = fs.readdirSync(dirPath)
 
-  files.forEach((file) => {
-    const pathTo = path.join(dirPath, file);
+  arrayOfFiles = arrayOfFiles || []
+
+  files.forEach(file => {
+    const pathTo = path.join(dirPath, file)
     if (fs.statSync(pathTo).isDirectory()) {
-      arrayOfFiles = allFiles(pathTo, ext, arrayOfFiles);
+      arrayOfFiles = allFiles(pathTo, ext, arrayOfFiles)
     } else {
-      if (!ext || file.endsWith(ext)) arrayOfFiles.push(pathTo);
+      if (!ext || file.endsWith(ext)) arrayOfFiles.push(pathTo)
     }
-  });
+  })
 
-  return arrayOfFiles;
-};
+  return arrayOfFiles
+}
 
-module.exports = allFiles;
+module.exports = allFiles

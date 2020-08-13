@@ -9,20 +9,22 @@ const md = new Remarkable({
 async function parseMarkdownWithPlugins(
   markdown,
   frontMatter,
-  { beforeMdParse, afterMdParse, frontMatterParse }
+  { beforeMdParse, afterMdParse, remarkPlugins }
 ) {
   if (!globalInfo.configs.contents) return markdown
 
-  // Use frontmatter parse plugins
-  for (let i = 0; i < frontMatterParse.length; i++) {
-    const plugin = frontMatterParse[i]
-    frontMatter = (await plugin(frontMatter)) || frontMatter
+  for (let i = 0; i < remarkPlugins.length; i++) {
+    const { plugin, options } = remarkPlugins[i]()
+    md.use(plugin, options)
   }
 
   // Use before markdown parse plugins
   for (let i = 0; i < beforeMdParse.length; i++) {
     const plugin = beforeMdParse[i]
-    markdown = (await plugin(markdown)) || markdown
+    const parsedMd = await plugin(markdown, frontMatter)
+
+    markdown = parsedMd.markdown || markdown
+    frontMatter = parsedMd.frontMatter || frontMatter
   }
 
   // Parse markdown to html
@@ -31,7 +33,10 @@ async function parseMarkdownWithPlugins(
   // Use after markdown parse plugins
   for (let i = 0; i < afterMdParse.length; i++) {
     const plugin = afterMdParse[i]
-    toHtml = (await plugin(toHtml)) || toHtml
+    const parsedHtml = await plugin(toHtml, frontMatter)
+    frontMatter = parsedHtml.frontMatter || frontMatter
+    toHtml = parsedHtml.toHtml || toHtml
+    frontMatter = parsedHtml.frontMatter || frontMatter
   }
 
   return {

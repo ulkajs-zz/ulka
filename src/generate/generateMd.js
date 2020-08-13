@@ -13,7 +13,7 @@ const configs = globalInfo.configs
 
 const getAllMdFilesData = contentsPath => {
   try {
-    return allFiles(absolutePath(`src/${contentsPath}`), '.md')
+    return allFiles(contentsPath, '.md')
       .map(dataFromPath)
       .map(fileData => ({
         ...fileData,
@@ -30,7 +30,7 @@ async function generateFromMd(ctDir, ctIndex) {
   const contentsDir = ctDir || configs.contents
 
   // Get all md files data from contentspath
-  const fileDatas = getAllMdFilesData(contentsDir.path)
+  const fileDatas = getAllMdFilesData(absolutePath(`src/${contentsDir.path}`))
 
   if (ctIndex !== undefined) globalInfo.contentFiles[ctIndex] = []
 
