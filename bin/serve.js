@@ -119,7 +119,7 @@ const liveServer = async (usersPort = 3000) => {
       if (ext === '.ulka' && !p.includes(globalInfo.configs.templatesPath)) {
         console.log('>> Generating from ulka files'.green)
         await generateFromUlka()
-      } else if (ext === '.md') {
+      } else {
         await build()
       }
       if (socket) socket.send('reload-page')
