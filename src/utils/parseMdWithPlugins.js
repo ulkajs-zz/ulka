@@ -9,9 +9,14 @@ const md = new Remarkable({
 async function parseMarkdownWithPlugins(
   markdown,
   frontMatter,
-  { beforeMdParse, afterMdParse }
+  { beforeMdParse, afterMdParse, remarkPlugins }
 ) {
   if (!globalInfo.configs.contents) return markdown
+
+  for (let i = 0; i < remarkPlugins.length; i++) {
+    const { plugin, options } = remarkPlugins[i]
+    md.use(plugin, options)
+  }
 
   // Use before markdown parse plugins
   for (let i = 0; i < beforeMdParse.length; i++) {
