@@ -3,18 +3,23 @@ const globalInfo = require('../globalInfo')
 function getPlugins(funcName) {
   return globalInfo.configs.plugins
     .map(plugin => {
-      if (typeof plugin === 'object' && plugin.resolve === 'string') {
-        plugin = () => plugin(plugin.options || {})
-      }
-
-      if (typeof plugin === 'string') {
-        return require(plugin)
+      if (typeof plugin === 'object' && typeof plugin.resolve === 'string') {
+        console.log(plugin)
+        return {
+          plugin: require(plugin.resolve),
+          options: plugin.options
+        }
+      } else if (typeof plugin === 'string') {
+        return { plugin: require(plugin) }
       } else if (typeof plugin === 'function') {
-        return plugin
+        return { plugin }
       }
     })
-    .filter(plugin => Object.prototype.hasOwnProperty.call(plugin, funcName))
-    .map(plugin => plugin[funcName])
+    .filter(
+      plugin =>
+        plugin && Object.prototype.hasOwnProperty.call(plugin.plugin, funcName)
+    )
+    .map(plugin => (...args) => plugin[funcName](...args, plugin.options))
 }
 
 const beforeUlkaParse = getPlugins('beforeUlkaParse')
