@@ -4,7 +4,6 @@ function getPlugins(funcName) {
   return globalInfo.configs.plugins
     .map(plugin => {
       if (typeof plugin === 'object' && typeof plugin.resolve === 'string') {
-        console.log(plugin)
         return {
           plugin: require(plugin.resolve),
           options: plugin.options
