@@ -70,7 +70,8 @@ async function buildFromUlka(ufd) {
 
   globalInfo.pagesFiles.push({
     html,
-    createFilePath
+    createFilePath,
+    absolutePath
   })
 
   // Create html files
