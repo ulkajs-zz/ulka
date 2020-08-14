@@ -11,7 +11,7 @@ function getPlugins(funcName) {
       } else if (typeof plugin === 'string') {
         return { plugin: require(plugin) }
       } else if (typeof plugin === 'function') {
-        return { plugin }
+        return { plugin: plugin() }
       }
     })
     .filter(
