@@ -16,10 +16,13 @@ function getPlugins(funcName) {
       }
     })
     .filter(
-      plugin =>
-        plugin && Object.prototype.hasOwnProperty.call(plugin.plugin, funcName)
+      pluginObj =>
+        pluginObj &&
+        Object.prototype.hasOwnProperty.call(pluginObj.plugin, funcName)
     )
-    .map(plugin => (...args) => plugin[funcName](...args, plugin.options))
+    .map(pluginObject => (...args) =>
+      pluginObject.plugin[funcName](...args, pluginObject.options)
+    )
 }
 
 const beforeUlkaParse = getPlugins('beforeUlkaParse')
