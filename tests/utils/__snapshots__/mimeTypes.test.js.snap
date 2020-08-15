@@ -16,6 +16,7 @@ Object {
   ".svg": "image/svg+xml",
   ".ttf": "application/x-font-ttf",
   ".wav": "audio/wav",
+  ".xml": "application/xml",
   ".zip": "application/zip",
 }
 `;
