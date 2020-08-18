@@ -1,17 +1,20 @@
 {
   "name": "ulka",
-  "version": "0.4.1-rc.11",
+  "version": "0.4.1-rc.12",
   "description": "Ulka - static site generator",
-  "main": "./src/index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "bin": {
-    "ulka": "bin/index.js"
+    "ulka": "./dist/bin/index.js"
   },
   "scripts": {
     "test": "jest",
+    "build": "tsc",
     "eslint": "eslint .",
-    "prettier": "prettier --write \"**/*.js\"",
+    "prettier": "prettier \"**/*.ts\"",
+    "prettier:write": "prettier --write \"**/*.ts\"",
     "lint-staged": "lint-staged",
-    "prepublishOnly": "npm run eslint && npm run test"
+    "prepublishOnly": "npm run build && npm run eslint && npm run test"
   },
   "repository": {
     "type": "git",
@@ -31,10 +34,14 @@
     "front-matter": "^4.0.2",
     "portfinder": "^1.0.27",
     "remarkable": "^2.0.1",
-    "ulka-parser": "^0.2.9",
+    "ulka-parser": "^0.2.10-rc.4",
     "ws": "^7.3.1"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.10",
+    "@types/node": "^14.6.0",
+    "@types/remarkable": "^1.7.4",
+    "@types/ws": "^7.2.6",
     "eslint": "^7.4.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^14.1.1",
@@ -46,10 +53,12 @@
     "husky": "^4.2.5",
     "jest": "^26.2.2",
     "lint-staged": "^10.2.11",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "ts-jest": "^26.2.0",
+    "typescript": "^3.9.7"
   },
   "lint-staged": {
-    "*.{js}": "eslint --cache --fix"
+    "*.{ts}": "eslint --cache --fix"
   },
   "husky": {
     "hooks": {
