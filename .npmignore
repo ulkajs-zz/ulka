@@ -1,5 +1,8 @@
 /tests
+/src
+/.github
 .prettierrc
 .prettierignore
 .eslintignore
 .eslintrc.js
+jest.config.js
