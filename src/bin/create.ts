@@ -1,22 +1,22 @@
-const path = require('path')
-const { execSync } = require('child_process')
-const fs = require('fs')
+import path from "path"
+import { execSync } from "child_process"
+import fs from "fs"
 
 const create = async (
   projectName: string,
-  template = 'https://www.github.com/ulkajs/ulka-starter-default.git'
+  template = "https://www.github.com/ulkajs/ulka-starter-default.git"
 ) => {
   try {
     execSync(`git clone ${template} ${projectName}`, {
       stdio: [0, 1, 2]
     })
 
-    console.log('\n>> Installing dependencies... \n'.green)
+    console.log("\n>> Installing dependencies... \n".green)
     execSync(`cd ${projectName} && npm install`, {
       stdio: [0, 1, 2]
     })
 
-    await fs.promises.rmdir(path.join(projectName, '.git'), {
+    await fs.promises.rmdir(path.join(projectName, ".git"), {
       recursive: true
     })
 

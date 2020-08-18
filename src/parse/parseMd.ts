@@ -1,10 +1,10 @@
-import frontmatter from 'front-matter'
+import frontmatter from "front-matter"
 
-import parseUlka from './parseUlka'
-import globalInfo from '../globalInfo'
+import parseUlka from "./parseUlka"
+import globalInfo from "../globalInfo"
 
-import { beforeMdParse, afterMdParse, remarkPlugins } from './parsePlugins'
-import parseMarkdownWithPlugins from '../utils/parseMdWithPlugins'
+import { beforeMdParse, afterMdParse, remarkPlugins } from "./parsePlugins"
+import parseMarkdownWithPlugins from "../utils/parseMdWithPlugins"
 
 const markdownImageRender = (markdown: string) => {
   return markdown.replace(/!\[(.*?)\]\((.*?)\)/, (...args) => {

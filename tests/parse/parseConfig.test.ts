@@ -1,7 +1,7 @@
-import configs from '../../src/parse/parseConfig'
+import configs from "../../src/parse/parseConfig"
 
-describe('PraseConfigs', () => {
-  test('returns default configs', () => {
+describe("PraseConfigs", () => {
+  test("returns default configs", () => {
     expect(configs).toMatchSnapshot()
   })
 })

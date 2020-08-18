@@ -1,8 +1,8 @@
-import fs from 'fs'
+import fs from "fs"
 
 const dataFromPath = (path: string) => {
   return {
-    data: fs.readFileSync(path, 'utf-8'),
+    data: fs.readFileSync(path, "utf-8"),
     path
   }
 }
