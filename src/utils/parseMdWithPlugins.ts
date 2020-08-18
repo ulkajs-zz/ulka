@@ -1,7 +1,7 @@
 // @ts-ignore
-import { Remarkable } from 'remarkable'
+import { Remarkable } from "remarkable"
 
-import globalInfo from '../globalInfo'
+import globalInfo from "../globalInfo"
 
 const md = new Remarkable({
   html: true

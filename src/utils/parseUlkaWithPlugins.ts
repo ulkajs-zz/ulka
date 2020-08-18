@@ -1,4 +1,4 @@
-import { parse } from 'ulka-parser'
+import { parse } from "ulka-parser"
 
 const parseUlkaWithPlugins = async (
   ulkaTemplate: string,
