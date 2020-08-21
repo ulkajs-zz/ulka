@@ -29,7 +29,7 @@ const $importUlka = async (rPath: string, values: any, filePath: string) => {
 }
 
 const parseUlka = async (
-  ulkaTemplate: string | Buffer,
+  ulkaTemplate: string,
   values = {},
   filePath = process.cwd()
 ) => {

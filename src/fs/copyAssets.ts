@@ -41,12 +41,12 @@ const copyAssets = async (
       if (assetExt === ".css") {
         readAssetsFile = (
           await parseUlka(
-            fs.readFileSync(path.format(f)),
+            fs.readFileSync(path.format(f), "utf-8"),
             globalInfo,
             writePath
           )
         ).html
-        readAssetsFile = parseUrlPath(readAssetsFile as string, f.dir)
+        readAssetsFile = parseUrlPath(readAssetsFile, f.dir)
       } else {
         readAssetsFile = fs.readFileSync(path.format(f))
       }

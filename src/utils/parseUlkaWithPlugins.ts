@@ -1,7 +1,7 @@
 import { parse } from "ulka-parser"
 
 const parseUlkaWithPlugins = async (
-  ulkaTemplate: string | Buffer,
+  ulkaTemplate: string,
   values: any,
   options: any,
   {
