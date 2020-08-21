@@ -1,7 +1,7 @@
 import { parse } from "ulka-parser"
 
 const parseUlkaWithPlugins = async (
-  ulkaTemplate: string,
+  ulkaTemplate: string | Buffer,
   values: any,
   options: any,
   {
@@ -19,7 +19,7 @@ const parseUlkaWithPlugins = async (
     values = { ...values, ...newValues }
   }
 
-  ulkaTemplate = await parse(ulkaTemplate, values, options)
+  ulkaTemplate = await parse(ulkaTemplate as string, values, options)
 
   for (let i = 0; i < afterUlkaParse.length; i++) {
     const plugin = afterUlkaParse[i]
