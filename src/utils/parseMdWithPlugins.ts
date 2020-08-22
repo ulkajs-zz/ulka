@@ -1,11 +1,17 @@
 // @ts-ignore
-import { Remarkable } from "remarkable"
+import unified from "unified"
+import remarkParse from "remark-parse"
+import remark2rehype from "remark-rehype"
+import stringify from "rehype-stringify"
+// import hastUtilRaw from "hast-util-raw"
 
 import globalInfo from "../globalInfo"
 
-const md = new Remarkable({
-  html: true
-})
+const processor = unified()
+  .use(remarkParse, { commonmark: true })
+  .use(remark2rehype, { allowDangerousHtml: true })
+  // .use(() => hastUtilRaw)
+  .use(stringify, { allowDangerousHtml: true, allowDangerousCharacters: true })
 
 async function parseMarkdownWithPlugins(
   markdown: string,
@@ -24,7 +30,7 @@ async function parseMarkdownWithPlugins(
 
   for (let i = 0; i < remarkPlugins.length; i++) {
     const { plugin, options } = remarkPlugins[i]()
-    md.use(plugin, options)
+    processor.use(plugin, options)
   }
 
   // Use before markdown parse plugins
@@ -37,7 +43,8 @@ async function parseMarkdownWithPlugins(
   }
 
   // Parse markdown to html
-  let toHtml = md.render(markdown)
+  const node = await processor.process(markdown)
+  let toHtml = String(node)
 
   // Use after markdown parse plugins
   for (let i = 0; i < afterMdParse.length; i++) {

@@ -15,8 +15,8 @@ describe("on given markdown", () => {
 })
 
 describe("Using ulka syntax inside markdown", () => {
-  test("on given {% configs.buildPath %} should return <p>build</p>", async () => {
-    const markdown = `{% configs.buildPath %}`
+  test("on given {% globalInfo.configs.buildPath %} should return <p>build</p>", async () => {
+    const markdown = `{% globalInfo.configs.buildPath %}`
     const parsedMarkdown = await parseMd(markdown)
     expect(parsedMarkdown.html).toBe("<p>build</p>")
   })

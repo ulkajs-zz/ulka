@@ -24,7 +24,11 @@ const parseMd = async (markdown: string, filePath = process.cwd()) => {
   )
 
   // Prase ulka if any ulka syntax
-  const ulkaPrase = await parseUlka(toHtml.trim(), globalInfo, filePath)
+  const ulkaPrase = await parseUlka(
+    toHtml.trim(),
+    { globalInfo, prasedFrontMatter },
+    filePath
+  )
 
   return {
     frontMatter: prasedFrontMatter,
