@@ -1,7 +1,6 @@
-/* eslint-disable  */
 import fs from "fs"
 import url from "url"
-import http, { RequestListener, IncomingMessage, ServerResponse } from "http"
+import http, { IncomingMessage, ServerResponse } from "http"
 import path from "path"
 import WebSocket from "ws"
 import chokidar from "chokidar"
@@ -11,12 +10,9 @@ import betterOpen from "better-opn"
 
 import build from "./build"
 import mimeType from "../utils/mimeTypes"
-import copyAssets from "../fs/copyAssets"
 import removeDirectories from "../fs/rmdir"
 import globalInfo from "../globalInfo"
 import linePrint from "../utils/linePrint"
-import generateFromUlka from "../generate/generateUlka"
-import generateFromMd from "../generate/generateMd"
 
 const configs = globalInfo.configs
 
@@ -27,7 +23,7 @@ const createServer = (req: IncomingMessage, res: ServerResponse) => {
     const parsedUrl = url.parse(req.url!)
     const sanitizePath = path
       .normalize(parsedUrl.pathname!)
-      .replace(/^(\.\.[\/\\])+/, "")
+      .replace(/^(\.\.[/\\])+/, "")
 
     let pathname = path.join(process.cwd(), configs.buildPath, sanitizePath)
 
@@ -103,28 +99,25 @@ const liveServer = async (usersPort = 3000) => {
     })
     .on("change", chokidarEvent)
     .on("add", chokidarEvent)
-    .on("unlink", async (p: any, s: any) => {
+    .on("unlink", async (p: any) => {
       const assetsPath = path.join(globalInfo.configs.buildPath, "__assets__")
-      await removeDirectories(assetsPath)
-      await chokidarEvent(p, s)
+      removeDirectories(assetsPath)
+      await chokidarEvent(p)
     })
 
-  async function chokidarEvent(p: any, s: any) {
+  async function chokidarEvent(p: any) {
     console.clear()
     linePrint(">> File change detected", "yellow")
     const ext = path.parse(p).ext
 
     if (ext === ".css") {
-      console.log(">> Copying assets".green)
-      await copyAssets()
+      await build("copy")
       if (socket) socket.send("refresh-css")
     } else {
-      if (ext === ".ulka" && !p.includes(globalInfo.configs.templatesPath)) {
-        console.log(">> Generating from ulka files".green)
-        await generateFromUlka()
-      } else {
-        await build()
-      }
+      if (ext === ".ulka" && !p.includes(globalInfo.configs.templatesPath))
+        await build("ulka")
+      else await build("md")
+
       if (socket) socket.send("reload-page")
     }
 

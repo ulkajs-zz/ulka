@@ -1,4 +1,4 @@
-import frontmatter from "front-matter"
+import matter from "gray-matter"
 
 import parseUlka from "./parseUlka"
 import globalInfo from "../globalInfo"
@@ -13,18 +13,22 @@ const markdownImageRender = (markdown: string) => {
 }
 
 const parseMd = async (markdown: string, filePath = process.cwd()) => {
-  const data = frontmatter(markdown)
+  const data = matter(markdown)
 
-  markdown = markdownImageRender(data.body)
+  markdown = markdownImageRender(data.content)
 
   const { toHtml, prasedFrontMatter } = await parseMarkdownWithPlugins(
     markdown,
-    data.attributes,
+    data.data,
     { beforeMdParse, afterMdParse, remarkPlugins }
   )
 
   // Prase ulka if any ulka syntax
-  const ulkaPrase = await parseUlka(toHtml.trim(), globalInfo, filePath)
+  const ulkaPrase = await parseUlka(
+    toHtml.trim(),
+    { globalInfo, prasedFrontMatter },
+    filePath
+  )
 
   return {
     frontMatter: prasedFrontMatter,

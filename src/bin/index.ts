@@ -10,12 +10,14 @@ import serve from "./serve"
 import create from "./create"
 import globalInfo from "../globalInfo"
 import { beforeBuild, afterBuild } from "../parse/parsePlugins"
+import removeDirectories from "../fs/rmdir"
 
 program.version(version)
 program
   .command("build")
   .description("Build static files")
   .action(async () => {
+    globalInfo.status = "building"
     console.log("\n>> Building static files".yellow)
 
     for (let i = 0; i < beforeBuild.length; i++) {
@@ -42,6 +44,8 @@ program
   .command("serve [port]")
   .description("Creates live server and serve static sites")
   .action(async port => {
+    globalInfo.status = "serving"
+
     await build()
     await serve(port)
   })
@@ -52,3 +56,18 @@ program
   .action(create)
 
 program.parse(process.argv)
+
+const exit = () => {
+  if (globalInfo.status === "serving")
+    removeDirectories(globalInfo.configs.buildPath)
+  process.exit()
+}
+
+process.on("exit", () => {
+  if (globalInfo.status === "serving")
+    removeDirectories(globalInfo.configs.buildPath)
+})
+process.on("SIGINT", exit)
+process.on("SIGUSR1", exit)
+process.on("SIGUSR2", exit)
+process.on("uncaughtException", exit)

@@ -11,7 +11,7 @@ try {
   }
 } catch (e) {
   console.log(`>> ${e.message}`.red)
-  throw e
+  process.exit(0)
 }
 
 const defaultConfigs = {

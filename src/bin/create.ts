@@ -23,7 +23,6 @@ const create = async (
     console.log(`\n>> cd ${projectName} \n>> npm start`.yellow)
   } catch (e) {
     console.log(`>> ${e.message}`.red)
-    throw e
   }
 }
 
