@@ -16,6 +16,7 @@ program
   .command("build")
   .description("Build static files")
   .action(async () => {
+    globalInfo.status = "building"
     console.log("\n>> Building static files".yellow)
 
     for (let i = 0; i < beforeBuild.length; i++) {
@@ -42,6 +43,8 @@ program
   .command("serve [port]")
   .description("Creates live server and serve static sites")
   .action(async port => {
+    globalInfo.status = "serving"
+
     await build()
     await serve(port)
   })
