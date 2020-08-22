@@ -1,16 +1,13 @@
-// @ts-ignore
 import unified from "unified"
 import remarkParse from "remark-parse"
 import remark2rehype from "remark-rehype"
 import stringify from "rehype-stringify"
-// import hastUtilRaw from "hast-util-raw"
 
 import globalInfo from "../globalInfo"
 
 const processor = unified()
   .use(remarkParse, { commonmark: true })
   .use(remark2rehype, { allowDangerousHtml: true })
-  // .use(() => hastUtilRaw)
   .use(stringify, { allowDangerousHtml: true, allowDangerousCharacters: true })
 
 async function parseMarkdownWithPlugins(
