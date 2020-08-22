@@ -123,15 +123,6 @@ const liveServer = async (usersPort = 3000) => {
 
     linePrint(`>> Server is listening on port ${port}`, "yellow")
   }
-
-  process.on("exit", () => {
-    removeDirectories(globalInfo.configs.buildPath)
-    process.exit()
-  })
-  process.on("SIGINT", () => process.exit())
-  process.on("SIGUSR1", () => process.exit())
-  process.on("SIGUSR2", () => process.exit())
-  process.on("uncaughtException", () => process.exit())
 }
 
 export default liveServer

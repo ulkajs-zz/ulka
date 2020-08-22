@@ -1,6 +1,6 @@
 {
   "name": "ulka",
-  "version": "0.4.2-rc.24",
+  "version": "0.4.2",
   "description": "Ulka - static site generator",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,12 +14,20 @@
     "eslint:fix": "eslint . --fix",
     "prettier": "prettier \"**/*.ts\"",
     "prettier:write": "prettier --write \"**/*.ts\"",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "prepublishOnly": "npm run build && npm run eslint && npm run test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ulkajs/ulka.git"
   },
+  "keywords": [
+    "generator",
+    "website",
+    "jekyll",
+    "blog",
+    "ssg"
+  ],
   "author": "Roshan Acharya",
   "license": "MIT",
   "bugs": {
@@ -31,14 +39,12 @@
     "chokidar": "^3.4.1",
     "colors": "^1.4.0",
     "commander": "^5.1.0",
-    "front-matter": "^4.0.2",
     "gray-matter": "^4.0.2",
     "hast-util-raw": "^6.0.0",
     "portfinder": "^1.0.27",
     "rehype-stringify": "^8.0.0",
     "remark-parse": "^8.0.3",
     "remark-rehype": "^7.0.0",
-    "remarkable": "^2.0.1",
     "ulka-parser": "^0.2.10-rc.4",
     "unified": "^9.2.0",
     "ws": "^7.3.1"
@@ -67,5 +73,10 @@
   },
   "lint-staged": {
     "*.{ts}": "eslint --cache --fix"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged && npm run test"
+    }
   }
 }

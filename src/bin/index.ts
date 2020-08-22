@@ -10,6 +10,7 @@ import serve from "./serve"
 import create from "./create"
 import globalInfo from "../globalInfo"
 import { beforeBuild, afterBuild } from "../parse/parsePlugins"
+import removeDirectories from "../fs/rmdir"
 
 program.version(version)
 program
@@ -55,3 +56,18 @@ program
   .action(create)
 
 program.parse(process.argv)
+
+const exit = () => {
+  if (globalInfo.status === "serving")
+    removeDirectories(globalInfo.configs.buildPath)
+  process.exit()
+}
+
+process.on("exit", () => {
+  if (globalInfo.status === "serving")
+    removeDirectories(globalInfo.configs.buildPath)
+})
+process.on("SIGINT", exit)
+process.on("SIGUSR1", exit)
+process.on("SIGUSR2", exit)
+process.on("uncaughtException", exit)
