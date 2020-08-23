@@ -4,7 +4,6 @@ import remark2rehype from "remark-rehype"
 import stringify from "rehype-stringify"
 
 import globalInfo from "../globalInfo"
-import { rehypePlugins } from "../parse/parsePlugins"
 
 async function parseMarkdownWithPlugins(
   markdown: string,
@@ -12,7 +11,8 @@ async function parseMarkdownWithPlugins(
   {
     beforeMdParse,
     afterMdParse,
-    remarkPlugins
+    remarkPlugins,
+    rehypePlugins
   }: {
     beforeMdParse: any
     afterMdParse: any
