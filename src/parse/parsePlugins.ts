@@ -34,11 +34,13 @@ const beforeBuild = getPlugins("beforeBuild")
 const afterBuild = getPlugins("afterBuild")
 
 const remarkPlugins = getPlugins("remarkPlugin")
+const rehypePlugins = getPlugins("rehypePlugin")
 
 export {
   beforeUlkaParse,
   afterUlkaParse,
   beforeMdParse,
+  rehypePlugins,
   remarkPlugins,
   afterMdParse,
   beforeBuild,

@@ -3,7 +3,12 @@ import matter from "gray-matter"
 import parseUlka from "./parseUlka"
 import globalInfo from "../globalInfo"
 
-import { beforeMdParse, afterMdParse, remarkPlugins } from "./parsePlugins"
+import {
+  beforeMdParse,
+  afterMdParse,
+  remarkPlugins,
+  rehypePlugins
+} from "./parsePlugins"
 import parseMarkdownWithPlugins from "../utils/parseMdWithPlugins"
 
 const markdownImageRender = (markdown: string) => {
@@ -20,7 +25,7 @@ const parseMd = async (markdown: string, filePath = process.cwd()) => {
   const { toHtml, prasedFrontMatter } = await parseMarkdownWithPlugins(
     markdown,
     data.data,
-    { beforeMdParse, afterMdParse, remarkPlugins }
+    { beforeMdParse, afterMdParse, remarkPlugins, rehypePlugins }
   )
 
   // Prase ulka if any ulka syntax

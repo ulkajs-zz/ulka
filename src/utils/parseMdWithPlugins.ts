@@ -4,11 +4,7 @@ import remark2rehype from "remark-rehype"
 import stringify from "rehype-stringify"
 
 import globalInfo from "../globalInfo"
-
-const processor = unified()
-  .use(remarkParse, { commonmark: true })
-  .use(remark2rehype, { allowDangerousHtml: true })
-  .use(stringify, { allowDangerousHtml: true, allowDangerousCharacters: true })
+import { rehypePlugins } from "../parse/parsePlugins"
 
 async function parseMarkdownWithPlugins(
   markdown: string,
@@ -17,7 +13,12 @@ async function parseMarkdownWithPlugins(
     beforeMdParse,
     afterMdParse,
     remarkPlugins
-  }: { beforeMdParse: any; afterMdParse: any; remarkPlugins: any }
+  }: {
+    beforeMdParse: any
+    afterMdParse: any
+    remarkPlugins: any
+    rehypePlugins: any
+  }
 ) {
   if (!globalInfo.configs.contents)
     return {
@@ -25,8 +26,22 @@ async function parseMarkdownWithPlugins(
       prasedFrontMatter: frontMatter
     }
 
+  const processor = unified().use(remarkParse, { commonmark: true })
+
   for (let i = 0; i < remarkPlugins.length; i++) {
     const { plugin, options } = remarkPlugins[i](processor)
+    if (plugin) {
+      processor.use(plugin, options)
+    }
+  }
+
+  processor.use(remark2rehype, { allowDangerousHtml: true }).use(stringify, {
+    allowDangerousHtml: true,
+    allowDangerousCharacters: true
+  })
+
+  for (let i = 0; i < rehypePlugins.length; i++) {
+    const { plugin, options } = rehypePlugins[i](processor)
     if (plugin) {
       processor.use(plugin, options)
     }
