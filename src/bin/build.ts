@@ -8,14 +8,13 @@ async function build(name = "*") {
   globalInfo.contentFiles = []
 
   const buildPath = globalInfo.configs.buildPath
-  if (globalInfo.status === "serving") {
-    globalInfo.configs.buildPath = ".debug"
-  } else {
-    globalInfo.configs.buildPath = buildPath
-  }
+
+  if (globalInfo.status === "serving") globalInfo.configs.buildPath = ".debug"
+  else globalInfo.configs.buildPath = buildPath
 
   try {
     console.log(">> Copying assets".green)
+
     if (name === "*" || name === "copy")
       await copyAssets(
         path.join(process.cwd(), "src"),
@@ -42,9 +41,7 @@ async function build(name = "*") {
     }
   } catch (e) {
     console.log(`>> ${e.toString()}\n`.red)
-
-    console.log(">> Build Failed".red)
-    process.exit(0)
+    console.log(">> Build Failed :(".red)
   }
 }
 

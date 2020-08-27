@@ -17,7 +17,11 @@ const markdownImageRender = (markdown: string) => {
   })
 }
 
-const parseMd = async (markdown: string, filePath = process.cwd()) => {
+const parseMd = async (
+  markdown: string,
+  values: any = {},
+  filePath = process.cwd()
+) => {
   const data = matter(markdown)
 
   markdown = markdownImageRender(data.content)
@@ -31,7 +35,7 @@ const parseMd = async (markdown: string, filePath = process.cwd()) => {
   // Prase ulka if any ulka syntax
   const ulkaPrase = await parseUlka(
     toHtml.trim(),
-    { globalInfo, prasedFrontMatter },
+    { globalInfo, frontMatter: prasedFrontMatter, ...values },
     filePath
   )
 

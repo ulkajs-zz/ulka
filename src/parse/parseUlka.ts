@@ -19,6 +19,7 @@ const $assets = (rPath: string, filePath: string) => {
 
 const $importUlka = async (rPath: string, values: any, filePath: string) => {
   const ulkaFile = path.join(path.parse(filePath).dir, rPath)
+
   return (
     await parseUlka(
       fs.readFileSync(ulkaFile, "utf-8"),

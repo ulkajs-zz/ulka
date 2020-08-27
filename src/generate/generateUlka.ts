@@ -3,35 +3,22 @@ import path from "path"
 
 import mkdir from "../fs/mkdir"
 import globalInfo from "../globalInfo"
-import allFiles from "../fs/allFiles"
 import parseUlka from "../parse/parseUlka"
 import absolutePath from "../utils/absolutePath"
-import dataFromPath from "../utils/dataFromPath"
+import data from "./data"
 
 const configs = globalInfo.configs
 
 async function generateFromUlka() {
-  // Get all ulka files' path from pages path
-  let files
-  try {
-    files = allFiles(absolutePath(`src/${configs.pagesPath}`), ".ulka")
-  } catch (e) {
-    console.log(`\n>> ${e.message}`.red)
-    process.exit(0)
-  }
+  const pagesData = data(
+    absolutePath(`src/${configs.pagesPath}`),
+    ".ulka",
+    { ...configs },
+    parseUlka
+  )
 
-  /**
-   * Get Data from filepath
-   * Prase data using parseUlka function
-   */
-  const fileDatas = files.map(dataFromPath).map((fileData: any) => ({
-    ...fileData,
-    data: parseUlka(fileData.data, { ...configs }, fileData.path),
-    relativePath: path.relative(process.cwd(), fileData.path)
-  }))
-
-  for (let i = 0; i < fileDatas.length; i++) {
-    const ufd = fileDatas[i]
+  for (let i = 0; i < pagesData.length; i++) {
+    const ufd = pagesData[i]
 
     try {
       await buildFromUlka(ufd)
@@ -43,8 +30,13 @@ async function generateFromUlka() {
 }
 
 async function buildFromUlka(ufd: any) {
-  // Get filepath eg: \index.ulka or folder\file.ulka
-  const filePath = ufd.path.split(path.join("src", configs.pagesPath))[1]
+  // Get filepath relative to pagespath
+  // eg: \index.ulka or folder\file.ulka
+
+  const filePath = path.relative(
+    path.join("src", configs.pagesPath),
+    ufd.relativePath
+  )
 
   // Prase filepath
   const parsedPath = path.parse(filePath)
@@ -52,7 +44,8 @@ async function buildFromUlka(ufd: any) {
   // filePath to create .html files eg: build\folder
   let createFilePath = configs.buildPath + parsedPath.dir
 
-  // If name of file is not index, then create folder with fileName and change fileName to index
+  // The goal here is to generate dir/index.ulka to dir/index.html
+  // and dir/hehe.ulka to dir/hehe/index.html
   if (parsedPath.name !== "index") {
     createFilePath += "/" + parsedPath.name
     parsedPath.name = "index"
