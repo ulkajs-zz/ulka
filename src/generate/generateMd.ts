@@ -2,35 +2,23 @@ import fs from "fs"
 import path from "path"
 
 import mkdir from "../fs/mkdir"
-import allFiles from "../fs/allFiles"
 import globalInfo from "../globalInfo"
 import parseMd from "../parse/parseMd"
 import parseUlka from "../parse/parseUlka"
 import absolutePath from "../utils/absolutePath"
-import dataFromPath from "../utils/dataFromPath"
+import data from "./data"
 
 const configs = globalInfo.configs
-
-const getAllMdFilesData = (contentsPath: string) => {
-  try {
-    return allFiles(contentsPath, ".md")
-      .map(dataFromPath)
-      .map((fileData: { data: string; path: string }) => ({
-        ...fileData,
-        data: parseMd(fileData.data, fileData.path),
-        relativePath: path.relative(process.cwd(), fileData.path)
-      }))
-  } catch (e) {
-    console.log(`\n>> ${e.message}`.red)
-    process.exit(0)
-  }
-}
 
 async function generateFromMd(ctDir: string, ctIndex?: number | undefined) {
   const contentsDir = ctDir || configs.contents
 
   // Get all md files data from contentspath
-  const fileDatas = getAllMdFilesData(absolutePath(`src/${contentsDir.path}`))
+  const fileDatas = data(
+    absolutePath(`src/${contentsDir.path}`),
+    ".md",
+    parseMd
+  )
 
   if (ctIndex !== undefined) globalInfo.contentFiles[ctIndex] = []
 

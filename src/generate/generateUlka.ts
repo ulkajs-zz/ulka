@@ -3,35 +3,21 @@ import path from "path"
 
 import mkdir from "../fs/mkdir"
 import globalInfo from "../globalInfo"
-import allFiles from "../fs/allFiles"
 import parseUlka from "../parse/parseUlka"
 import absolutePath from "../utils/absolutePath"
-import dataFromPath from "../utils/dataFromPath"
+import data from "./data"
 
 const configs = globalInfo.configs
 
 async function generateFromUlka() {
-  // Get all ulka files' path from pages path
-  let files
-  try {
-    files = allFiles(absolutePath(`src/${configs.pagesPath}`), ".ulka")
-  } catch (e) {
-    console.log(`\n>> ${e.message}`.red)
-    process.exit(0)
-  }
+  const pagesData = data(
+    absolutePath(`src/${configs.pagesPath}`),
+    ".ulka",
+    parseUlka
+  )
 
-  /**
-   * Get Data from filepath
-   * Prase data using parseUlka function
-   */
-  const fileDatas = files.map(dataFromPath).map((fileData: any) => ({
-    ...fileData,
-    data: parseUlka(fileData.data, { ...configs }, fileData.path),
-    relativePath: path.relative(process.cwd(), fileData.path)
-  }))
-
-  for (let i = 0; i < fileDatas.length; i++) {
-    const ufd = fileDatas[i]
+  for (let i = 0; i < pagesData.length; i++) {
+    const ufd = pagesData[i]
 
     try {
       await buildFromUlka(ufd)
