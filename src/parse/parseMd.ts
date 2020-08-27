@@ -19,7 +19,7 @@ const markdownImageRender = (markdown: string) => {
 
 const parseMd = async (
   markdown: string,
-  values: any,
+  values: any = {},
   filePath = process.cwd()
 ) => {
   const data = matter(markdown)
