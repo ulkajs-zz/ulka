@@ -13,6 +13,7 @@ async function generateFromUlka() {
   const pagesData = data(
     absolutePath(`src/${configs.pagesPath}`),
     ".ulka",
+    { ...configs },
     parseUlka
   )
 

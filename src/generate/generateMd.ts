@@ -17,6 +17,7 @@ async function generateFromMd(ctDir: string, ctIndex?: number | undefined) {
   const contentsDatas = data(
     absolutePath(`src/${contentsDir.path}`),
     ".md",
+    {},
     parseMd
   )
 

@@ -114,9 +114,7 @@ const liveServer = async (usersPort = 3000) => {
       await build("copy")
       if (socket) socket.send("refresh-css")
     } else {
-      if (ext === ".ulka" && !p.includes(globalInfo.configs.templatesPath))
-        await build("ulka")
-      else await build("md")
+      await build()
 
       if (socket) socket.send("reload-page")
     }
