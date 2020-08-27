@@ -29,8 +29,13 @@ async function generateFromUlka() {
 }
 
 async function buildFromUlka(ufd: any) {
-  // Get filepath eg: \index.ulka or folder\file.ulka
-  const filePath = ufd.path.split(path.join("src", configs.pagesPath))[1]
+  // Get filepath relative to pagespath
+  // eg: \index.ulka or folder\file.ulka
+
+  const filePath = path.relative(
+    path.join("src", configs.pagesPath),
+    ufd.relativePath
+  )
 
   // Prase filepath
   const parsedPath = path.parse(filePath)
@@ -38,7 +43,8 @@ async function buildFromUlka(ufd: any) {
   // filePath to create .html files eg: build\folder
   let createFilePath = configs.buildPath + parsedPath.dir
 
-  // If name of file is not index, then create folder with fileName and change fileName to index
+  // The goal here is to generate dir/index.ulka to dir/index.html
+  // and dir/hehe.ulka to dir/hehe/index.html
   if (parsedPath.name !== "index") {
     createFilePath += "/" + parsedPath.name
     parsedPath.name = "index"

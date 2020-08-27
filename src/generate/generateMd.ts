@@ -14,7 +14,7 @@ async function generateFromMd(ctDir: string, ctIndex?: number | undefined) {
   const contentsDir = ctDir || configs.contents
 
   // Get all md files data from contentspath
-  const fileDatas = data(
+  const contentsDatas = data(
     absolutePath(`src/${contentsDir.path}`),
     ".md",
     parseMd
@@ -22,11 +22,14 @@ async function generateFromMd(ctDir: string, ctIndex?: number | undefined) {
 
   if (ctIndex !== undefined) globalInfo.contentFiles[ctIndex] = []
 
-  for (let i = 0; i < fileDatas.length; i++) {
-    const mfd = fileDatas[i]
+  for (let i = 0; i < contentsDatas.length; i++) {
+    const mfd = contentsDatas[i]
 
     // Get filepath eg: \index.md, \post-1\index.md
-    const filePath = mfd.path.split(path.join("src", contentsDir.path))[1]
+    const filePath = path.relative(
+      path.join("src", contentsDir.path),
+      mfd.relativePath
+    )
 
     const parsedPath = path.parse(filePath)
 
@@ -34,7 +37,8 @@ async function generateFromMd(ctDir: string, ctIndex?: number | undefined) {
     let createFilePath =
       configs.buildPath + "/" + contentsDir.generatePath + parsedPath.dir
 
-    // If name of file is not index, then create folder with fileName and change fileName to index
+    // The goal here is to generate dir/index.md to dir/index.html
+    // and dir/hehe.md to dir/hehe/index.html
     if (parsedPath.name !== "index") {
       createFilePath += "/" + parsedPath.name
       parsedPath.name = "index"
@@ -44,7 +48,7 @@ async function generateFromMd(ctDir: string, ctIndex?: number | undefined) {
     const mfdData = await mfd.data
 
     // Url link to the file
-    const link = createFilePath.split(configs.buildPath)[1]
+    const link = createFilePath.replace(configs.buildPath, "")
 
     // Absolute Filepath to create html files
     const absoluteFilePath = absolutePath(
@@ -60,32 +64,27 @@ async function generateFromMd(ctDir: string, ctIndex?: number | undefined) {
       contentsName: contentsDir.name || contentsDir.path
     }
 
-    if (ctIndex !== undefined) {
+    if (ctIndex !== undefined)
       globalInfo.contentFiles[ctIndex].push(contentData)
-    } else {
-      globalInfo.contentFiles.push(contentData)
-    }
+    else globalInfo.contentFiles.push(contentData)
   }
 
-  for (let i = 0; i < fileDatas.length; i++) {
-    const mfd = fileDatas[i]
+  for (let i = 0; i < contentsDatas.length; i++) {
+    const mfd = contentsDatas[i]
 
     try {
       // Path to the template of markdown files
-      const markdownTemplatePath = absolutePath(
+      const mdTemplatePath = absolutePath(
         `src/${configs.templatesPath}/${contentsDir.template}`
       )
       // Templatefile data
-      const templateUlkaData = fs.readFileSync(markdownTemplatePath, "utf-8")
+      const templateUlkaData = fs.readFileSync(mdTemplatePath, "utf-8")
 
       // Previosly parsed data that was pushed to globalInfo
       let mfdData
 
-      if (ctIndex !== undefined) {
-        mfdData = globalInfo.contentFiles[ctIndex][i]
-      } else {
-        mfdData = globalInfo.contentFiles[i]
-      }
+      if (ctIndex !== undefined) mfdData = globalInfo.contentFiles[ctIndex][i]
+      else mfdData = globalInfo.contentFiles[i]
 
       // Prase template ulka file with the value of parsed markdown
       const templateData = await parseUlka(
@@ -95,15 +94,13 @@ async function generateFromMd(ctDir: string, ctIndex?: number | undefined) {
           data: mfdData.html,
           globalInfo
         },
-        markdownTemplatePath
+        mdTemplatePath
       )
 
       // Rewrite html to the parsed html from templates
-      if (ctIndex !== undefined) {
+      if (ctIndex !== undefined)
         globalInfo.contentFiles[ctIndex][i].html = templateData.html
-      } else {
-        globalInfo.contentFiles[i].html = templateData.html
-      }
+      else globalInfo.contentFiles[i].html = templateData.html
 
       // Create folder to generate html file
       await mkdir(mfdData.createFilePath)

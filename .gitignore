@@ -7,6 +7,7 @@ yarn-error.log*
 lerna-debug.log*
 
 /tests/resources/ulka_test/build
+/tests/resources/ulka_test/.debug
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
