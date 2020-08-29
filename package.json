@@ -1,6 +1,6 @@
 {
   "name": "ulka",
-  "version": "0.4.3-rc.7",
+  "version": "0.4.3-rc.8",
   "description": "Ulka - static site generator",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -45,7 +45,7 @@
     "rehype-stringify": "^8.0.0",
     "remark-parse": "^8.0.3",
     "remark-rehype": "^7.0.0",
-    "ulka-parser": "^0.2.10-rc.4",
+    "ulka-parser": "^0.2.10",
     "unified": "^9.2.0",
     "ws": "^7.3.1"
   },
