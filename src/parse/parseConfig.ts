@@ -26,13 +26,7 @@ const defaultConfigs = {
   contents: {
     path: "contents",
     generatePath: "blog",
-    template: "blog.ulka",
-    // Array of functions that takes markdown as arg and returns markdown
-    preParse: [],
-    // Array of functions that takes html as arg and return html
-    postParse: [],
-    // Array of functions that takes frontmatter as arg and return frontMatter
-    parseFrontMatter: []
+    template: "blog.ulka"
   }
 }
 

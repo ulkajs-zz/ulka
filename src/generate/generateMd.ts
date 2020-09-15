@@ -5,7 +5,7 @@ import mkdir from "../fs/mkdir"
 import globalInfo from "../globalInfo"
 import parseMd from "../parse/parseMd"
 import parseUlka from "../parse/parseUlka"
-import absolutePath from "../utils/absolutePath"
+import { absolutePath } from "../utils/path-utils"
 import data from "./data"
 
 const configs = globalInfo.configs

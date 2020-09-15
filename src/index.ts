@@ -5,7 +5,6 @@ import dataFromPath from "./utils/dataFromPath"
 import generateName from "./utils/generateName"
 import parseUlkaWithPlugins from "./utils/parseUlkaWithPlugins"
 import parseMarkdownWithPlugins from "./utils/parseMdWithPlugins"
-import absolutePath from "./utils/absolutePath"
 
 export * as globalInfo from "./globalInfo"
 export const fs = {
@@ -16,8 +15,7 @@ export const fs = {
 
 export const utils = {
   dataFromPath,
-  generateName,
-  absolutePath
+  generateName
 }
 
 export const parseWithPlugins = {

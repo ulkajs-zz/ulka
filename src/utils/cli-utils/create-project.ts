@@ -2,7 +2,7 @@ import path from "path"
 import { execSync } from "child_process"
 import fs from "fs"
 
-const create = async (
+const createProject = async (
   projectName: string,
   template = "https://www.github.com/ulkajs/ulka-starter-default.git"
 ) => {
@@ -26,4 +26,4 @@ const create = async (
   }
 }
 
-export default create
+export default createProject

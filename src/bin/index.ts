@@ -2,17 +2,17 @@
 
 import "colors"
 import { program } from "commander"
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version } = require("../../package.json")
 
 import build from "./build"
 import serve from "./serve"
-import create from "./create"
 import globalInfo from "../globalInfo"
 import { beforeBuild, afterBuild } from "../parse/parsePlugins"
 import removeDirectories from "../fs/rmdir"
 
-program.version(version)
+import { createProject } from "../utils/cli-utils"
+
+program.version(require("../../package.json").version)
+
 program
   .command("build")
   .description("Build static files")
@@ -53,7 +53,7 @@ program
 program
   .command("create <projectName> [template]")
   .description("Generates ulka project")
-  .action(create)
+  .action(createProject)
 
 program.parse(process.argv)
 

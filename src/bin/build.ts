@@ -1,6 +1,7 @@
 import path from "path"
+
 import globalInfo from "../globalInfo"
-import copyAssets from "../fs/copyAssets"
+import { copyAssets } from "../fs"
 import generateFromMd from "../generate/generateMd"
 import generateFromUlka from "../generate/generateUlka"
 
