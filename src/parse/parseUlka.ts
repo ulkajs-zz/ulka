@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import globalInfo from "../globalInfo"
 
-import generateFileName from "../utils/generateName"
+import { generateFileName } from "../utils/ulka-utils"
 import parseUlkaWithPlugins from "../utils/parseUlkaWithPlugins"
 import { beforeUlkaParse, afterUlkaParse } from "./parsePlugins"
 
