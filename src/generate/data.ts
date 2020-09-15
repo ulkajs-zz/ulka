@@ -1,6 +1,6 @@
 import path from "path"
 import allFiles from "../fs/allFiles"
-import dataFromPath from "../utils/dataFromPath"
+import { dataFromPath } from "../utils/path-utils"
 
 const data = (
   filePath: string,

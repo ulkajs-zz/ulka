@@ -1,8 +1,4 @@
-interface mimeTypeInterface {
-  [key: string]: string
-}
-
-const mimeType: mimeTypeInterface = {
+const mimeType = {
   ".ico": "image/x-icon",
   ".html": "text/html",
   ".js": "text/javascript",

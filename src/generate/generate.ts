@@ -1,13 +1,15 @@
-import { absolutePath } from "../utils/path-utils"
+import { absolutePath, dataFromPath } from "../utils/path-utils"
+import { parse } from "ulka-parser"
 
 function generate(fileName: string) {
   return fileName
 }
 
-export function fromUlka(fPath: string) {
+export async function fromUlka(fPath: string) {
   fPath = absolutePath(fPath)
-
-  return fPath
+  const { data } = dataFromPath(fPath)
+  const ulkaData = await parse(data, {})
+  return ulkaData
 }
 
 export function fromMd(fPath: string) {
