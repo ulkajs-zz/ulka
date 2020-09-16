@@ -1,10 +1,9 @@
 import { writeFileSync } from "fs"
-import { isAbsolute, relative, join, parse } from "path"
+import { relative, join, parse } from "path"
 
-import { mkdir } from "../fs"
-import { fromUlka } from "../utils/transform-utils"
-import { configs } from "../utils/data-utils"
-import { absolutePath } from "../utils/path-utils"
+import { mkdir } from "../../fs"
+import { configs } from "../data-utils"
+import { fromUlka } from "../transform-utils"
 
 const pagesDirectory = configs.pagesPath
 const buildDirectory = configs.buildPath
@@ -13,17 +12,7 @@ const pathFromPagesDirectory = (fPath: string) => {
   return relative(join(process.cwd(), "src", pagesDirectory), fPath)
 }
 
-export function generate(fPath: string) {
-  fPath = isAbsolute(fPath) ? fPath : absolutePath(fPath)
-
-  return fPath
-}
-
-export async function generateFromMarkdown(fPath: string) {
-  return fPath
-}
-
-export async function generateFromUlka(fPath: string) {
+export default async function generateFromUlka(fPath: string) {
   const filePathFromPagesDirectory = pathFromPagesDirectory(fPath)
 
   const parsedFilePath = parse(filePathFromPagesDirectory)
