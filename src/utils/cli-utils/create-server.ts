@@ -4,7 +4,7 @@ import url from "url"
 import fs from "fs"
 
 import globalInfo from "../../globalInfo"
-import mimeType from "../mimeTypes"
+import { mimeTypes } from "../data-utils"
 
 const configs = globalInfo.configs
 
@@ -28,12 +28,12 @@ const createServer = (req: IncomingMessage, res: ServerResponse) => {
       pathname = path.join(pathname, "index.html")
     }
 
-    let data = fs.readFileSync(pathname)
+    let data = fs.readFileSync(pathname) as any
     const ext = path.parse(pathname).ext
-    res.setHeader("Content-type", mimeType[ext] || "text/plain")
+
+    res.setHeader("Content-type", mimeTypes[ext] || "text/plain")
 
     if (ext === ".html") {
-      // @ts-ignore
       data += `
           <script>
           if ('WebSocket' in window) {
