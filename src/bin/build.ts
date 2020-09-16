@@ -2,8 +2,7 @@ import path from "path"
 
 import globalInfo from "../globalInfo"
 import { copyAssets } from "../fs"
-import generateFromMd from "../generate/generateMd"
-import generateFromUlka from "../generate/generateUlka"
+import generate from "../generate"
 
 async function build(name = "*") {
   globalInfo.contentFiles = []
@@ -15,31 +14,14 @@ async function build(name = "*") {
 
   try {
     console.log(">> Copying assets".green)
-
     if (name === "*" || name === "copy")
       await copyAssets(
         path.join(process.cwd(), "src"),
         globalInfo.configs.buildPath
       )
 
-    if (name === "*" || name === "md") {
-      console.log(">> Generating from markdown files".green)
-
-      const contentsIsArray = Array.isArray(globalInfo.configs.contents)
-      if (contentsIsArray) {
-        for (let i = 0; i < globalInfo.configs.contents.length; i++) {
-          const contentsDir = globalInfo.configs.contents[i]
-          await generateFromMd(contentsDir, i)
-        }
-      } else {
-        await generateFromMd(globalInfo.configs.contents)
-      }
-    }
-
-    if (name === "*" || name === "ulka") {
-      console.log(">> Generating from ulka files".green)
-      await generateFromUlka()
-    }
+    console.log(">> Generating pages\n".green)
+    await generate()
   } catch (e) {
     console.log(`>> ${e.toString()}\n`.red)
     console.log(">> Build Failed :(".red)

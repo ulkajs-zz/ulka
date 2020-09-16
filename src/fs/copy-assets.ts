@@ -1,11 +1,11 @@
 import fs from "fs"
 import path from "path"
-import mkdir from "./mkdir"
+
+import { mkdir } from "."
 import allFiles from "./all-files"
+import globalInfo from "../globalInfo"
 import { absolutePath } from "../utils/path-utils"
 import { generateFileName } from "../utils/ulka-utils"
-import parseUlka from "../parse/parseUlka"
-import globalInfo from "../globalInfo"
 
 const configs = globalInfo.configs
 
@@ -29,7 +29,7 @@ const copyAssets = async (
   const files = allFiles(dir)
     .map((f: string) => path.parse(f))
     .filter((f: path.ParsedPath) => f.ext !== ".ulka" && f.ext !== ".md")
-    .forEach(async (f: path.ParsedPath) => {
+    .forEach((f: path.ParsedPath) => {
       const assetExt = f.ext === ".ucss" ? ".css" : f.ext
 
       const writePath =
@@ -39,13 +39,7 @@ const copyAssets = async (
 
       let readAssetsFile
       if (assetExt === ".css") {
-        readAssetsFile = (
-          await parseUlka(
-            fs.readFileSync(path.format(f), "utf-8"),
-            globalInfo,
-            writePath
-          )
-        ).html
+        readAssetsFile = fs.readFileSync(path.format(f), "utf-8")
         readAssetsFile = parseUrlPath(readAssetsFile, f.dir)
       } else {
         readAssetsFile = fs.readFileSync(path.format(f))

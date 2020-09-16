@@ -3,15 +3,12 @@ import path from "path"
 import WebSocket from "ws"
 import chokidar from "chokidar"
 import portfinder from "portfinder"
-// @ts-ignore
 import betterOpen from "better-opn"
 
 import build from "./build"
-import removeDirectories from "../fs/rmdir"
+import { rmdir } from "../fs"
 import globalInfo from "../globalInfo"
-import linePrint from "../utils/linePrint"
-
-import { createServer } from "../utils/cli-utils"
+import { createServer, linePrint } from "../utils/cli-utils"
 
 const liveServer = async (usersPort = 3000) => {
   const port = await portfinder.getPortPromise({ port: usersPort })
@@ -22,12 +19,11 @@ const liveServer = async (usersPort = 3000) => {
 
   linePrint(`>> Server is listening on port ${port}`, "yellow")
 
-  let socket: WebSocket
+  let socket: WebSocket | null = null
   wss.on("connection", ws => {
     socket = ws
   })
 
-  //  @ts-ignore
   if (!socket) await betterOpen(`http://localhost:${port}`)
 
   chokidar
@@ -42,7 +38,7 @@ const liveServer = async (usersPort = 3000) => {
     .on("add", chokidarEvent)
     .on("unlink", async (p: any) => {
       const assetsPath = path.join(globalInfo.configs.buildPath, "__assets__")
-      removeDirectories(assetsPath)
+      rmdir(assetsPath)
       await chokidarEvent(p)
     })
 

@@ -5,13 +5,14 @@ import { program } from "commander"
 
 import build from "./build"
 import serve from "./serve"
+import { rmdir } from "../fs"
 import globalInfo from "../globalInfo"
-import { beforeBuild, afterBuild } from "../parse/parsePlugins"
-import removeDirectories from "../fs/rmdir"
-
+import { plugins } from "../utils/data-utils"
 import { createProject } from "../utils/cli-utils"
 
 program.version(require("../../package.json").version)
+
+const { beforeBuild, afterBuild } = plugins
 
 program
   .command("build")
@@ -45,7 +46,6 @@ program
   .description("Creates live server and serve static sites")
   .action(async port => {
     globalInfo.status = "serving"
-
     await build()
     await serve(port)
   })
@@ -58,14 +58,12 @@ program
 program.parse(process.argv)
 
 const exit = () => {
-  if (globalInfo.status === "serving")
-    removeDirectories(globalInfo.configs.buildPath)
+  if (globalInfo.status === "serving") rmdir(globalInfo.configs.buildPath)
   process.exit()
 }
 
 process.on("exit", () => {
-  if (globalInfo.status === "serving")
-    removeDirectories(globalInfo.configs.buildPath)
+  if (globalInfo.status === "serving") rmdir(globalInfo.configs.buildPath)
 })
 process.on("SIGINT", exit)
 process.on("SIGUSR1", exit)

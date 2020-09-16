@@ -1,4 +1,4 @@
-import configs from "./parse/parseConfig"
+import { configs } from "./utils/data-utils"
 
 interface globalInfoType {
   contentFiles: any[]
