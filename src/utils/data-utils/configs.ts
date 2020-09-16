@@ -13,6 +13,14 @@ try {
   process.exit(0)
 }
 
+interface Config {
+  buildPath: string
+  pagesPath: string
+  templatesPath: string
+  contents: any[]
+  plugins: any[]
+}
+
 const defConfig = {
   buildPath: "build",
   pagesPath: "pages",
@@ -21,6 +29,6 @@ const defConfig = {
   plugins: []
 }
 
-const config = { ...defConfig, ...ulkaConfigs }
+const config: Config = { ...defConfig, ...ulkaConfigs }
 
 export default config

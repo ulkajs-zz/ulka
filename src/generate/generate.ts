@@ -1,44 +1,37 @@
-import { writeFileSync } from "fs"
-import { isAbsolute, relative, join, parse } from "path"
-
-import { mkdir } from "../fs"
-import { fromUlka } from "../utils/transform-utils"
+import { allFiles } from "../fs"
 import { configs } from "../utils/data-utils"
 import { absolutePath } from "../utils/path-utils"
+import { generateFromMd, generateFromUlka } from "../utils/generate-utils"
 
-const pagesDirectory = configs.pagesPath
-const buildDirectory = configs.buildPath
+const pagesDirectory = absolutePath(`src/${configs.pagesPath}`)
 
-const pathFromPagesDirectory = (fPath: string) => {
-  return relative(join(process.cwd(), "src", pagesDirectory), fPath)
-}
-
-export function generate(fPath: string) {
-  fPath = isAbsolute(fPath) ? fPath : absolutePath(fPath)
-
-  return fPath
-}
-
-export async function generateFromMarkdown(fPath: string) {
-  return fPath
-}
-
-export async function generateFromUlka(fPath: string) {
-  const filePathFromPagesDirectory = pathFromPagesDirectory(fPath)
-
-  const parsedFilePath = parse(filePathFromPagesDirectory)
-
-  let buildFilePath = join(process.cwd(), buildDirectory, parsedFilePath.dir)
-
-  if (parsedFilePath.name !== "index") {
-    buildFilePath = join(buildFilePath, parsedFilePath.name, "index.html")
-  } else {
-    buildFilePath = join(buildFilePath, "index.html")
+export default async function generate() {
+  const allUlkaFiles = allFiles(pagesDirectory, ".ulka")
+  for (let i = 0; i < allUlkaFiles.length; i++) {
+    const file = allUlkaFiles[i]
+    try {
+      await generateFromUlka(file)
+    } catch (e) {
+      console.log(`>> Error while generating ${file}`.red)
+      throw e
+    }
   }
 
-  const data = await fromUlka(fPath, {})
+  const contentsArr = configs.contents
 
-  await mkdir(parse(buildFilePath).dir)
+  for (let i = 0; i < contentsArr.length; i++) {
+    const content = contentsArr[i]
 
-  writeFileSync(buildFilePath, data)
+    const mdFiles = allFiles(absolutePath(`src/${content.path}`))
+
+    for (let j = 0; j < mdFiles.length; j++) {
+      const file = mdFiles[j]
+      try {
+        await generateFromMd(file, content)
+      } catch (e) {
+        console.log(`>> Error while generating ${file}`.red)
+        throw e
+      }
+    }
+  }
 }
