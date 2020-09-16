@@ -20,7 +20,7 @@ export default async function fromMd(fPath: string) {
     }
   }
 
-  const node = processor().process(markdown)
+  const node = await processor().process(markdown)
 
   let html = String(node)
 

@@ -3,11 +3,18 @@ import { parse } from "ulka-parser"
 
 import { plugins } from "../data-utils"
 import { dataFromPath } from "../path-utils"
+import { $assets, $import } from "../ulka-utils"
 
 const { beforeUlkaParse: bup, afterUlkaParse: aup } = plugins
 
 export default async function fromUlka(fPath: string, values: any) {
   let { data } = dataFromPath(fPath)
+
+  values = {
+    ...values,
+    $assets: (rPath: string) => $assets(rPath, fPath),
+    $import: (rPath: string) => $import(rPath, values, fPath)
+  }
 
   // Before ulka parse
   for (let i = 0; i < bup.length; i++) {

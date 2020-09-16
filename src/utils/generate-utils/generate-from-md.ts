@@ -35,10 +35,12 @@ async function generateFromMd({ data, path }: any, contentInfo: any) {
   const link = url.format(relative(absolutePath(buildDirectory), buildFilePath))
 
   if (!data) {
-    data = await fromMd(path)
+    data = fromMd(path)
   }
 
-  const template = join(process.cwd(), tempDir, tempPath)
+  const template = join(process.cwd(), "src", tempDir, tempPath)
+
+  data = await data
 
   const context = {
     data: data.html,
