@@ -1,4 +1,4 @@
-import allFiles from "../fs/allFiles"
+import allFiles from "../fs/all-files"
 import dataFromPath from "./dataFromPath"
 import globalInfo from "../globalInfo"
 import absolutePath from "./absolutePath"

@@ -1,4 +1,4 @@
-export { default as allFiles } from "./allFiles"
-export { default as copyAssets } from "./copyAssets"
-export { default as createDirectories } from "./mkdir"
-export { default as removeDirectories } from "./rmdir"
+export { default as allFiles } from "./all-files"
+export { default as copyAssets } from "./copy-assets"
+export { default as mkdir } from "./mkdir"
+export { default as rmdir } from "./rmdir"

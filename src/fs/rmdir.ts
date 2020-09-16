@@ -1,6 +1,6 @@
 import fs from "fs"
 import path from "path"
-import absolutePath from "../utils/absolutePath"
+import { absolutePath } from "../utils/path-utils"
 
 const removeDirectories = (pathname: string) => {
   pathname = pathname.replace(/^\.*\/|\/?[^/]+\.[a-z]+|\/$/g, "")

@@ -1,6 +1,6 @@
 import rmDir from "./fs/rmdir"
 import mkdir from "./fs/mkdir"
-import allFiles from "./fs/allFiles"
+import allFiles from "./fs/all-files"
 import dataFromPath from "./utils/dataFromPath"
 import generateName from "./utils/generateName"
 import parseUlkaWithPlugins from "./utils/parseUlkaWithPlugins"

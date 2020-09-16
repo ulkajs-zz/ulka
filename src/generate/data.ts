@@ -1,5 +1,5 @@
 import path from "path"
-import allFiles from "../fs/allFiles"
+import allFiles from "../fs/all-files"
 import { dataFromPath } from "../utils/path-utils"
 
 const data = (

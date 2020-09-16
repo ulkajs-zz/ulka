@@ -1,9 +1,9 @@
 import fs from "fs"
 import path from "path"
 import mkdir from "./mkdir"
-import allFiles from "./allFiles"
-import absolutePath from "../utils/absolutePath"
-import generateFileName from "../utils/generateName"
+import allFiles from "./all-files"
+import { absolutePath } from "../utils/path-utils"
+import { generateFileName } from "../utils/ulka-utils"
 import parseUlka from "../parse/parseUlka"
 import globalInfo from "../globalInfo"
 
