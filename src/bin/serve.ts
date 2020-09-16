@@ -7,7 +7,7 @@ import betterOpen from "better-opn"
 
 import build from "./build"
 import { rmdir } from "../fs"
-import globalInfo from "../globalInfo"
+import { globalInfo } from ".."
 import { createServer, linePrint } from "../utils/cli-utils"
 
 const liveServer = async (usersPort = 3000) => {

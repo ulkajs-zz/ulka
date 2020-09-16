@@ -8,12 +8,12 @@ import { fromUlka } from "../transform-utils"
 const pagesDirectory = configs.pagesPath
 const buildDirectory = configs.buildPath
 
-const pathFromPagesDirectory = (fPath: string) => {
-  return relative(join(process.cwd(), "src", pagesDirectory), fPath)
+const pathFromPagesDirectory = (path: string) => {
+  return relative(join(process.cwd(), "src", pagesDirectory), path)
 }
 
-export default async function generateFromUlka(fPath: string) {
-  const filePathFromPagesDirectory = pathFromPagesDirectory(fPath)
+const generateFromUlka = async ({ data, path }: any) => {
+  const filePathFromPagesDirectory = pathFromPagesDirectory(path)
 
   const parsedFilePath = parse(filePathFromPagesDirectory)
 
@@ -25,9 +25,14 @@ export default async function generateFromUlka(fPath: string) {
     buildFilePath = join(buildFilePath, "index.html")
   }
 
-  const data = await fromUlka(fPath, {})
+  if (!data) {
+    data = fromUlka(path, {})
+  }
 
   await mkdir(parse(buildFilePath).dir)
 
-  writeFileSync(buildFilePath, data)
+  const html = await data
+  writeFileSync(buildFilePath, html)
 }
+
+export default generateFromUlka

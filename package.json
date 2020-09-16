@@ -1,6 +1,6 @@
 {
   "name": "ulka",
-  "version": "0.4.3-rc.8",
+  "version": "0.5.0",
   "description": "Ulka - static site generator",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

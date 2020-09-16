@@ -1,15 +1,15 @@
 import { configs } from "./utils/data-utils"
 
 interface globalInfoType {
-  contentFiles: any[]
-  pagesFiles: any[]
+  contentFiles: {
+    [key: string]: any
+  }
   configs: any
   status: string
 }
 
 const globalInfo: globalInfoType = {
   contentFiles: [],
-  pagesFiles: [],
   configs,
   status: "serving"
 }

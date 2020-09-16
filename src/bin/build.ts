@@ -1,8 +1,8 @@
 import path from "path"
 
-import globalInfo from "../globalInfo"
-import { copyAssets } from "../fs"
 import generate from "../generate"
+import { copyAssets } from "../fs"
+import globalInfo from "../globalInfo"
 
 async function build(name = "*") {
   globalInfo.contentFiles = []

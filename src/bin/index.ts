@@ -6,7 +6,7 @@ import { program } from "commander"
 import build from "./build"
 import serve from "./serve"
 import { rmdir } from "../fs"
-import globalInfo from "../globalInfo"
+import { globalInfo } from ".."
 import { plugins } from "../utils/data-utils"
 import { createProject } from "../utils/cli-utils"
 
