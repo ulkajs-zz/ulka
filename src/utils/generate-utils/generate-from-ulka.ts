@@ -2,8 +2,10 @@ import { writeFileSync } from "fs"
 import { relative, join, parse } from "path"
 
 import { mkdir } from "../../fs"
-import { configs } from "../data-utils"
+import globalInfo from "../../globalInfo"
 import { fromUlka } from "../transform-utils"
+
+const configs = globalInfo.configs
 
 const pagesDirectory = configs.pagesPath
 const buildDirectory = configs.buildPath

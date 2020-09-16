@@ -3,22 +3,14 @@ import path from "path"
 import generate from "../generate"
 import { copyAssets } from "../fs"
 import globalInfo from "../globalInfo"
+import { configs } from "../utils/data-utils"
 
-async function build(name = "*") {
+async function build() {
   globalInfo.contentFiles = []
-
-  const buildPath = globalInfo.configs.buildPath
-
-  if (globalInfo.status === "serving") globalInfo.configs.buildPath = ".debug"
-  else globalInfo.configs.buildPath = buildPath
 
   try {
     console.log(">> Copying assets".green)
-    if (name === "*" || name === "copy")
-      await copyAssets(
-        path.join(process.cwd(), "src"),
-        globalInfo.configs.buildPath
-      )
+    await copyAssets(path.join(process.cwd(), "src"), configs.buildPath)
 
     console.log(">> Generating pages\n".green)
     await generate()

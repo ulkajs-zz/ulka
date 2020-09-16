@@ -1,10 +1,13 @@
 import url from "url"
 import { writeFileSync } from "fs"
 import { join, relative, parse } from "path"
+
 import { mkdir } from "../../fs"
-import { configs } from "../data-utils"
+import globalInfo from "../../globalInfo"
 import { fromMd, fromUlka } from "../transform-utils"
 import { absolutePath } from "../path-utils"
+
+const configs = globalInfo.configs
 
 const buildDirectory = configs.buildPath
 const tempDir = configs.templatesPath

@@ -6,9 +6,11 @@ import { program } from "commander"
 import build from "./build"
 import serve from "./serve"
 import { rmdir } from "../fs"
-import { globalInfo } from ".."
+import globalInfo from "../globalInfo"
 import { plugins } from "../utils/data-utils"
 import { createProject } from "../utils/cli-utils"
+
+const configs = globalInfo.configs
 
 program.version(require("../../package.json").version)
 
@@ -21,19 +23,21 @@ program
     globalInfo.status = "building"
     console.log("\n>> Building static files".yellow)
 
+    const startBuild = new Date().getTime()
+
     for (let i = 0; i < beforeBuild.length; i++) {
       const plugin = beforeBuild[i]
       await plugin(globalInfo)
     }
 
-    const startBuild = new Date().getTime()
     await build()
-    const finishBuild = new Date().getTime()
 
     for (let i = 0; i < afterBuild.length; i++) {
       const plugin = afterBuild[i]
       await plugin(globalInfo)
     }
+
+    const finishBuild = new Date().getTime()
 
     console.log(
       `>> Build finished in`.yellow,
@@ -58,12 +62,12 @@ program
 program.parse(process.argv)
 
 const exit = () => {
-  if (globalInfo.status === "serving") rmdir(globalInfo.configs.buildPath)
+  if (globalInfo.status === "serving") rmdir(configs.buildPath)
   process.exit()
 }
 
 process.on("exit", () => {
-  if (globalInfo.status === "serving") rmdir(globalInfo.configs.buildPath)
+  if (globalInfo.status === "serving") rmdir(configs.buildPath)
 })
 process.on("SIGINT", exit)
 process.on("SIGUSR1", exit)

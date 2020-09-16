@@ -13,7 +13,12 @@ const parseUrlPath = (css: string, f: string) => {
   return css.replace(/ url\((.*?)\)/gs, (...args) => {
     const pathGiven = args[1].replace(/'|"/gs, "")
 
-    if (pathGiven.startsWith("http")) return ` url("${pathGiven}")`
+    if (
+      pathGiven.startsWith("http:") ||
+      pathGiven.startsWith("https:") ||
+      pathGiven.startsWith("//")
+    )
+      return ` url("${pathGiven}")`
 
     const fileName = generateFileName(path.join(f, pathGiven))
 
@@ -26,19 +31,30 @@ const copyAssets = async (
   to = "build"
 ) => {
   await mkdir(`${to}/__assets__`)
+
   const files = allFiles(dir)
+
+  files
     .map((f: string) => path.parse(f))
     .filter((f: path.ParsedPath) => f.ext !== ".ulka" && f.ext !== ".md")
     .forEach((f: path.ParsedPath) => {
-      const assetExt = f.ext === ".ucss" ? ".css" : f.ext
+      /**
+       * If file ends with .ulka.(ext) then ignore such files. This will get useful when you want to write server side
+       * code inside src directory and don't want it to be copied to the client
+       * eg
+       * data.ulka.js => ignore
+       * data.js => don't ignore
+       */
+
+      if (f.base.endsWith(".ulka")) return
+
+      const generatedName = generateFileName(path.format(f))
 
       const writePath =
-        absolutePath(
-          configs.buildPath + "/__assets__/" + generateFileName(path.format(f))
-        ) + assetExt
+        absolutePath(`${configs.buildPath}/__assets__/${generatedName}`) + f.ext
 
       let readAssetsFile
-      if (assetExt === ".css") {
+      if (f.ext === ".css") {
         readAssetsFile = fs.readFileSync(path.format(f), "utf-8")
         readAssetsFile = parseUrlPath(readAssetsFile, f.dir)
       } else {
@@ -47,7 +63,6 @@ const copyAssets = async (
 
       fs.writeFileSync(writePath, readAssetsFile)
     })
-  return files
 }
 
 export default copyAssets

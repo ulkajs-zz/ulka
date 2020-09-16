@@ -47,12 +47,11 @@ const liveServer = async (usersPort = 3000) => {
     linePrint(">> File change detected", "yellow")
     const ext = path.parse(p).ext
 
+    await build()
+
     if (ext === ".css") {
-      await build("copy")
       if (socket) socket.send("refresh-css")
     } else {
-      await build()
-
       if (socket) socket.send("reload-page")
     }
 

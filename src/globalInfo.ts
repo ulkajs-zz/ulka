@@ -11,7 +11,7 @@ interface globalInfoType {
 const globalInfo: globalInfoType = {
   contentFiles: [],
   configs,
-  status: "serving"
+  status: "building"
 }
 
 export default globalInfo
