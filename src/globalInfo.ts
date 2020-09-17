@@ -1,5 +1,6 @@
 import configs from "./utils/data-utils/configs"
-import { fromMd, fromUlka } from "./utils/transform-utils"
+import fromMd from "./utils/transform-utils/from-md"
+import fromUlka from "./utils/transform-utils/from-ulka"
 
 interface globalInfoType {
   contentFiles: {

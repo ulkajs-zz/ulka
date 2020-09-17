@@ -4,8 +4,9 @@ import { join, relative, parse } from "path"
 
 import { mkdir } from "../../fs"
 import globalInfo from "../../globalInfo"
-import { fromMd, fromUlka } from "../transform-utils"
-import { absolutePath } from "../path-utils"
+import fromMd from "../transform-utils/from-md"
+import fromUlka from "../transform-utils/from-ulka"
+import absolutePath from "../path-utils/absolute-path"
 
 const configs = globalInfo.configs
 

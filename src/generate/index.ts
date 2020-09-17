@@ -1,8 +1,10 @@
 import { allFiles } from "../fs"
 import configs from "../utils/data-utils/configs"
-import { absolutePath } from "../utils/path-utils"
-import { fromMd, fromUlka } from "../utils/transform-utils"
-import { generateFromMd, generateFromUlka } from "../utils/generate-utils"
+import fromMd from "../utils/transform-utils/from-md"
+import fromUlka from "../utils/transform-utils/from-ulka"
+import absolutePath from "../utils/path-utils/absolute-path"
+import generateFromMd from "../utils/generate-utils/generate-from-md"
+import generateFromUlka from "../utils/generate-utils/generate-from-ulka"
 
 const pagesDirectory = absolutePath(`src/${configs.pagesPath}`)
 

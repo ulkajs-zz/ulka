@@ -4,8 +4,8 @@ import path from "path"
 import { mkdir } from "."
 import allFiles from "./all-files"
 import globalInfo from "../globalInfo"
-import { absolutePath } from "../utils/path-utils"
-import { generateFileName } from "../utils/ulka-utils"
+import absolutePath from "../utils/path-utils/absolute-path"
+import generateFileName from "../utils/ulka-utils/generate-file-name"
 
 const configs = globalInfo.configs
 

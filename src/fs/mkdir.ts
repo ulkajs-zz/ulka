@@ -1,6 +1,6 @@
 import fs from "fs"
 import { isAbsolute } from "path"
-import { absolutePath } from "../utils/path-utils"
+import absolutePath from "../utils/path-utils/absolute-path"
 
 const createDirectories = async (pathname: string) => {
   if (!isAbsolute(pathname)) {

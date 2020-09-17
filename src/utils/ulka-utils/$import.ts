@@ -1,6 +1,7 @@
 import path from "path"
 import { readFileSync } from "fs"
-import { fromMd, fromUlka } from "../transform-utils"
+import fromMd from "../transform-utils/from-md"
+import fromUlka from "../transform-utils/from-ulka"
 
 const $import = async (rPath: string, values: any, filePath: string) => {
   const file = path.join(path.parse(filePath).dir, rPath)

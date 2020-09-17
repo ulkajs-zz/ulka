@@ -3,7 +3,7 @@ import { relative, join, parse } from "path"
 
 import { mkdir } from "../../fs"
 import globalInfo from "../../globalInfo"
-import { fromUlka } from "../transform-utils"
+import fromUlka from "../transform-utils/from-ulka"
 
 const configs = globalInfo.configs
 
