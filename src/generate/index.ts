@@ -39,6 +39,8 @@ export default async function generate() {
     }
   }
 
+  if (!configs.pagesPath) return
+
   const allUlkaFiles = allFiles(pagesDirectory, ".ulka").map(file => ({
     data: fromUlka(file, {}),
     path: file
