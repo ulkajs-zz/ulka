@@ -6,8 +6,10 @@ import { dataFromPath } from "../path-utils"
 
 const { beforeMdParse: bmp, afterMdParse: amp } = plugins
 
-export default async function fromMd(fPath: string) {
-  const { data } = dataFromPath(fPath)
+export default async function fromMd(fPath: string, data?: string) {
+  if (!data) {
+    data = dataFromPath(fPath).data
+  }
 
   let { content: markdown, data: frontMatter } = matter(data)
 

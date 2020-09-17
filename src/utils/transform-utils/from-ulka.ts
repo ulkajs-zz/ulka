@@ -7,8 +7,14 @@ import { $assets, $import } from "../ulka-utils"
 
 const { beforeUlkaParse: bup, afterUlkaParse: aup } = plugins
 
-export default async function fromUlka(fPath: string, values: any) {
-  let { data } = dataFromPath(fPath)
+export default async function fromUlka(
+  fPath: string,
+  values: any,
+  data?: string
+) {
+  if (!data) {
+    data = dataFromPath(fPath).data
+  }
 
   values = {
     ...values,
@@ -19,7 +25,7 @@ export default async function fromUlka(fPath: string, values: any) {
   // Before ulka parse
   for (let i = 0; i < bup.length; i++) {
     const plugin = bup[i]
-    const d = await plugin(data, values)
+    const d: { ulkaTemplate: string; values: any } = await plugin(data, values)
 
     if (d) {
       if (d.ulkaTemplate) data = d.ulkaTemplate
@@ -35,7 +41,7 @@ export default async function fromUlka(fPath: string, values: any) {
   // After ulka parse
   for (let i = 0; i < aup.length; i++) {
     const plugin = aup[i]
-    const d = await plugin(data, values)
+    const d: string | { ulkaTemplate: string } = await plugin(data, values)
 
     if (d) {
       if (typeof d === "string") data = d
