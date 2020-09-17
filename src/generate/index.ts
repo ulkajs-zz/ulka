@@ -1,8 +1,8 @@
 import { allFiles } from "../fs"
-import { configs } from "../utils/data-utils"
+import configs from "../utils/data-utils/configs"
 import { absolutePath } from "../utils/path-utils"
-import { generateFromMd, generateFromUlka } from "../utils/generate-utils"
 import { fromMd, fromUlka } from "../utils/transform-utils"
+import { generateFromMd, generateFromUlka } from "../utils/generate-utils"
 
 const pagesDirectory = absolutePath(`src/${configs.pagesPath}`)
 

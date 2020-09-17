@@ -4,7 +4,7 @@ import url from "url"
 import fs from "fs"
 
 import globalInfo from "../../globalInfo"
-import { mimeTypes } from "../data-utils"
+import mimeTypes from "../data-utils/mime-types"
 
 const configs = globalInfo.configs
 

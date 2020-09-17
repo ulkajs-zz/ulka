@@ -1,7 +1,7 @@
 import matter from "gray-matter"
 
 import { processor } from "."
-import { plugins } from "../data-utils"
+import * as plugins from "../data-utils/plugins"
 import { dataFromPath } from "../path-utils"
 
 const { beforeMdParse: bmp, afterMdParse: amp } = plugins

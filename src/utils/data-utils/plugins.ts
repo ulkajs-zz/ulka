@@ -1,4 +1,4 @@
-import { configs } from "./"
+import configs from "./configs"
 
 function getPluginFunction(plugin: any) {
   if (typeof plugin === "object" && typeof plugin.resolve === "string") {

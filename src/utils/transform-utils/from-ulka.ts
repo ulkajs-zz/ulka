@@ -1,9 +1,9 @@
 import path from "path"
 import { parse } from "ulka-parser"
 
-import { plugins } from "../data-utils"
 import { dataFromPath } from "../path-utils"
 import { $assets, $import } from "../ulka-utils"
+import * as plugins from "../data-utils/plugins"
 
 const { beforeUlkaParse: bup, afterUlkaParse: aup } = plugins
 

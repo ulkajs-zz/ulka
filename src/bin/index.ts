@@ -7,8 +7,8 @@ import build from "./build"
 import serve from "./serve"
 import { rmdir } from "../fs"
 import globalInfo from "../globalInfo"
-import { plugins } from "../utils/data-utils"
 import { createProject } from "../utils/cli-utils"
+import * as plugins from "../utils/data-utils/plugins"
 
 const configs = globalInfo.configs
 

@@ -3,7 +3,7 @@ import path from "path"
 import generate from "../generate"
 import { copyAssets } from "../fs"
 import globalInfo from "../globalInfo"
-import { configs } from "../utils/data-utils"
+import configs from "../utils/data-utils/configs"
 
 async function build() {
   globalInfo.contentFiles = []
