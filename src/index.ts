@@ -1,1 +1,1 @@
-export { default as globalInfo } from "./globalInfo"
+export default "Ulka Js"

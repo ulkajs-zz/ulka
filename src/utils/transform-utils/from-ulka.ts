@@ -1,6 +1,7 @@
 import path from "path"
 import { parse } from "ulka-parser"
 
+import globalInfo from "../../globalInfo"
 import $assets from "../ulka-utils/$assets"
 import $import from "../ulka-utils/$import"
 import * as plugins from "../data-utils/plugins"
@@ -20,7 +21,8 @@ export default async function fromUlka(
   values = {
     ...values,
     $assets: (rPath: string) => $assets(rPath, fPath),
-    $import: (rPath: string) => $import(rPath, values, fPath)
+    $import: (rPath: string) => $import(rPath, values, fPath),
+    globalInfo
   }
 
   // Before ulka parse

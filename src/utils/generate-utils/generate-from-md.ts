@@ -1,11 +1,9 @@
 import url from "url"
-import { writeFileSync } from "fs"
 import { join, relative, parse } from "path"
 
 import { mkdir } from "../../fs"
 import globalInfo from "../../globalInfo"
 import fromMd from "../transform-utils/from-md"
-import fromUlka from "../transform-utils/from-ulka"
 import absolutePath from "../path-utils/absolute-path"
 
 const configs = globalInfo.configs
@@ -17,7 +15,7 @@ const pathFromContentsDirectory = (contentsPath: string, path: string) => {
   return relative(join(process.cwd(), "src", contentsPath), path)
 }
 
-async function generateFromMd({ data, path }: any, contentInfo: any) {
+async function generateFromMd({ data, path, index }: any, contentInfo: any) {
   const {
     template: tempPath,
     generatePath: genPath,
@@ -49,18 +47,27 @@ async function generateFromMd({ data, path }: any, contentInfo: any) {
   const context = {
     data: data.html,
     frontMatter: data.frontMatter,
-    link: "/" + link
+    link: "/" + link,
+    buildFilePath,
+    template
   }
-
-  const html = await fromUlka(template, context)
 
   if (!contentInfo.contentFiles) contentInfo.contentFiles = {}
 
   contentInfo.contentFiles[path] = context
 
+  if (!globalInfo.contentFiles[contentInfo.path] || index === 0)
+    globalInfo.contentFiles[contentInfo.path] = []
+
+  globalInfo.contentFiles[contentInfo.path].push(context)
+
   await mkdir(parse(buildFilePath).dir)
 
-  writeFileSync(buildFilePath, html)
+  // const html = await fromUlka(template, context)
+
+  // writeFileSync(buildFilePath, html)
+
+  return context
 }
 
 export default generateFromMd

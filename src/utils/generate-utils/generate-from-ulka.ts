@@ -1,3 +1,6 @@
+delete require.cache[require.resolve("../transform-utils/from-ulka")]
+delete require.cache[require.resolve("../../globalInfo")]
+
 import { writeFileSync } from "fs"
 import { relative, join, parse } from "path"
 

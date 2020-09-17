@@ -5,6 +5,8 @@ import fromUlka from "../utils/transform-utils/from-ulka"
 import absolutePath from "../utils/path-utils/absolute-path"
 import generateFromMd from "../utils/generate-utils/generate-from-md"
 import generateFromUlka from "../utils/generate-utils/generate-from-ulka"
+import { writeFileSync } from "fs"
+import globalInfo from "../globalInfo"
 
 const pagesDirectory = absolutePath(`src/${configs.pagesPath}`)
 
@@ -18,14 +20,22 @@ export default async function generate() {
       data: fromMd(file)
     }))
 
+    const data: any = []
+
     for (let j = 0; j < mdFiles.length; j++) {
       const file = mdFiles[j]
       try {
-        await generateFromMd(file, content)
+        data.push(await generateFromMd({ ...file, index: j }, content))
       } catch (e) {
         console.log(`>> Error while generating ${file.path}`.red)
         throw e
       }
+    }
+
+    for (let i = 0; i < data.length; i++) {
+      const d = data[i]
+      const html = await fromUlka(d.template, d)
+      writeFileSync(d.buildFilePath, html)
     }
   }
 

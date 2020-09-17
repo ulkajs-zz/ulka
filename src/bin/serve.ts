@@ -7,7 +7,7 @@ import betterOpen from "better-opn"
 
 import build from "./build"
 import { rmdir } from "../fs"
-import { globalInfo } from ".."
+import globalInfo from "../globalInfo"
 import createServer from "../utils/cli-utils/create-server"
 import linePrint from "../utils/cli-utils/line-print"
 

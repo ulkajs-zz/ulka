@@ -12,7 +12,7 @@ interface globalInfoType {
 }
 
 const globalInfo: globalInfoType = {
-  contentFiles: [],
+  contentFiles: {},
   configs,
   status: "building",
   getHTML: {
