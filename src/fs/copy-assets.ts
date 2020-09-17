@@ -46,7 +46,7 @@ const copyAssets = async (
        * data.js => don't ignore
        */
 
-      if (f.base.endsWith(".ulka")) return
+      if (f.name.endsWith(".ulka")) return
 
       const generatedName = generateFileName(path.format(f))
 
