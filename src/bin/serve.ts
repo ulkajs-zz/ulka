@@ -1,15 +1,16 @@
 import http from "http"
-import path from "path"
+import path, { parse } from "path"
 import WebSocket from "ws"
 import chokidar from "chokidar"
 import portfinder from "portfinder"
 import betterOpen from "better-opn"
 
 import build from "./build"
-import { rmdir } from "../fs"
 import globalInfo from "../globalInfo"
-import createServer from "../utils/cli-utils/create-server"
+import { copyAssets, rmdir } from "../fs"
 import linePrint from "../utils/cli-utils/line-print"
+import createServer from "../utils/cli-utils/create-server"
+import generateFromUlka from "../utils/generate-utils/generate-from-ulka"
 
 const liveServer = async (usersPort = 3000) => {
   const port = await portfinder.getPortPromise({ port: usersPort })
@@ -40,7 +41,20 @@ const liveServer = async (usersPort = 3000) => {
     .on("unlink", async (p: any) => {
       const assetsPath = path.join(globalInfo.configs.buildPath, "__assets__")
       rmdir(assetsPath)
-      await chokidarEvent(p)
+
+      console.clear()
+      linePrint(">> File change detected", "yellow")
+      const ext = path.parse(p).ext
+
+      await build()
+
+      if (ext === ".css") {
+        if (socket) socket.send("refresh-css")
+      } else {
+        if (socket) socket.send("reload-page")
+      }
+
+      linePrint(`>> Server is listening on port ${port}`, "yellow")
     })
 
   async function chokidarEvent(p: any) {
@@ -48,7 +62,9 @@ const liveServer = async (usersPort = 3000) => {
     linePrint(">> File change detected", "yellow")
     const ext = path.parse(p).ext
 
-    await build()
+    // await build()
+
+    await experimentalBuildOnlyRequired(p)
 
     if (ext === ".css") {
       if (socket) socket.send("refresh-css")
@@ -57,6 +73,23 @@ const liveServer = async (usersPort = 3000) => {
     }
 
     linePrint(`>> Server is listening on port ${port}`, "yellow")
+  }
+}
+
+async function experimentalBuildOnlyRequired(p: any) {
+  const path = parse(p)
+  if (path.ext === ".ulka") {
+    if (!p.includes(globalInfo.configs.templatesPath)) {
+      console.log(`>> Generating pages`.green)
+      await generateFromUlka({ path: p })
+    } else {
+      await build()
+    }
+  } else if (path.ext === ".md") {
+    await build()
+  } else {
+    console.log(`>> Copying assets`.green)
+    await copyAssets()
   }
 }
 

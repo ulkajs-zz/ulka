@@ -15,6 +15,8 @@ const pathFromPagesDirectory = (path: string) => {
 }
 
 const generateFromUlka = async ({ data, path }: any) => {
+  if (!path && !data) return
+
   const filePathFromPagesDirectory = pathFromPagesDirectory(path)
 
   const parsedFilePath = parse(filePathFromPagesDirectory)
