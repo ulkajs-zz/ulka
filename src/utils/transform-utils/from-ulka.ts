@@ -21,7 +21,7 @@ export default async function fromUlka(
   values = {
     ...values,
     $assets: (rPath: string) => $assets(rPath, fPath),
-    $import: (rPath: string, impValues: any) => {
+    $import: (rPath: string, impValues = {}) => {
       return $import(rPath, { ...values, ...impValues }, fPath)
     },
     globalInfo
