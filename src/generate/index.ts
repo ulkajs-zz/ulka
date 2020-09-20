@@ -1,58 +1,61 @@
-import { writeFileSync } from "fs"
+import generate from "./generate"
+export default generate
 
-import { allFiles } from "../fs"
-import configs from "../utils/data-utils/configs"
-import fromMd from "../utils/transform-utils/from-md"
-import fromUlka from "../utils/transform-utils/from-ulka"
-import absolutePath from "../utils/path-utils/absolute-path"
-import generateFromMd from "../utils/generate-utils/generate-from-md"
-import generateFromUlka from "../utils/generate-utils/generate-from-ulka"
+// import { writeFileSync } from "fs"
 
-const pagesDirectory = absolutePath(`src/${configs.pagesPath}`)
+// import { allFiles } from "../fs"
+// import configs from "../utils/data-utils/configs"
+// import fromMd from "../utils/transform-utils/from-md"
+// import fromUlka from "../utils/transform-utils/from-ulka"
+// import absolutePath from "../utils/path-utils/absolute-path"
+// import generateFromMd from "../utils/generate-utils/generate-from-md"
+// import generateFromUlka from "../utils/generate-utils/generate-from-ulka"
 
-export default async function generate() {
-  const contentsArr = configs.contents
-  for (let i = 0; i < contentsArr.length; i++) {
-    const content = contentsArr[i]
+// const pagesDirectory = absolutePath(`src/${configs.pagesPath}`)
 
-    const mdFiles = allFiles(absolutePath(`src/${content.path}`)).map(file => ({
-      path: file,
-      data: fromMd(file)
-    }))
+// export default async function generate() {
+//   const contentsArr = configs.contents
+//   for (let i = 0; i < contentsArr.length; i++) {
+//     const content = contentsArr[i]
 
-    const data: any = []
+//     const mdFiles = allFiles(absolutePath(`src/${content.path}`)).map(file => ({
+//       path: file,
+//       data: fromMd(file)
+//     }))
 
-    for (let j = 0; j < mdFiles.length; j++) {
-      const file = mdFiles[j]
-      try {
-        data.push(await generateFromMd({ ...file, index: j }, content))
-      } catch (e) {
-        console.log(`>> Error while generating ${file.path}`.red)
-        throw e
-      }
-    }
+//     const data: any = []
 
-    for (let i = 0; i < data.length; i++) {
-      const d = data[i]
-      const html = await fromUlka(d.template, d)
-      writeFileSync(d.buildFilePath, html)
-    }
-  }
+//     for (let j = 0; j < mdFiles.length; j++) {
+//       const file = mdFiles[j]
+//       try {
+//         data.push(await generateFromMd({ ...file, index: j }, content))
+//       } catch (e) {
+//         console.log(`>> Error while generating ${file.path}`.red)
+//         throw e
+//       }
+//     }
 
-  if (!configs.pagesPath) return
+//     for (let i = 0; i < data.length; i++) {
+//       const d = data[i]
+//       const html = await fromUlka(d.template, d)
+//       writeFileSync(d.buildFilePath, html)
+//     }
+//   }
 
-  const allUlkaFiles = allFiles(pagesDirectory, ".ulka").map(file => ({
-    data: fromUlka(file, {}),
-    path: file
-  }))
+//   if (!configs.pagesPath) return
 
-  for (let i = 0; i < allUlkaFiles.length; i++) {
-    const file = allUlkaFiles[i]
-    try {
-      await generateFromUlka(file)
-    } catch (e) {
-      console.log(`>> Error while generating ${file}`.red)
-      throw e
-    }
-  }
-}
+//   const allUlkaFiles = allFiles(pagesDirectory, ".ulka").map(file => ({
+//     data: fromUlka(file, {}),
+//     path: file
+//   }))
+
+//   for (let i = 0; i < allUlkaFiles.length; i++) {
+//     const file = allUlkaFiles[i]
+//     try {
+//       await generateFromUlka(file)
+//     } catch (e) {
+//       console.log(`>> Error while generating ${file}`.red)
+//       throw e
+//     }
+//   }
+// }

@@ -1,5 +1,4 @@
 import { readFileSync } from "fs"
-import { parse } from "ulka-parser"
 
 export interface SourceContext {
   fPath: string
@@ -16,8 +15,7 @@ abstract class Source {
 
   get data(): string | Promise<string> {
     if (!this.context.data) {
-      const fileData = readFileSync(this.context.fPath, "utf-8")
-      this.context.data = parse(fileData, this.context.values)
+      this.context.data = readFileSync(this.context.fPath, "utf-8")
     }
     return this.context.data
   }
@@ -33,8 +31,8 @@ abstract class Source {
     return this.context.plugins
   }
 
-  abstract async transform(): Promise<string>
-  abstract generate(): void
+  abstract async transform(): Promise<any>
+  abstract generate(...args: any): Promise<any>
 }
 
 export default Source

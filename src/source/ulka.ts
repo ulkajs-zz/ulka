@@ -6,17 +6,12 @@ import { mkdir } from "../fs"
 import Source, { SourceContext } from "."
 import config from "../utils/data-utils/configs"
 import $import from "../utils/ulka-utils/$import"
+import globalInfo from "../globalInfo"
 import $assets from "../utils/ulka-utils/$assets"
 import absolutePath from "../utils/path-utils/absolute-path"
 
-interface UlkaContext extends SourceContext {
-  values: {
-    [key: string]: any
-  }
-}
-
-class Ulka extends Source {
-  constructor(public context: UlkaContext) {
+class UlkaSource extends Source {
+  constructor(context: SourceContext) {
     super(context)
   }
 
@@ -27,13 +22,19 @@ class Ulka extends Source {
       $assets: (rPath: string) => $assets(rPath, this.context.fPath),
       $import: (rPath: string, impValues = {}) => {
         return $import(rPath, { ...val, ...impValues }, this.context.fPath)
-      }
+      },
+      globalInfo
     }
 
     return val
   }
 
-  async transform() {
+  /**
+   * Use before plugins
+   * Transform ulka to html
+   * Use after plugins
+   */
+  async transform(): Promise<string> {
     const plugins = this.plugins
     let ulkaTemplate = await this.data
 
@@ -68,9 +69,11 @@ class Ulka extends Source {
     return this.context.html
   }
 
-  async generate() {
-    const html = await this.transform()
-
+  /**
+   * Get html from this.transform()
+   * Build new html file
+   */
+  calculate() {
     const pathFromPages = path.relative(
       absolutePath(`src/${config.pagesPath}`),
       this.context.fPath
@@ -85,10 +88,23 @@ class Ulka extends Source {
       buildpath = path.join(buildpath, "index.html")
     }
 
-    await mkdir(buildpath)
+    this.context.buildPath = buildpath
 
-    writeFileSync(buildpath, html)
+    return buildpath
+  }
+
+  async generate() {
+    const html = await this.transform()
+    const buildPath = this.calculate()
+
+    await mkdir(path.parse(buildPath).dir)
+    writeFileSync(buildPath, html)
+  }
+
+  static async transform(context: SourceContext) {
+    const ulkaSourceInstance = new UlkaSource(context)
+    return await ulkaSourceInstance.transform()
   }
 }
 
-export default Ulka
+export default UlkaSource
