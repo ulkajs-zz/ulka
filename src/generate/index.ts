@@ -1,61 +1,70 @@
-import generate from "./generate"
-export default generate
+import { allFiles } from "../fs"
+import MDSource from "../source/md"
+import config from "../utils/data-utils/configs"
+import absolutePath from "../utils/path-utils/absolute-path"
+import {
+  afterMdParse,
+  afterUlkaParse,
+  beforeMdParse,
+  beforeUlkaParse
+} from "../utils/data-utils/plugins"
+import UlkaSource from "../source/ulka"
+import globalInfo from "../globalInfo"
 
-// import { writeFileSync } from "fs"
+const { contents, pagesPath, templatesPath } = config
+export default async function generate() {
+  for (let i = 0; i < contents.length; i++) {
+    const content = contents[i]
+    const mdFiles = allFiles(absolutePath(`src/${content.path}`), ".md")
+    const tmpPath = absolutePath(`src/${templatesPath}/${content.template}`)
 
-// import { allFiles } from "../fs"
-// import configs from "../utils/data-utils/configs"
-// import fromMd from "../utils/transform-utils/from-md"
-// import fromUlka from "../utils/transform-utils/from-ulka"
-// import absolutePath from "../utils/path-utils/absolute-path"
-// import generateFromMd from "../utils/generate-utils/generate-from-md"
-// import generateFromUlka from "../utils/generate-utils/generate-from-ulka"
+    const mdDatas: MDSource[] = []
 
-// const pagesDirectory = absolutePath(`src/${configs.pagesPath}`)
+    for (let j = 0; j < mdFiles.length; j++) {
+      const file = mdFiles[j]
+      const mdSource = new MDSource({
+        fPath: file,
+        plugins: {
+          before: beforeMdParse,
+          after: afterMdParse
+        },
+        contentInfo: { ...content, template: tmpPath }
+      })
+      await mdSource.transform()
+      mdSource.calculate()
+      mdDatas.push(mdSource)
+    }
 
-// export default async function generate() {
-//   const contentsArr = configs.contents
-//   for (let i = 0; i < contentsArr.length; i++) {
-//     const content = contentsArr[i]
+    const reqData = mdDatas.map(d => ({
+      data: d.context.data,
+      markdown: d.context.markdown,
+      html: d.context.html,
+      frontMatter: d.context.frontMatter,
+      link: d.context.link,
+      fPath: d.context.fPath,
+      buildPath: d.context.buildFilePath
+    }))
 
-//     const mdFiles = allFiles(absolutePath(`src/${content.path}`)).map(file => ({
-//       path: file,
-//       data: fromMd(file)
-//     }))
+    globalInfo.contentFiles[content.path] = reqData
 
-//     const data: any = []
+    for (let j = 0; j < mdDatas.length; j++) {
+      const data = mdDatas[j]
+      data.generate(reqData, j)
+    }
+  }
 
-//     for (let j = 0; j < mdFiles.length; j++) {
-//       const file = mdFiles[j]
-//       try {
-//         data.push(await generateFromMd({ ...file, index: j }, content))
-//       } catch (e) {
-//         console.log(`>> Error while generating ${file.path}`.red)
-//         throw e
-//       }
-//     }
+  const ulkaFiles = allFiles(absolutePath(`src/${pagesPath}`), ".ulka")
 
-//     for (let i = 0; i < data.length; i++) {
-//       const d = data[i]
-//       const html = await fromUlka(d.template, d)
-//       writeFileSync(d.buildFilePath, html)
-//     }
-//   }
+  for (let i = 0; i < ulkaFiles.length; i++) {
+    const file = ulkaFiles[i]
+    const ulkaSource = new UlkaSource({
+      fPath: file,
+      plugins: {
+        before: beforeUlkaParse,
+        after: afterUlkaParse
+      }
+    })
 
-//   if (!configs.pagesPath) return
-
-//   const allUlkaFiles = allFiles(pagesDirectory, ".ulka").map(file => ({
-//     data: fromUlka(file, {}),
-//     path: file
-//   }))
-
-//   for (let i = 0; i < allUlkaFiles.length; i++) {
-//     const file = allUlkaFiles[i]
-//     try {
-//       await generateFromUlka(file)
-//     } catch (e) {
-//       console.log(`>> Error while generating ${file}`.red)
-//       throw e
-//     }
-//   }
-// }
+    await ulkaSource.generate()
+  }
+}
