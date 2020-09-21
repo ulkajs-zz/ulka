@@ -1,6 +1,4 @@
-import configs from "./utils/data-utils/configs"
-import fromMd from "./utils/transform-utils/from-md"
-import fromUlka from "./utils/transform-utils/from-ulka"
+import configs from "./data/configs"
 
 interface globalInfoType {
   contentFiles: {
@@ -14,11 +12,7 @@ interface globalInfoType {
 const globalInfo: globalInfoType = {
   contentFiles: {},
   configs,
-  status: "building",
-  getHTML: {
-    fromMd: (data: string) => fromMd("", data),
-    fromUlka: (data: string, values: any) => fromUlka("", values, data)
-  }
+  status: "building"
 }
 
 export default globalInfo

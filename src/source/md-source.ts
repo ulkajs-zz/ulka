@@ -6,10 +6,10 @@ import { writeFileSync } from "fs"
 import { mkdir } from "../fs"
 import UlkaSource from "./ulka-source"
 import Source, { SourceContext } from "."
-import config from "../utils/data-utils/configs"
-import processor from "../utils/transform-utils/processor"
-import absolutePath from "../utils/path-utils/absolute-path"
-import { afterUlkaParse, beforeUlkaParse } from "../utils/data-utils/plugins"
+import config from "../data/configs"
+import processor from "../utils/unified-processor"
+import absolutePath from "../utils/absolute-path"
+import { afterUlkaParse, beforeUlkaParse } from "../data/plugins"
 
 class MDSource extends Source {
   constructor(context: SourceContext) {
@@ -154,6 +154,12 @@ class MDSource extends Source {
 
     await mkdir(path.parse(buildFilePath).dir)
     writeFileSync(buildFilePath, tHtml)
+  }
+
+  static async transform(context: SourceContext) {
+    const mdSourceInstance = new MDSource(context)
+
+    return await mdSourceInstance.transform()
   }
 }
 

@@ -1,7 +1,13 @@
 import path from "path"
 import { readFileSync } from "fs"
-import fromMd from "../transform-utils/from-md"
-import fromUlka from "../transform-utils/from-ulka"
+import UlkaSource from "../../source/ulka-source"
+import {
+  afterMdParse,
+  afterUlkaParse,
+  beforeMdParse,
+  beforeUlkaParse
+} from "../../data/plugins"
+import MDSource from "../../source/md-source"
 
 const imgExts = [".jpeg", ".jpg", ".png", ".gif", ".bmp", ".svg", ".webp"]
 
@@ -14,9 +20,24 @@ const $import = async (rPath: string, values: any, filePath: string) => {
   const file = path.join(path.parse(filePath).dir, rPath)
   const ext = path.parse(file).ext
   if (ext === ".ulka") {
-    return await fromUlka(file, values)
+    return await UlkaSource.transform({
+      fPath: file,
+      values,
+      plugins: {
+        before: beforeUlkaParse,
+        after: afterUlkaParse
+      }
+    })
   } else if (ext === ".md") {
-    return (await fromMd(file)).html
+    const data = await MDSource.transform({
+      fPath: file,
+      plugins: {
+        before: beforeMdParse,
+        after: afterMdParse
+      }
+    })
+
+    return data.html
   } else if (imgExts.includes(ext)) {
     return `data:image/${ext.substr(1)};base64,` + readFileSync(file, "base64")
   } else {

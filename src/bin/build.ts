@@ -2,7 +2,7 @@ import path from "path"
 
 import generate from "../generate"
 import { copyAssets } from "../fs"
-import configs from "../utils/data-utils/configs"
+import configs from "../data/configs"
 
 async function build() {
   try {

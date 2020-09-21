@@ -1,5 +1,5 @@
 import path from "path"
-import generateFileName from "./generate-file-name"
+import generateFileName from "../generate-file-name"
 
 const $assets = (rPath: string, filePath: string) => {
   // Generate hash of required file

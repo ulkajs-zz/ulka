@@ -5,10 +5,10 @@ import { parse } from "ulka-parser"
 import { mkdir } from "../fs"
 import globalInfo from "../globalInfo"
 import Source, { SourceContext } from "."
-import $assets from "../utils/ulka-utils/$assets"
-import config from "../utils/data-utils/configs"
-import $import from "../utils/ulka-utils/$import"
-import absolutePath from "../utils/path-utils/absolute-path"
+import $assets from "../utils/ulka-source-utils/$assets"
+import config from "../data/configs"
+import $import from "../utils/ulka-source-utils/$import"
+import absolutePath from "../utils/absolute-path"
 
 class UlkaSource extends Source {
   constructor(context: SourceContext) {

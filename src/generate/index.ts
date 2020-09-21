@@ -2,14 +2,14 @@ import { allFiles } from "../fs"
 import MDSource from "../source/md-source"
 import globalInfo from "../globalInfo"
 import UlkaSource from "../source/ulka-source"
-import config from "../utils/data-utils/configs"
-import absolutePath from "../utils/path-utils/absolute-path"
+import config from "../data/configs"
+import absolutePath from "../utils/absolute-path"
 import {
   afterMdParse,
   afterUlkaParse,
   beforeMdParse,
   beforeUlkaParse
-} from "../utils/data-utils/plugins"
+} from "../data/plugins"
 
 const { contents, pagesPath, templatesPath } = config
 

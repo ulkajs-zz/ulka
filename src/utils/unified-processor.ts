@@ -3,7 +3,7 @@ import remarkParse from "remark-parse"
 import stringify from "rehype-stringify"
 import remark2rehype from "remark-rehype"
 
-import * as plugins from "../data-utils/plugins"
+import * as plugins from "../data/plugins"
 
 const { remarkPlugins: rmp, rehypePlugins: rhp } = plugins
 
