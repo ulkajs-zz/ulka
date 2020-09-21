@@ -3,7 +3,6 @@ import path from "path"
 import absolutePath from "../utils/absolute-path"
 
 const removeDirectories = (pathname: string) => {
-  pathname = pathname.replace(/^\.*\/|\/?[^/]+\.[a-z]+|\/$/g, "")
   rmdirSync(absolutePath(pathname))
 }
 
