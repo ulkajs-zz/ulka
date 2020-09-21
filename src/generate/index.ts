@@ -1,7 +1,7 @@
 import { allFiles } from "../fs"
-import MDSource from "../source/md"
+import MDSource from "../source/md-source"
 import globalInfo from "../globalInfo"
-import UlkaSource from "../source/ulka"
+import UlkaSource from "../source/ulka-source"
 import config from "../utils/data-utils/configs"
 import absolutePath from "../utils/path-utils/absolute-path"
 import {

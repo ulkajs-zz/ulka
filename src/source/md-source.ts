@@ -4,7 +4,7 @@ import matter from "gray-matter"
 import { writeFileSync } from "fs"
 
 import { mkdir } from "../fs"
-import UlkaSource from "./ulka"
+import UlkaSource from "./ulka-source"
 import Source, { SourceContext } from "."
 import config from "../utils/data-utils/configs"
 import processor from "../utils/transform-utils/processor"
