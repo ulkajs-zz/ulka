@@ -1,6 +1,6 @@
 import "colors"
 import fs from "fs"
-import absolutePath from "../src/utils/absolutePath"
+import absolutePath from "../src/utils/absolute-path"
 import globalInfo from "../src/globalInfo"
 
 import build from "../src/bin/build"
