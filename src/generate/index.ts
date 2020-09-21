@@ -54,6 +54,7 @@ export default async function generate() {
     }
   }
 
+  if (!pagesPath) return
   const ulkaFiles = allFiles(absolutePath(`src/${pagesPath}`), ".ulka")
 
   for (let i = 0; i < ulkaFiles.length; i++) {
