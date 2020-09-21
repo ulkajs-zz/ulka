@@ -50,6 +50,7 @@ program
   .description("Creates live server and serve static sites")
   .action(async port => {
     globalInfo.status = "serving"
+    globalInfo.configs.buildPath = ".debug"
     await build()
     await serve(port)
   })
