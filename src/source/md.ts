@@ -98,7 +98,9 @@ class MDSource extends Source {
 
     const link =
       "/" +
-      url.format(path.relative(absolutePath(config.buildPath), buildFilePath))
+      url
+        .format(path.relative(absolutePath(config.buildPath), buildFilePath))
+        .slice(0, -10)
 
     this.context.link = link
     this.context.buildFilePath = buildFilePath
