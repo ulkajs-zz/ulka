@@ -3,11 +3,11 @@ import { writeFileSync } from "fs"
 import { parse } from "ulka-parser"
 
 import { mkdir } from "../fs"
+import globalInfo from "../globalInfo"
 import Source, { SourceContext } from "."
+import $assets from "../utils/ulka-utils/$assets"
 import config from "../utils/data-utils/configs"
 import $import from "../utils/ulka-utils/$import"
-import globalInfo from "../globalInfo"
-import $assets from "../utils/ulka-utils/$assets"
 import absolutePath from "../utils/path-utils/absolute-path"
 
 class UlkaSource extends Source {
@@ -30,9 +30,9 @@ class UlkaSource extends Source {
   }
 
   /**
-   * Use before plugins
+   * Use `before` plugins
    * Transform ulka to html
-   * Use after plugins
+   * Use `after` plugins
    */
   async transform(): Promise<string> {
     const plugins = this.plugins
@@ -51,7 +51,11 @@ class UlkaSource extends Source {
       }
     }
 
-    const html = await parse(ulkaTemplate, this.values)
+    const html = await parse(ulkaTemplate, this.values, {
+      base: path.parse(this.context.fPath).dir,
+      logError: false
+    })
+
     this.context.html = html
 
     for (let i = 0; i < plugins.after.length; i++) {
@@ -70,12 +74,11 @@ class UlkaSource extends Source {
   }
 
   /**
-   * Get html from this.transform()
-   * Build new html file
+   * Calculate buildPath from this.context.fPath with reference to pages path
    */
-  calculate() {
+  calculate(fromPath = config.pagesPath) {
     const pathFromPages = path.relative(
-      absolutePath(`src/${config.pagesPath}`),
+      absolutePath(`src/${fromPath}`),
       this.context.fPath
     )
 
@@ -93,6 +96,12 @@ class UlkaSource extends Source {
     return buildpath
   }
 
+  /**
+   * Get html from this.transform
+   * Get build path from this.calculate()
+   *
+   * Generate html file
+   */
   async generate() {
     const html = await this.transform()
     const buildPath = this.calculate()
