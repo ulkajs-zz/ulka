@@ -1,4 +1,4 @@
-{% globalInfo.contentFiles.slice().sort((a, b) => new Date(b.frontMatter.date) - new Date(a.frontMatter.date)).map(cf => {
+{% globalInfo.contentFiles.contents.slice().sort((a, b) => new Date(b.frontMatter.date) - new Date(a.frontMatter.date)).map(cf => {
     return `
         <div class="blog-item">
             <a href="${cf.link}">

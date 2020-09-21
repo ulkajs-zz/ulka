@@ -6,12 +6,11 @@ module.exports = {
   buildPath: "build",
   pagesPath: "pages",
   templatesPath: "templates",
-
-  contents: {
-    path: "contents",
-    generatePath: "blog",
-    template: "blog.ulka",
-    preParse: [],
-    postParse: []
-  }
+  contents: [
+    {
+      path: "contents",
+      generatePath: "blog",
+      template: "blog.ulka"
+    }
+  ]
 }

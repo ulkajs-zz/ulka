@@ -6,6 +6,8 @@ let ulkaConfigs: { [key: string]: string | any } = {}
 
 try {
   const configExists = fs.existsSync(path.join(process.cwd(), "ulka-config.js"))
+
+  console.log("PATH", path.join(process.cwd(), "ulka-config.js"))
   if (configExists)
     ulkaConfigs = require(path.join(process.cwd(), "ulka-config.js"))
 } catch (e) {

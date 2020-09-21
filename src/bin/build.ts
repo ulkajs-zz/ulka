@@ -8,7 +8,6 @@ async function build() {
   try {
     console.log(">> Copying assets".green)
     await copyAssets(path.join(process.cwd(), "src"), configs.buildPath)
-
     console.log(">> Generating pages\n".green)
     await generate()
   } catch (e) {
