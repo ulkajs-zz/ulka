@@ -75,6 +75,8 @@
     "*.{ts}": "eslint --cache --fix"
   },
   "husky": {
-    "hooks": {}
+    "hooks": {
+      "pre-commit": "npm run lint-staged && npm run test"
+    }
   }
 }
