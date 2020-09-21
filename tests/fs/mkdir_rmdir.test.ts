@@ -1,9 +1,9 @@
 import fs from "fs"
-import mkdir from "../../src/fs/mkdir"
-import rmdir from "../../src/fs/rmdir"
-import absolutePath from "../../src/utils/absolutePath"
 
-const folderPath = "tests/resources/fsmkrmdir_test/created_folder"
+import { mkdir, rmdir } from "../../src/fs"
+import absolutePath from "../../src/utils/absolute-path"
+
+const folderPath = "tests/resources/fs_test/mkdir_rmdir/created_folder"
 
 describe("add and remove directories", () => {
   test("should add directory", async () => {

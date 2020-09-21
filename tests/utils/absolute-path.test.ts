@@ -1,5 +1,5 @@
 import path from "path"
-import absolutePath from "../../src/utils/absolutePath"
+import absolutePath from "../../src/utils/absolute-path"
 
 describe("AbsolutePath function", () => {
   describe("on given path/to/file", () => {

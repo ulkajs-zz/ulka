@@ -28,9 +28,9 @@ const parseUrlPath = (css: string, f: string) => {
 
 const copyAssets = async (
   dir = path.join(process.cwd(), "src"),
-  to = "build"
+  to = configs.buildPath
 ) => {
-  await mkdir(`${to}/__assets__`)
+  await mkdir(absolutePath(`${to}/__assets__`))
 
   const files = allFiles(dir)
 
@@ -51,7 +51,7 @@ const copyAssets = async (
       const generatedName = generateFileName(path.format(f))
 
       const writePath =
-        absolutePath(`${configs.buildPath}/__assets__/${generatedName}`) + f.ext
+        absolutePath(`${to}/__assets__/${generatedName}`) + f.ext
 
       let readAssetsFile
       if (f.ext === ".css") {
