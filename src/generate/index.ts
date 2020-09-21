@@ -1,5 +1,7 @@
 import { allFiles } from "../fs"
 import MDSource from "../source/md"
+import globalInfo from "../globalInfo"
+import UlkaSource from "../source/ulka"
 import config from "../utils/data-utils/configs"
 import absolutePath from "../utils/path-utils/absolute-path"
 import {
@@ -8,10 +10,9 @@ import {
   beforeMdParse,
   beforeUlkaParse
 } from "../utils/data-utils/plugins"
-import UlkaSource from "../source/ulka"
-import globalInfo from "../globalInfo"
 
 const { contents, pagesPath, templatesPath } = config
+
 export default async function generate() {
   for (let i = 0; i < contents.length; i++) {
     const content = contents[i]
@@ -36,10 +37,10 @@ export default async function generate() {
     }
 
     const reqData = mdDatas.map(d => ({
-      data: d.context.data,
       markdown: d.context.markdown,
-      html: d.context.html,
+      data: d.context.html,
       frontMatter: d.context.frontMatter,
+      fields: d.context.fields,
       link: d.context.link,
       fPath: d.context.fPath,
       buildPath: d.context.buildFilePath
@@ -49,7 +50,7 @@ export default async function generate() {
 
     for (let j = 0; j < mdDatas.length; j++) {
       const data = mdDatas[j]
-      data.generate(reqData, j)
+      data.generate(reqData)
     }
   }
 

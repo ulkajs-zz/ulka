@@ -27,16 +27,24 @@ class MDSource extends Source {
 
     this.context.frontMatter = data
     this.context.markdown = content
+    this.context.fields = {}
 
     for (let i = 0; i < plugins.before.length; i++) {
       const plugin = plugins.before[i]
 
       const pluginContext = {
         markdown: this.context.markdown,
-        frontMatter: this.context.frontMatter
+        frontMatter: this.context.frontMatter,
+        fields: this.context.fields
       }
 
       await plugin(pluginContext)
+
+      /**
+       * Changing the whole markdown is a bad idea, one can use remark plugin for this
+       * But keeping here, in case anyone needs it (NOT RECOMMENDED AT ALL).
+       */
+      this.context.markdown = pluginContext.markdown
     }
 
     const node = await processor().process(this.context.markdown)
@@ -47,15 +55,24 @@ class MDSource extends Source {
 
       const pluginContext = {
         html: this.context.html,
-        frontMatter: this.context.frontMatter
+        frontMatter: this.context.frontMatter,
+        fields: this.context.fields
       }
 
       await plugin(pluginContext)
+
+      /**
+       * Changing the whole html is a bad idea, one can use rehype plugin for this
+       * But keeping here, in case anyone needs it (NOT RECOMMENDED AT ALL).
+       */
+      this.context.html = pluginContext.html
     }
 
     return {
       html: this.context.html,
-      frontMatter: this.context.frontMatter
+      frontMatter: this.context.frontMatter,
+      fields: this.context.fields,
+      markdown: this.context.markdown
     }
   }
 
@@ -90,17 +107,22 @@ class MDSource extends Source {
     return { tmpPath, link: link, buildFilePath }
   }
 
-  async generate(datas: any, index?: number) {
+  async generate(datas: any) {
     let html = this.context.html
-    let frontMatter = this.context.frontMatter
     let link = this.context.link
-    let buildFilePath = this.context.buildFilePath
     let tmpPath = this.context.tmpPath
+    let buildFilePath = this.context.buildFilePath
 
-    if (!html || !frontMatter) {
+    let fields = this.context.fields
+    let frontMatter = this.context.frontMatter
+    let markdown = this.context.markdown
+
+    if (!html || !frontMatter || !fields || !markdown) {
       const data = await this.transform()
       html = data.html
       frontMatter = data.frontMatter
+      fields = data.fields
+      markdown = data.markdown
     }
 
     if (!link || !buildFilePath || !tmpPath) {
@@ -120,7 +142,11 @@ class MDSource extends Source {
         contentData: datas,
         data: html,
         frontMatter,
-        index
+        fields,
+        markdown,
+        link,
+        buildFilePath,
+        fPath: this.context.fPath
       }
     })
 
