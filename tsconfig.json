@@ -12,7 +12,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "typeRoots": ["@types", "node_modules/@types"]
+    "resolveJsonModule": true,
+    "typeRoots": ["@types", "node_modules/@types"],
   },
   "exclude": ["node_modules", "**/*.test.ts", "dist"]
 }
