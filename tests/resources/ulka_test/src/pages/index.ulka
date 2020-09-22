@@ -1,8 +1,15 @@
+{% 
+    const file = $import('../data/index.ulka.txt')
+%}
+
 <html>
     <head>
         <title>Ulka Js</title>
+        <link rel="stylesheet" href="{% $assets('../assets/style.css') %}" />
     </head>
     <body>
         <h1>Hello World</h1>
+        {% file %}
+        <img src="{% $assets('../assets/tick.svg') %}" />
     </body>
 </html>
