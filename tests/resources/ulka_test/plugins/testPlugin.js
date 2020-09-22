@@ -13,5 +13,17 @@ module.exports = () => ({
 
   afterUlkaParse: () => {
     console.log("After ulka parse")
-  }
+  },
+
+  rehypePlugin: () => ({
+    plugin: () => {
+      console.log("rehype plugin")
+    }
+  }),
+
+  remarkPlugin: () => ({
+    plugin: () => {
+      console.log("remark plugin")
+    }
+  })
 })

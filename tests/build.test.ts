@@ -1,4 +1,3 @@
-import { rmdir } from "../src/fs"
 import path from "path"
 
 const curDir = process.cwd()
