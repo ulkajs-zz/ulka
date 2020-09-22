@@ -7,14 +7,11 @@ import build from "./build"
 import serve from "./serve"
 import { rmdir } from "../fs"
 import globalInfo from "../globalInfo"
-import * as plugins from "../data/plugins"
 import createProject from "../utils/cli-utils/create-project"
 
 const configs = globalInfo.configs
 
 program.version(require("../../package.json").version)
-
-const { beforeBuild, afterBuild } = plugins
 
 program
   .command("build")
@@ -24,19 +21,7 @@ program
     console.log("\n>> Building static files".yellow)
 
     const startBuild = new Date().getTime()
-
-    for (let i = 0; i < beforeBuild.length; i++) {
-      const plugin = beforeBuild[i]
-      await plugin(globalInfo)
-    }
-
     await build()
-
-    for (let i = 0; i < afterBuild.length; i++) {
-      const plugin = afterBuild[i]
-      await plugin(globalInfo)
-    }
-
     const finishBuild = new Date().getTime()
 
     console.log(

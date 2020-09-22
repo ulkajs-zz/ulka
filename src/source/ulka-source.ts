@@ -43,12 +43,15 @@ class UlkaSource extends Source {
 
     for (let i = 0; i < plugins.before.length; i++) {
       const plugin = plugins.before[i]
-      const d = await plugin(ulkaTemplate, this.values)
 
-      if (d) {
-        if (typeof d === "string") ulkaTemplate = d
-        else if (d.ulkaTemplate) ulkaTemplate = d.ulkaTemplate
+      const pluginContext = {
+        ulkaTemplate,
+        values: this.values
       }
+
+      await plugin(pluginContext)
+
+      ulkaTemplate = pluginContext.ulkaTemplate
     }
 
     const html = await parse(ulkaTemplate, this.values, {
@@ -60,14 +63,15 @@ class UlkaSource extends Source {
 
     for (let i = 0; i < plugins.after.length; i++) {
       const plugin = plugins.after[i]
-      const d = await plugin(this.context.html, this.values)
 
-      if (d) {
-        if (typeof d === "string") this.context.html = d
-        else if (d.ulkaTemplate || d.html) {
-          this.context.html = d.ulkaTemplate || d.html
-        }
+      const pluginContext = {
+        html: this.context.html,
+        values: this.values
       }
+
+      await plugin(pluginContext)
+
+      this.context.html = pluginContext.html
     }
 
     return this.context.html

@@ -1,3 +1,4 @@
+import { Processor } from "unified/types/ts3.4/index"
 import configs from "./configs"
 
 function getPluginFunction(plugin: any) {
@@ -30,17 +31,55 @@ function getPlugins(funcName: string) {
     .map((pluginObj: any) => argsAndOptionsToPlugins(pluginObj, funcName))
 }
 
-const beforeUlkaParse = getPlugins("beforeUlkaParse")
-const afterUlkaParse = getPlugins("afterUlkaParse")
+export type PluginBeforeUlka = (context: {
+  ulkaTemplate: string
+  values: object
+}) => void
 
-const beforeMdParse = getPlugins("beforeMdParse")
-const afterMdParse = getPlugins("afterMdParse")
+export type PluginAfterUlka = (context: {
+  html: string
+  values: object
+}) => void
 
-const beforeBuild = getPlugins("beforeBuild")
-const afterBuild = getPlugins("afterBuild")
+export type PluginBeforeMd = (context: {
+  markdown: string
+  frontMatter: object
+  fields: object
+}) => void
 
-const remarkPlugins = getPlugins("remarkPlugin")
-const rehypePlugins = getPlugins("rehypePlugin")
+export type PluginAfterMd = (context: {
+  html: string
+  frontMatter: object
+  fields: object
+}) => void
+
+export type UlkaPluginRemark = (
+  processor: Processor
+) => {
+  plugin: any
+  options: object
+}
+
+export type UlkaPluginRehype = (
+  processor: Processor
+) => {
+  plugin: any
+  options: object
+}
+
+export type BeforeAfterBuild = (globalInfo: object) => void
+
+const beforeUlkaParse: PluginBeforeUlka[] = getPlugins("beforeUlkaParse")
+const afterUlkaParse: PluginAfterUlka[] = getPlugins("afterUlkaParse")
+
+const beforeMdParse: PluginBeforeMd[] = getPlugins("beforeMdParse")
+const afterMdParse: PluginAfterMd[] = getPlugins("afterMdParse")
+
+const beforeBuild: BeforeAfterBuild[] = getPlugins("beforeBuild")
+const afterBuild: BeforeAfterBuild[] = getPlugins("afterBuild")
+
+const remarkPlugins: UlkaPluginRemark[] = getPlugins("remarkPlugin")
+const rehypePlugins: UlkaPluginRehype[] = getPlugins("rehypePlugin")
 
 export {
   beforeUlkaParse,
