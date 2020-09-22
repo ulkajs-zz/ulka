@@ -25,4 +25,15 @@ describe("all Files function", () => {
     )
     expect(allJsFiles).toMatchSnapshot()
   })
+
+  test("should return the file in a array if file path is provided", () => {
+    const file1 = allFiles(absolutePath(testDir + "/file1.js")).map(f =>
+      path.relative(process.cwd(), f).split(path.sep).join("/")
+    )
+    expect(file1).toMatchInlineSnapshot(`
+      Array [
+        "tests/resources/fs_test/allfiles/file1.js",
+      ]
+    `)
+  })
 })
