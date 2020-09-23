@@ -1,0 +1,11 @@
+/* 
+IDK if these links work or not
+Just keeping here for testing
+*/
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
+@import url("//fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
+@import url("http://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
+
+* {
+  background-image: url(./idk/the/path);
+}

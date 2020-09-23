@@ -1,3 +1,5 @@
+const testPlugin = require("./plugins/testPlugin")
+
 module.exports = {
   siteMetaData: {
     title: "UlkaJs",
@@ -6,12 +8,12 @@ module.exports = {
   buildPath: "build",
   pagesPath: "pages",
   templatesPath: "templates",
-
-  contents: {
-    path: "contents",
-    generatePath: "blog",
-    template: "blog.ulka",
-    preParse: [],
-    postParse: []
-  }
+  plugins: [testPlugin],
+  contents: [
+    {
+      path: "contents",
+      generatePath: "blog",
+      template: "blog.ulka"
+    }
+  ]
 }

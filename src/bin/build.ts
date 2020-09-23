@@ -1,43 +1,27 @@
 import path from "path"
+
+import { copyAssets } from "../fs"
+import generate from "../generate"
 import globalInfo from "../globalInfo"
-import copyAssets from "../fs/copyAssets"
-import generateFromMd from "../generate/generateMd"
-import generateFromUlka from "../generate/generateUlka"
+import { beforeBuild, afterBuild } from "../data/plugins"
 
-async function build(name = "*") {
-  globalInfo.contentFiles = []
+const { configs } = globalInfo
 
-  const buildPath = globalInfo.configs.buildPath
-
-  if (globalInfo.status === "serving") globalInfo.configs.buildPath = ".debug"
-  else globalInfo.configs.buildPath = buildPath
-
+async function build() {
   try {
-    console.log(">> Copying assets".green)
-
-    if (name === "*" || name === "copy")
-      await copyAssets(
-        path.join(process.cwd(), "src"),
-        globalInfo.configs.buildPath
-      )
-
-    if (name === "*" || name === "md") {
-      console.log(">> Generating from markdown files".green)
-
-      const contentsIsArray = Array.isArray(globalInfo.configs.contents)
-      if (contentsIsArray) {
-        for (let i = 0; i < globalInfo.configs.contents.length; i++) {
-          const contentsDir = globalInfo.configs.contents[i]
-          await generateFromMd(contentsDir, i)
-        }
-      } else {
-        await generateFromMd(globalInfo.configs.contents)
-      }
+    for (let i = 0; i < beforeBuild.length; i++) {
+      const plugin = beforeBuild[i]
+      await plugin(globalInfo)
     }
 
-    if (name === "*" || name === "ulka") {
-      console.log(">> Generating from ulka files".green)
-      await generateFromUlka()
+    console.log(">> Copying assets".green)
+    await copyAssets(path.join(process.cwd(), "src"), configs.buildPath)
+    console.log(">> Generating pages\n".green)
+    await generate()
+
+    for (let i = 0; i < afterBuild.length; i++) {
+      const plugin = afterBuild[i]
+      await plugin(globalInfo)
     }
   } catch (e) {
     console.log(`>> ${e.toString()}\n`.red)

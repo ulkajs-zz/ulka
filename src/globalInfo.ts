@@ -1,17 +1,18 @@
-import configs from "./parse/parseConfig"
+import configs from "./data/configs"
 
 interface globalInfoType {
-  contentFiles: any[]
-  pagesFiles: any[]
+  contentFiles: {
+    [key: string]: any
+  }
   configs: any
   status: string
+  [key: string]: any
 }
 
 const globalInfo: globalInfoType = {
-  contentFiles: [],
-  pagesFiles: [],
+  contentFiles: {},
   configs,
-  status: "serving"
+  status: "building"
 }
 
 export default globalInfo

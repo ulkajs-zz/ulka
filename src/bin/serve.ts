@@ -1,76 +1,15 @@
-import fs from "fs"
-import url from "url"
-import http, { IncomingMessage, ServerResponse } from "http"
+import http from "http"
 import path from "path"
 import WebSocket from "ws"
 import chokidar from "chokidar"
 import portfinder from "portfinder"
-// @ts-ignore
 import betterOpen from "better-opn"
 
 import build from "./build"
-import mimeType from "../utils/mimeTypes"
-import removeDirectories from "../fs/rmdir"
 import globalInfo from "../globalInfo"
-import linePrint from "../utils/linePrint"
-
-const configs = globalInfo.configs
-
-const createServer = (req: IncomingMessage, res: ServerResponse) => {
-  try {
-    // console.log(`${req.method} ${req.url}`)
-
-    const parsedUrl = url.parse(req.url!)
-    const sanitizePath = path
-      .normalize(parsedUrl.pathname!)
-      .replace(/^(\.\.[/\\])+/, "")
-
-    let pathname = path.join(process.cwd(), configs.buildPath, sanitizePath)
-
-    if (!fs.existsSync(pathname)) {
-      res.statusCode = 404
-      res.end(`File ${pathname} not found!`)
-      return
-    }
-
-    if (fs.statSync(pathname).isDirectory()) {
-      pathname = path.join(pathname, "index.html")
-    }
-
-    let data = fs.readFileSync(pathname)
-    const ext = path.parse(pathname).ext
-    res.setHeader("Content-type", mimeType[ext] || "text/plain")
-
-    if (ext === ".html") {
-      // @ts-ignore
-      data += `
-        <script>
-        if ('WebSocket' in window) {
-            const protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-            const address = protocol + window.location.host + window.location.pathname;
-            const ws = new WebSocket(address);
-            ws.addEventListener('message', e => {
-              if (e.data === 'refresh-css') {
-                const links = document.querySelectorAll("link[rel='stylesheet']");
-                links.forEach(link => {
-                  link.href += "";
-                })
-              }
-
-              if(e.data === "reload-page") location.reload()
-            });
-        }else {
-          console.warn("Your browser doesn't support websockets, so can't live reload")
-        }
-        </script>  
-        `
-    }
-    res.end(data)
-  } catch (e) {
-    res.statusCode = 500
-    res.end(e.message)
-  }
-}
+import { rmdir } from "../fs"
+import linePrint from "../utils/cli-utils/line-print"
+import createServer from "../utils/cli-utils/create-server"
 
 const liveServer = async (usersPort = 3000) => {
   const port = await portfinder.getPortPromise({ port: usersPort })
@@ -81,12 +20,11 @@ const liveServer = async (usersPort = 3000) => {
 
   linePrint(`>> Server is listening on port ${port}`, "yellow")
 
-  let socket: WebSocket
+  let socket: WebSocket | null = null
   wss.on("connection", ws => {
     socket = ws
   })
 
-  //  @ts-ignore
   if (!socket) await betterOpen(`http://localhost:${port}`)
 
   chokidar
@@ -101,8 +39,21 @@ const liveServer = async (usersPort = 3000) => {
     .on("add", chokidarEvent)
     .on("unlink", async (p: any) => {
       const assetsPath = path.join(globalInfo.configs.buildPath, "__assets__")
-      removeDirectories(assetsPath)
-      await chokidarEvent(p)
+      rmdir(assetsPath)
+
+      console.clear()
+      linePrint(">> File change detected", "yellow")
+      const ext = path.parse(p).ext
+
+      await build()
+
+      if (ext === ".css") {
+        if (socket) socket.send("refresh-css")
+      } else {
+        if (socket) socket.send("reload-page")
+      }
+
+      linePrint(`>> Server is listening on port ${port}`, "yellow")
     })
 
   async function chokidarEvent(p: any) {
@@ -110,12 +61,11 @@ const liveServer = async (usersPort = 3000) => {
     linePrint(">> File change detected", "yellow")
     const ext = path.parse(p).ext
 
+    await build()
+
     if (ext === ".css") {
-      await build("copy")
       if (socket) socket.send("refresh-css")
     } else {
-      await build()
-
       if (socket) socket.send("reload-page")
     }
 

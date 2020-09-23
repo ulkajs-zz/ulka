@@ -1,9 +1,13 @@
 import fs from "fs"
-import absolutePath from "../utils/absolutePath"
+import { isAbsolute } from "path"
+import absolutePath from "../utils/absolute-path"
 
 const createDirectories = async (pathname: string) => {
-  pathname = pathname.replace(/^\.*\/|\/?[^/]+\.[a-z]+|\/$/g, "")
-  return await fs.promises.mkdir(absolutePath(pathname), {
+  if (!isAbsolute(pathname)) {
+    pathname = absolutePath(pathname)
+  }
+
+  await fs.promises.mkdir(pathname, {
     recursive: true
   })
 }
