@@ -10,8 +10,16 @@ import config from "../data/configs"
 import $import from "../utils/ulka-source-utils/$import"
 import absolutePath from "../utils/absolute-path"
 
-class UlkaSource extends Source {
-  constructor(context: SourceContext) {
+export interface UlkaSourceContext extends SourceContext {
+  values?: object
+  plugins: {
+    before: any[]
+    after: any[]
+  }
+}
+
+class UlkaSource extends Source<UlkaSourceContext> {
+  constructor(context: UlkaSourceContext) {
     super(context)
   }
 
@@ -114,7 +122,7 @@ class UlkaSource extends Source {
     writeFileSync(buildPath, html)
   }
 
-  static async transform(context: SourceContext) {
+  static async transform(context: UlkaSourceContext) {
     const ulkaSourceInstance = new UlkaSource(context)
     return await ulkaSourceInstance.transform()
   }

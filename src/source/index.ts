@@ -10,8 +10,8 @@ export interface SourceContext {
   [key: string]: any
 }
 
-abstract class Source {
-  constructor(public context: SourceContext) {}
+abstract class Source<T extends SourceContext> {
+  constructor(public context: T) {}
 
   get data(): string | Promise<string> {
     if (!this.context.data) {

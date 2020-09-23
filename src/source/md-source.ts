@@ -11,8 +11,15 @@ import processor from "../utils/unified-processor"
 import absolutePath from "../utils/absolute-path"
 import { afterUlkaParse, beforeUlkaParse } from "../data/plugins"
 
-class MDSource extends Source {
-  constructor(context: SourceContext) {
+export interface MDSourceContext extends SourceContext {
+  plugins: {
+    before: any[]
+    after: any[]
+  }
+}
+
+class MDSource extends Source<MDSourceContext> {
+  constructor(context: MDSourceContext) {
     super(context)
   }
 
@@ -156,7 +163,7 @@ class MDSource extends Source {
     writeFileSync(buildFilePath, tHtml)
   }
 
-  static async transform(context: SourceContext) {
+  static async transform(context: MDSourceContext) {
     const mdSourceInstance = new MDSource(context)
 
     return await mdSourceInstance.transform()
