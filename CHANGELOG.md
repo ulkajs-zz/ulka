@@ -1,8 +1,15 @@
 # Changelog
 
+## v0.5.1
+
+- Support relative images in markdown.
+- Support ulka syntax in markdown.
+- Use relative image path for generating hash.
+- Bug fixes.
+
 ## v0.5.0
 
-- Added class for source.
+- Source class added
   - UlkaSource
   - MdSource
 - Removed `$importUlka`
