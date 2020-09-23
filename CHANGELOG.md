@@ -8,7 +8,7 @@
 - Removed `$importUlka`
 - Added new function `$import`
   - Returns base64 from images.
-  - Returns parsed html from ulka and markdown
+  - Returns transformed html from ulka and markdown
 - [name].ulka.[ext] files are ignored and aren't copied to build directory.
 - Complete build on file change (live-server)
 - Plugins can modify the arguements provided.
