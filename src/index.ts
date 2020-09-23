@@ -9,3 +9,4 @@ export {
   UlkaPluginRehype,
   UlkaPluginRemark
 } from "./data/plugins"
+export { default as globalInfo } from "./globalInfo"

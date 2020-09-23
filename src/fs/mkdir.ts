@@ -2,7 +2,7 @@ import fs from "fs"
 import { isAbsolute } from "path"
 import absolutePath from "../utils/absolute-path"
 
-const createDirectories = async (pathname: string) => {
+const mkdir = async (pathname: string) => {
   if (!isAbsolute(pathname)) {
     pathname = absolutePath(pathname)
   }
@@ -12,4 +12,4 @@ const createDirectories = async (pathname: string) => {
   })
 }
 
-export default createDirectories
+export default mkdir

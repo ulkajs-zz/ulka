@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import absolutePath from "../utils/absolute-path"
 
-const removeDirectories = (pathname: string) => {
+const rmdir = (pathname: string) => {
   rmdirSync(absolutePath(pathname))
 }
 
@@ -24,4 +24,4 @@ function rmdirSync(pathname: string) {
   }
 }
 
-export default removeDirectories
+export default rmdir

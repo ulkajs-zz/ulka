@@ -9,7 +9,7 @@ import generateFileName from "../utils/generate-file-name"
 
 const configs = globalInfo.configs
 
-const parseUrlPath = (css: string, f: string) => {
+const changeCssUrlPath = (css: string, f: string) => {
   return css.replace(/ url\((.*?)\)/gs, (...args) => {
     const pathGiven = args[1].replace(/'|"/gs, "")
 
@@ -56,7 +56,7 @@ const copyAssets = async (
       let readAssetsFile
       if (f.ext === ".css") {
         readAssetsFile = fs.readFileSync(path.format(f), "utf-8")
-        readAssetsFile = parseUrlPath(readAssetsFile, f.dir)
+        readAssetsFile = changeCssUrlPath(readAssetsFile, f.dir)
       } else {
         readAssetsFile = fs.readFileSync(path.format(f))
       }

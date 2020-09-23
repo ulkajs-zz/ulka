@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.2
+
+- globalInfo is exported from index file.
+- Better name for functions
+
 ## v0.5.1
 
 - Support relative images in markdown.
