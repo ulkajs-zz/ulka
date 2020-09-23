@@ -24,17 +24,24 @@ describe("Build function", () => {
     expect(contentFiles).toMatchInlineSnapshot(`
       Array [
         Object {
-          "data": "<h1>This is post one</h1>",
+          "data": "<h1>This is post one</h1>
+      <img src=\\"/__assets__/492d72773900d0997eebfb9dd2a24c.svg\\">
+      <p><img src=\\"/__assets__/492d72773900d0997eebfb9dd2a24c.svg\\" alt=\\"Tick\\"></p>",
           "fields": Object {},
           "frontMatter": Object {
+            "date": 2020-12-12T00:00:00.000Z,
+            "description": "This is a description",
             "title": "Post 1",
           },
           "link": "/blog/post-1/",
         },
         Object {
-          "data": "<h1>Post 2</h1>",
+          "data": "<h1>Post 2</h1>
+      <p>This is post 2</p>",
           "fields": Object {},
           "frontMatter": Object {
+            "date": 2020-08-12T00:00:00.000Z,
+            "description": "This is a description 2",
             "title": "Post 2",
           },
           "link": "/blog/post-2/",

@@ -4,12 +4,6 @@ import globalInfo from "../globalInfo"
 import UlkaSource from "../source/ulka-source"
 import config from "../data/configs"
 import absolutePath from "../utils/absolute-path"
-import {
-  afterMdParse,
-  afterUlkaParse,
-  beforeMdParse,
-  beforeUlkaParse
-} from "../data/plugins"
 
 const { contents, pagesPath, templatesPath } = config
 
@@ -25,10 +19,6 @@ export default async function generate() {
       const file = mdFiles[j]
       const mdSource = new MDSource({
         fPath: file,
-        plugins: {
-          before: beforeMdParse,
-          after: afterMdParse
-        },
         contentInfo: { ...content, template: tmpPath }
       })
       await mdSource.transform()
@@ -60,11 +50,7 @@ export default async function generate() {
   for (let i = 0; i < ulkaFiles.length; i++) {
     const file = ulkaFiles[i]
     const ulkaSource = new UlkaSource({
-      fPath: file,
-      plugins: {
-        before: beforeUlkaParse,
-        after: afterUlkaParse
-      }
+      fPath: file
     })
 
     await ulkaSource.generate()

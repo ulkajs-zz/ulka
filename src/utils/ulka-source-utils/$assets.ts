@@ -1,3 +1,4 @@
+import url from "url"
 import path from "path"
 import generateFileName from "../generate-file-name"
 
@@ -10,8 +11,10 @@ const $assets = (rPath: string, filePath: string) => {
   // Check extension of required file
   const ext = parsedPath.ext
 
-  // Return hashed fileName path
-  return path.join(path.sep, "__assets__", fileName) + ext
+  // hashed fileName path
+  const pathToFile = path.join(path.sep, "__assets__", fileName) + ext
+
+  return url.format(pathToFile)
 }
 
 export default $assets

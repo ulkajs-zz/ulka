@@ -1,12 +1,6 @@
 import path from "path"
 import { readFileSync } from "fs"
 import UlkaSource from "../../source/ulka-source"
-import {
-  afterMdParse,
-  afterUlkaParse,
-  beforeMdParse,
-  beforeUlkaParse
-} from "../../data/plugins"
 import MDSource from "../../source/md-source"
 
 const imgExts = [".jpeg", ".jpg", ".png", ".gif", ".bmp", ".svg", ".webp"]
@@ -22,19 +16,11 @@ const $import = async (rPath: string, values: any, filePath: string) => {
   if (ext === ".ulka") {
     return await UlkaSource.transform({
       fPath: file,
-      values,
-      plugins: {
-        before: beforeUlkaParse,
-        after: afterUlkaParse
-      }
+      values
     })
   } else if (ext === ".md") {
     const data = await MDSource.transform({
-      fPath: file,
-      plugins: {
-        before: beforeMdParse,
-        after: afterMdParse
-      }
+      fPath: file
     })
 
     return data.html

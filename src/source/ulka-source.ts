@@ -9,18 +9,28 @@ import $assets from "../utils/ulka-source-utils/$assets"
 import config from "../data/configs"
 import $import from "../utils/ulka-source-utils/$import"
 import absolutePath from "../utils/absolute-path"
+import {
+  afterUlkaParse,
+  beforeUlkaParse,
+  PluginAfterUlka,
+  PluginBeforeUlka
+} from "../data/plugins"
 
 export interface UlkaSourceContext extends SourceContext {
   values?: object
-  plugins: {
-    before: any[]
-    after: any[]
+  plugins?: {
+    before: PluginBeforeUlka[]
+    after: PluginAfterUlka[]
   }
 }
 
 class UlkaSource extends Source<UlkaSourceContext> {
   constructor(context: UlkaSourceContext) {
     super(context)
+    this.context.plugins = {
+      before: beforeUlkaParse,
+      after: afterUlkaParse
+    }
   }
 
   get values() {
@@ -43,7 +53,7 @@ class UlkaSource extends Source<UlkaSourceContext> {
    * Use `after` plugins
    */
   async transform(): Promise<string> {
-    const plugins = this.plugins
+    const plugins = this.context.plugins!
     let ulkaTemplate = await this.data
 
     if (!plugins.before) plugins.before = []

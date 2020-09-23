@@ -9,22 +9,33 @@ import Source, { SourceContext } from "."
 import config from "../data/configs"
 import processor from "../utils/unified-processor"
 import absolutePath from "../utils/absolute-path"
-import { afterUlkaParse, beforeUlkaParse } from "../data/plugins"
+import {
+  afterMdParse,
+  afterUlkaParse,
+  beforeMdParse,
+  beforeUlkaParse,
+  PluginAfterMd,
+  PluginBeforeMd
+} from "../data/plugins"
 
 export interface MDSourceContext extends SourceContext {
-  plugins: {
-    before: any[]
-    after: any[]
+  plugins?: {
+    before: PluginBeforeMd[]
+    after: PluginAfterMd[]
   }
 }
 
 class MDSource extends Source<MDSourceContext> {
   constructor(context: MDSourceContext) {
     super(context)
+    this.context.plugins = {
+      before: beforeMdParse,
+      after: afterMdParse
+    }
   }
 
   async transform() {
-    const plugins = this.plugins
+    const plugins = this.context.plugins!
 
     if (!plugins.before) plugins.before = []
     if (!plugins.after) plugins.after = []
@@ -51,10 +62,15 @@ class MDSource extends Source<MDSourceContext> {
        * Changing the whole markdown is a bad idea, one can use remark plugin for this
        * But keeping here, in case anyone needs it (NOT RECOMMENDED AT ALL).
        */
-      this.context.markdown = pluginContext.markdown
+      this.context.markdown = await UlkaSource.transform({
+        fPath: this.context.fPath,
+        data: pluginContext.markdown
+      })
     }
 
-    const node = await processor().process(this.context.markdown)
+    const node = await processor(this.context.fPath).process(
+      this.context.markdown
+    )
     this.context.html = String(node)
 
     for (let i = 0; i < plugins.after.length; i++) {

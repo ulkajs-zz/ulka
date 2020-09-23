@@ -31,6 +31,7 @@ describe("Package.json file", () => {
       "remark-rehype",
       "ulka-parser",
       "unified",
+      "unist-util-visit",
       "ws"
     ])
   })
