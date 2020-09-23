@@ -1,8 +1,12 @@
 /tests
 /src
 /.github
+/coverage
 .prettierrc
 .prettierignore
 .eslintignore
 .eslintrc.json
 jest.config.js
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+CHANGELOG.md
