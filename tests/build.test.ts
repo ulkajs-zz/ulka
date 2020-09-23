@@ -25,8 +25,8 @@ describe("Build function", () => {
       Array [
         Object {
           "data": "<h1>This is post one</h1>
-      <img src=\\"/__assets__/492d72773900d0997eebfb9dd2a24c.svg\\">
-      <p><img src=\\"/__assets__/492d72773900d0997eebfb9dd2a24c.svg\\" alt=\\"Tick\\"></p>",
+      <img src=\\"/__assets__/8a418db75ee887428f385946cb3cf1.svg\\">
+      <p><img src=\\"/__assets__/8a418db75ee887428f385946cb3cf1.svg\\" alt=\\"Tick\\"></p>",
           "fields": Object {},
           "frontMatter": Object {
             "date": 2020-12-12T00:00:00.000Z,
