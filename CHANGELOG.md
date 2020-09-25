@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.3
+
+- ulka-parser -> 0.3.1
+- await the content generate.
+
 ## v0.5.2
 
 - globalInfo is exported from index file.
