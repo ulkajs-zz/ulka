@@ -40,7 +40,7 @@ export default async function generate() {
 
     for (let j = 0; j < mdDatas.length; j++) {
       const data = mdDatas[j]
-      data.generate(reqData)
+      await data.generate(reqData)
     }
   }
 
