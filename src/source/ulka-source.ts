@@ -1,6 +1,6 @@
 import path from "path"
 import { writeFileSync } from "fs"
-import { parse } from "ulka-parser"
+import { compile } from "ulka-parser"
 
 import { mkdir } from "../fs"
 import globalInfo from "../globalInfo"
@@ -72,7 +72,7 @@ class UlkaSource extends Source<UlkaSourceContext> {
       ulkaTemplate = pluginContext.ulkaTemplate
     }
 
-    const html = await parse(ulkaTemplate, this.values, {
+    const html = await compile(ulkaTemplate, this.values, {
       base: path.parse(this.context.fPath).dir,
       logError: false
     })
