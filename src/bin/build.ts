@@ -11,7 +11,7 @@ async function build() {
   try {
     for (let i = 0; i < beforeBuild.length; i++) {
       const plugin = beforeBuild[i]
-      await plugin(globalInfo)
+      plugin(globalInfo)
     }
 
     console.log(">> Copying assets".green)
@@ -21,7 +21,7 @@ async function build() {
 
     for (let i = 0; i < afterBuild.length; i++) {
       const plugin = afterBuild[i]
-      await plugin(globalInfo)
+      plugin(globalInfo)
     }
   } catch (e) {
     console.log(`>> ${e.toString()}\n`.red)
