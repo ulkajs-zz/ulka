@@ -22,7 +22,7 @@ describe("Absolute path function", () => {
   })
 })
 
-describe("generate hash function", () => {
+describe("generateHash function", () => {
   test("should return hash from a string", () => {
     expect(generateHash("strongword")).not.toBe("strongword")
   })

@@ -21,10 +21,10 @@ function absolutePath(pathInString, cwd = process.cwd()) {
 /**
  * Get configs from ulka-config.js
  *
- * @param {String} [cwd]
+ * @param {String} cwd
  * @return {Configs} configs
  */
-function getConfigs(cwd = process.cwd()) {
+function getConfigs(cwd) {
   const defaultConfigs = {
     buildPath: "build",
     pagesPath: "pages",
