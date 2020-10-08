@@ -1,11 +1,13 @@
-const url = require("url")
-const path = require("path")
 const fs = require("fs")
+const url = require("url")
+const http = require("http")
+const path = require("path")
+const getport = require("get-port")
+
+const log = require("../../utils/ulka-log")
 
 /**
- * @typedef {import('http').IncomingMessage} Request
- * @typedef {import('http').OutgoingMessage} Response
- * @typedef {{base: String, live: Boolean}} Options
+ * @typedef {{base: String, live: Boolean, port: Number}} Options
  */
 
 const mimeTypesMap = {
@@ -51,8 +53,8 @@ if ('WebSocket' in window) {
 
 /**
  *
- * @param {Request} req
- * @param {Response} res
+ * @param {http.IncomingMessage} req
+ * @param {http.OutgoingMessage} res
  * @param {Options} options
  */
 function createServer(req, res, options) {
@@ -97,4 +99,27 @@ function createServer(req, res, options) {
   }
 }
 
-module.exports = createServer
+/**
+ *
+ * @param {Options} options
+ * @return {Promise<http.Server>} httpserver
+ */
+async function server(options) {
+  try {
+    const port = await getport({ port: options.port || 3000 })
+    const httpserver = http.createServer((req, res) =>
+      createServer(req, res, options)
+    )
+
+    httpserver.listen(port)
+
+    log.success(`Server is listening on port ${port}`)
+
+    return httpserver
+  } catch (e) {
+    log.error(`Live server failed!!! ${e}`)
+    process.exit(0)
+  }
+}
+
+module.exports = server

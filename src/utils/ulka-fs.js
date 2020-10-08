@@ -3,6 +3,7 @@ const path = require("path")
 
 /**
  * Remove the directory recursively
+ *
  * @param {String} pathToDirectory path to the directory
  */
 function rmdir(pathToDirectory) {
@@ -30,6 +31,7 @@ function mkdir(pathToDirectory) {
 }
 
 /**
+ * Find all files is a directory using recursion
  *
  * @param {String} dirPath path to the directory to search files.
  * @param {String} [ext] extension of the files to search.
