@@ -58,8 +58,14 @@ describe("mkdir and rmdir function", () => {
     expect(fs.existsSync(createDir)).toBe(true)
   })
 
-  test("should delete the directory", () => {
+  test("should delete the directory and throw error if dir doesn't exist", () => {
+    fs.writeFileSync(path.join(createDir, "index.html"), "Test String") // rmdir should delete this file too.
+
     rmdir(removeDir)
     expect(fs.existsSync(removeDir)).toBe(false)
+
+    expect(() => rmdir(removeDir)).toThrow(
+      `Provided directory ${removeDir} doesn't exist`
+    )
   })
 })

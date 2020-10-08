@@ -16,6 +16,8 @@ function rmdir(pathToDirectory) {
       }
     })
     fs.rmdirSync(pathToDirectory)
+  } else {
+    throw new Error(`Provided directory ${pathToDirectory} doesn't exist`)
   }
 }
 
