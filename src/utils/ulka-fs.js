@@ -1,4 +1,5 @@
 const fs = require("fs")
+const path = require("path")
 
 /**
  * Remove the directory recursively
