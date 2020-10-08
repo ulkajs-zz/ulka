@@ -6,7 +6,7 @@ const path = require("path")
  * @return {String} absolute path
  */
 function absolutePath(pathInString) {
-  if (typeof args !== "string") {
+  if (typeof pathInString !== "string") {
     throw new Error("Path provided should be string")
   }
   return path.join(process.cwd(), ...pathInString.split("/"))
