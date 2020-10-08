@@ -2,8 +2,6 @@ const fs = require("fs")
 const path = require("path")
 const crypto = require("crypto")
 
-const log = require("./ulka-log")
-
 /** @typedef {{ buildPath: String; pagesPath: String; templatesPath: String; contents: any[]; plugins: any[] }} Configs */
 
 /**
@@ -35,35 +33,31 @@ function getConfigs(cwd = process.cwd()) {
     plugins: []
   }
 
-  try {
-    let reqConfigs = {}
+  let reqConfigs = {}
 
-    const configExists = fs.existsSync(path.join(cwd, "ulka-config.js"))
+  const configExists = fs.existsSync(path.join(cwd, "ulka-config.js"))
 
-    if (configExists) {
-      reqConfigs = require(path.join(cwd, "ulka-config.js"))
-    }
+  if (configExists) {
+    reqConfigs = require(path.join(cwd, "ulka-config.js"))
+  }
 
-    const configs = {
-      ...reqConfigs,
-      ...defaultConfigs
-    }
+  const configs = {
+    ...reqConfigs,
+    ...defaultConfigs
+  }
 
-    const pagesPath = absolutePath(configs.pagesPath, cwd)
-    const templatesPath = absolutePath(configs.templatesPath, cwd)
-    const contents = configs.contents.map(content => ({
-      ...content,
-      path: absolutePath(content.path, cwd)
-    }))
+  const pagesPath = absolutePath(configs.pagesPath, cwd)
+  const templatesPath = absolutePath(configs.templatesPath, cwd)
+  const contents = configs.contents.map(content => ({
+    ...content,
+    path: absolutePath(content.path, cwd)
+  }))
 
-    return {
-      ...configs,
-      pagesPath,
-      templatesPath,
-      contents
-    }
-  } catch (e) {
-    log.error(`Error while getting configs ${e}`)
+  return {
+    ...configs,
+    pagesPath,
+    templatesPath,
+    contents
   }
 }
 
@@ -73,7 +67,7 @@ function getConfigs(cwd = process.cwd()) {
  * @param {String} str
  * @return {String}
  */
-function generateHash(str) {
+function generateHash(str = "") {
   return crypto.scryptSync(str.toString(), str.toString(), 15).toString("hex")
 }
 

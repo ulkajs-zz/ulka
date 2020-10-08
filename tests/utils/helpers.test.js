@@ -1,4 +1,4 @@
-const { absolutePath } = require("../../src/utils/helpers")
+const { absolutePath, generateHash } = require("../../src/utils/helpers")
 const path = require("path")
 
 describe("Absolute path function", () => {
@@ -19,5 +19,15 @@ describe("Absolute path function", () => {
 
   test("Should throw an error if arg is not string", () => {
     expect(absolutePath).toThrow("Path provided should be string")
+  })
+})
+
+describe("generate hash function", () => {
+  test("should return hash from a string", () => {
+    expect(generateHash("strongword")).not.toBe("strongword")
+  })
+
+  test("should return hash for empty string if noting provided", () => {
+    expect(generateHash()).not.toBe("")
   })
 })
