@@ -1,11 +1,14 @@
-const path = require("path")
 const fs = require("fs")
+const path = require("path")
+const crypto = require("crypto")
+
 const log = require("./ulka-log")
 
 /** @typedef {{ buildPath: String; pagesPath: String; templatesPath: String; contents: any[]; plugins: any[] }} Configs */
 
 /**
  * Get absolute path
+ *
  * @param {String} pathInString path in string separated by / from cwd
  * @param {String} [cwd] Current working directory (default: process.cwd())
  * @return {String} absolute path
@@ -23,7 +26,7 @@ function absolutePath(pathInString, cwd = process.cwd()) {
  * @param {String} [cwd]
  * @return {Configs} configs
  */
-function getConfig(cwd = process.cwd()) {
+function getConfigs(cwd = process.cwd()) {
   const defaultConfigs = {
     buildPath: "build",
     pagesPath: "pages",
@@ -64,7 +67,18 @@ function getConfig(cwd = process.cwd()) {
   }
 }
 
+/**
+ * Generates hex hash from a string
+ *
+ * @param {String} str
+ * @return {String}
+ */
+function generateHash(str) {
+  return crypto.scryptSync(str.toString(), str.toString(), 15).toString("hex")
+}
+
 module.exports = {
   absolutePath,
-  getConfig
+  getConfigs,
+  generateHash
 }
