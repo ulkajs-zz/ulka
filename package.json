@@ -2,20 +2,18 @@
   "name": "ulka",
   "version": "0.5.3",
   "description": "Ulka - static site generator",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.js",
   "bin": {
-    "ulka": "./dist/bin/index.js"
+    "ulka": "./bin/index.js"
   },
   "scripts": {
     "test": "jest",
-    "build": "tsc",
-    "eslint": "eslint \"**/*.ts\"",
-    "eslint:fix": "eslint \"**/*.ts\" --fix",
-    "prettier": "prettier \"**/*.ts\"",
-    "prettier:write": "prettier --write \"**/*.ts\"",
+    "eslint": "eslint \"**/*.js\"",
+    "eslint:fix": "eslint \"**/*.js\" --fix",
+    "prettier": "prettier \"**/*.js\"",
+    "prettier:write": "prettier --write \"**/*.js\"",
     "lint-staged": "lint-staged",
-    "prepublishOnly": "npm run build && npm run eslint && npm run test"
+    "prepublishOnly": "npm run eslint && npm run test"
   },
   "repository": {
     "type": "git",
@@ -35,45 +33,28 @@
   },
   "homepage": "https://github.com/ulkajs/ulka#readme",
   "dependencies": {
-    "better-opn": "^2.0.0",
-    "chokidar": "^3.4.1",
-    "colors": "^1.4.0",
-    "commander": "^5.1.0",
-    "gray-matter": "^4.0.2",
-    "hast-util-raw": "^6.0.0",
-    "portfinder": "^1.0.27",
-    "rehype-stringify": "^8.0.0",
-    "remark-parse": "^8.0.3",
-    "remark-rehype": "^7.0.0",
+    "chalk": "^4.1.0",
+    "chokidar": "^3.4.2",
+    "commander": "^6.1.0",
+    "front-matter": "^4.0.2",
+    "portfinder": "^1.0.28",
+    "remarkable": "^2.0.1",
     "ulka-parser": "^0.3.1",
-    "unified": "^9.2.0",
-    "unist-util-visit": "^2.0.3",
     "ws": "^7.3.1"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.10",
-    "@types/node": "^14.6.0",
-    "@types/remarkable": "^1.7.4",
-    "@types/ws": "^7.2.6",
-    "@typescript-eslint/eslint-plugin": "^4.2.0",
-    "@typescript-eslint/parser": "^4.2.0",
-    "eslint": "^7.9.0",
+    "eslint": "^7.10.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "husky": "^4.2.5",
-    "jest": "^26.2.2",
-    "lint-staged": "^10.2.11",
-    "prettier": "^2.0.5",
-    "ts-jest": "^26.2.0",
-    "typescript": "^3.9.7"
+    "husky": "^4.3.0",
+    "lint-staged": "^10.4.0",
+    "prettier": "^2.1.2"
   },
   "lint-staged": {
-    "*.{ts}": "eslint --cache --fix"
+    "*.{js}": "eslint --cache --fix"
   },
   "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint-staged && npm run test"
-    }
+    "hooks": {}
   }
 }
