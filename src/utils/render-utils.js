@@ -4,10 +4,6 @@ const fm = require("front-matter")
 const { render } = require("ulka-parser")
 const { Remarkable } = require("remarkable")
 const { getConfigs } = require("./helpers")
-const {
-  generateContentMap,
-  generatePagesMap
-} = require("../generate/files-map")
 
 const md = new Remarkable()
 
@@ -129,31 +125,8 @@ function $import(rPath, values, filePath) {
 function ulkaInfo(cwd) {
   const configs = getConfigs(cwd)
 
-  const allContentsDataMap = {}
-  const allContentsMap = {}
-
-  for (const content of configs.contents) {
-    const contentMap = generateContentMap(content, { configs })
-
-    allContentsMap[content.name] = contentMap
-    allContentsDataMap[content.name] = Object.values(contentMap)
-  }
-
-  const pagesMap = generatePagesMap(configs.pagesPath, {
-    configs,
-    contents: allContentsDataMap
-  })
-
   return {
-    configs,
-
-    contents: allContentsDataMap,
-    contentsObject: allContentsMap,
-
-    pages: Object.values(pagesMap),
-    pagesObject: pagesMap,
-
-    task: "still"
+    configs
   }
 }
 
