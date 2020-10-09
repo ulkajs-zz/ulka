@@ -7,7 +7,7 @@
     "ulka": "./bin/index.js"
   },
   "scripts": {
-    "test": "jest",
+    "test": "cross-env FORCE_COLOR=1 jest",
     "eslint": "eslint \"**/*.js\" --color",
     "eslint:fix": "eslint \"**/*.js\" --fix --color",
     "prettier": "prettier \"**/*.js\"",
