@@ -3,6 +3,11 @@ const path = require("path")
 const fm = require("front-matter")
 const { render } = require("ulka-parser")
 const { Remarkable } = require("remarkable")
+const { getConfigs } = require("./helpers")
+const {
+  generateContentMap,
+  generatePagesMap
+} = require("../generate/files-map")
 
 const md = new Remarkable()
 
@@ -11,19 +16,42 @@ const md = new Remarkable()
  *
  * @param {String} filePath - Full path to the markdown file.
  * @param {Object} values - Variables to be available inside markdown
- * @return {{html: String, frontMatter: Object}}
+ * @param {Boolean} [isData]
+ * @return {{html: String, frontMatter: Object, fields: Object}}
  */
-function renderMarkdown(filePath, values) {
-  const markdown = fs.readFileSync(filePath, "utf-8")
-  const contents = fm(markdown)
+function renderMarkdown(filePath, values, isData = false) {
+  let markdown
 
-  const html = md.render(contents.body)
+  if (isData) {
+    markdown = filePath
+  } else {
+    markdown = fs.readFileSync(filePath, "utf-8")
+  }
 
-  const htmlFromUlka = renderUlka(html, values)
+  const data = {
+    markdown,
+    fields: {}
+  }
+
+  const { body, attributes } = fm(data.markdown)
+
+  data.body = body
+  data.frontMatter = attributes
+
+  data.html = md.render(data.body)
+
+  data.htmlFromUlka = renderUlka(data.html, {
+    frontMatter: data.frontMatter,
+    markdown: data.markdown,
+    fields: data.fields,
+    raw: data.html,
+    ...values
+  })
 
   return {
-    html: htmlFromUlka,
-    frontMatter: contents.attributes
+    html: data.htmlFromUlka,
+    frontMatter: data.markdown,
+    fields: data.fields
   }
 }
 
@@ -37,7 +65,7 @@ function renderMarkdown(filePath, values) {
 function renderUlka(filePath, values) {
   const template = fs.readFileSync(filePath, "utf-8")
 
-  const context = ulkaContext(values)
+  const context = ulkaContext(values, filePath)
 
   const html = render(template, context)
 
@@ -54,7 +82,9 @@ function renderUlka(filePath, values) {
 function ulkaContext(values, filePath) {
   values = {
     ...values,
-    $import: rPath => $import(rPath, values, filePath)
+    $import: (requirePath, $values = {}) => {
+      return $import(requirePath, { ...values, ...$values }, filePath)
+    }
   }
 
   return values
@@ -90,7 +120,45 @@ function $import(rPath, values, filePath) {
   }
 }
 
+/**
+ * Global Info
+ *
+ * @param {String} cwd
+ * @return {any} globalInfo
+ */
+function ulkaInfo(cwd) {
+  const configs = getConfigs(cwd)
+
+  const allContentsDataMap = {}
+  const allContentsMap = {}
+
+  for (const content of configs.contents) {
+    const contentMap = generateContentMap(content, { configs })
+
+    allContentsMap[content.name] = contentMap
+    allContentsDataMap[content.name] = Object.values(contentMap)
+  }
+
+  const pagesMap = generatePagesMap(configs.pagesPath, {
+    configs,
+    contents: allContentsDataMap
+  })
+
+  return {
+    configs,
+
+    contents: allContentsDataMap,
+    contentsObject: allContentsMap,
+
+    pages: Object.values(pagesMap),
+    pagesObject: pagesMap,
+
+    task: "still"
+  }
+}
+
 module.exports = {
   renderMarkdown,
-  renderUlka
+  renderUlka,
+  ulkaInfo
 }

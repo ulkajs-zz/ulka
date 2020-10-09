@@ -73,8 +73,21 @@ function generateHash(str = "") {
   return crypto.scryptSync(str.toString(), str.toString(), 15).toString("hex")
 }
 
+/**
+ * Change the extension of filePath
+ *
+ * @param {String} filePath File Path
+ * @param {String} newExtention New extension
+ * @return {String} FilePath with new extension
+ */
+function changeExtension(filePath, newExtention) {
+  const parsedPath = path.parse(filePath)
+  return path.join(parsedPath.dir, parsedPath.name, newExtention)
+}
+
 module.exports = {
   absolutePath,
   getConfigs,
-  generateHash
+  generateHash,
+  changeExtension
 }
