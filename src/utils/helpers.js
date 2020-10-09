@@ -42,11 +42,12 @@ function getConfigs(cwd) {
   }
 
   const configs = {
-    ...reqConfigs,
-    ...defaultConfigs
+    ...defaultConfigs,
+    ...reqConfigs
   }
 
   const pagesPath = absolutePath(configs.pagesPath, cwd)
+  const buildPath = absolutePath(configs.buildPath, cwd)
   const templatesPath = absolutePath(configs.templatesPath, cwd)
   const contents = configs.contents.map(content => ({
     ...content,
@@ -55,6 +56,7 @@ function getConfigs(cwd) {
 
   return {
     ...configs,
+    buildPath,
     pagesPath,
     templatesPath,
     contents
@@ -65,7 +67,7 @@ function getConfigs(cwd) {
  * Generates hex hash from a string
  *
  * @param {String} str
- * @return {String}
+ * @return {String} Hex hash from given string
  */
 function generateHash(str = "") {
   return crypto.scryptSync(str.toString(), str.toString(), 15).toString("hex")
