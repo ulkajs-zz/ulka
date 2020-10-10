@@ -1,18 +1,21 @@
-// const fs = require("fs")
-// const path = require("path")
+const fs = require("fs")
+const path = require("path")
+const Markdown = require("../generate/Markdown")
+const Ulka = require("../generate/Ulka")
 
 /**
  * Create context for ulka-parser from given values and default values
  *
  * @param {Object} values
  * @param {String} filePath
+ * @param {String} cwd
  * @return {Object} Context
  */
-function ulkaContext(values, filePath) {
+function ulkaContext(values, filePath, cwd) {
   values = {
     ...values,
     $import: (requirePath, $values = {}) => {
-      return $import(requirePath, { ...values, ...$values }, filePath)
+      return $import(requirePath, { ...values, ...$values }, filePath, cwd)
     }
   }
 
@@ -28,24 +31,27 @@ function ulkaContext(values, filePath) {
  * @param {String} rPath Require path
  * @param {Object} values Variables to be available inside ulka
  * @param {any} filePath Path to file
+ * @param {String} cwd
  * @return {any}
  */
-function $import(rPath, values, filePath) {
-  // const imgExts = [".jpeg", ".jpg", ".png", ".gif", ".bmp", ".svg", ".webp"]
-  // const file = path.join(path.parse(filePath).dir, rPath)
-  // const ext = path.parse(file).ext
-  // if (ext === ".ulka") {
-  //   return renderUlka(file, values)
-  // } else if (ext === ".md") {
-  //   return renderMarkdown(file, values).html
-  // } else if (imgExts.includes(ext)) {
-  //   const imgContent = fs.readFileSync(file, "base64")
-  //   return `data:image/${ext.substr(1)};base64,` + imgContent
-  // } else {
-  //   return fs.readFileSync(file, "utf-8")
-  // }
-
-  return ""
+function $import(rPath, values, filePath, cwd) {
+  const imgExts = [".jpeg", ".jpg", ".png", ".gif", ".bmp", ".svg", ".webp"]
+  const file = path.join(path.parse(filePath).dir, rPath)
+  const ext = path.parse(file).ext
+  if (ext === ".ulka") {
+    const raw = fs.readFileSync(file, "utf-8")
+    const uInstance = new Ulka(raw, file, values, cwd)
+    return uInstance.render()
+  } else if (ext === ".md") {
+    const raw = fs.readFileSync(file, "utf-8")
+    const mInstance = new Markdown(raw, file, values, {}, cwd)
+    return mInstance.render(true)
+  } else if (imgExts.includes(ext)) {
+    const imgContent = fs.readFileSync(file, "base64")
+    return `data:image/${ext.substr(1)};base64,` + imgContent
+  } else {
+    return fs.readFileSync(file, "utf-8")
+  }
 }
 
 module.exports = {
