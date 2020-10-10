@@ -1,7 +1,6 @@
 const fs = require("fs")
 const path = require("path")
 const { render } = require("ulka-parser")
-const { absolutePath } = require("../utils/helpers")
 const { ulkaContext } = require("../utils/render-utils")
 
 /** Class ULka */
@@ -39,7 +38,7 @@ class Ulka {
     const filePathFromPages = path.relative(configs.pagesPath, this.filePath)
     const parsedPath = path.parse(filePathFromPages)
 
-    let buildPath = absolutePath(`${configs.buildPath}/${parsedPath.dir}`)
+    let buildPath = path.join(configs.buildPath, parsedPath.dir)
 
     if (parsedPath.name === "index") {
       buildPath = path.join(buildPath, "index.html")

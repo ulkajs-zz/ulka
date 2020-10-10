@@ -1,6 +1,5 @@
 const fs = require("fs")
 const path = require("path")
-const { absolutePath } = require("../utils/helpers")
 const fm = require("front-matter")
 const { Remarkable } = require("remarkable")
 
@@ -65,9 +64,7 @@ class Markdown {
 
     const parsedPath = path.parse(filePathFromPages)
 
-    let buildPath = absolutePath(
-      `${configs.buildPath}/${genPath}/${parsedPath.dir}`
-    )
+    let buildPath = path.join(configs.buildPath, genPath, parsedPath.dir)
 
     if (parsedPath.name === "index") {
       buildPath = path.join(buildPath, "index.html")
