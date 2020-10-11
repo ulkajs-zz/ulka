@@ -5,25 +5,26 @@ const { allFiles } = require("../utils/ulka-fs")
 const Markdown = require("./Markdown")
 
 /**
- * @param {Object} ulkaInfo
+ * @param {Object} info
  * @param {Object} values
  * @param {String} cwd
  * @return {Object}
  */
-function createPagesMap(ulkaInfo, values, cwd) {
-  const { configs } = ulkaInfo
+function createPagesMap(info, values, cwd) {
+  const { configs } = info
   const pagesFiles = allFiles(configs.pagesPath, ".ulka")
 
   const pagesMap = {}
 
   for (const page of pagesFiles) {
     const raw = fs.readFileSync(page, "utf-8")
-    const uInstance = new Ulka(raw, page, { ulkaInfo, ...values }, cwd)
+    const uInstance = new Ulka(raw, page, { ulkaInfo: info, ...values }, cwd)
     uInstance.render()
-    uInstance.createInfo(ulkaInfo)
+    uInstance.createInfo(info)
     pagesMap[page] = {
       ...uInstance.info,
-      instance: uInstance
+      instance: uInstance,
+      configs
     }
   }
 
@@ -31,12 +32,12 @@ function createPagesMap(ulkaInfo, values, cwd) {
 }
 
 /**
- * @param {Object} ulkaInfo
+ * @param {Object} info
  * @param {String} cwd
  * @return {Object}
  */
-function createContentMap(ulkaInfo, cwd) {
-  const { configs } = ulkaInfo
+function createContentMap(info, cwd) {
+  const { configs } = info
 
   const contentsMap = {}
 
@@ -50,17 +51,18 @@ function createContentMap(ulkaInfo, cwd) {
       const mInstance = new Markdown(
         raw,
         content,
-        { ulkaInfo },
+        { ulkaInfo: info },
         contentInfo,
         cwd
       )
 
       mInstance.render(true)
-      mInstance.createInfo(ulkaInfo)
+      mInstance.createInfo(info)
 
       contentMap[content] = {
         ...mInstance.info,
-        instance: mInstance
+        instance: mInstance,
+        configs
       }
     }
 
