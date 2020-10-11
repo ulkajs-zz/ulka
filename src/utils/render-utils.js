@@ -1,7 +1,5 @@
 const fs = require("fs")
 const path = require("path")
-const Markdown = require("../generate/Markdown")
-const Ulka = require("../generate/Ulka")
 
 /**
  * Create context for ulka-parser from given values and default values
@@ -40,10 +38,12 @@ function $import(rPath, values, filePath, cwd) {
   const ext = path.parse(file).ext
   if (ext === ".ulka") {
     const raw = fs.readFileSync(file, "utf-8")
+    const Ulka = require("../generate/Ulka")
     const uInstance = new Ulka(raw, file, values, cwd)
     return uInstance.render()
   } else if (ext === ".md") {
     const raw = fs.readFileSync(file, "utf-8")
+    const Markdown = require("../generate/Markdown")
     const mInstance = new Markdown(raw, file, values, {}, cwd)
     return mInstance.render(true)
   } else if (imgExts.includes(ext)) {

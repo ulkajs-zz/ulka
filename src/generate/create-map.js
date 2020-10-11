@@ -6,10 +6,11 @@ const Markdown = require("./Markdown")
 
 /**
  * @param {Object} ulkaInfo
+ * @param {Object} values
  * @param {String} cwd
  * @return {Object}
  */
-function createPagesMap(ulkaInfo, cwd) {
+function createPagesMap(ulkaInfo, values, cwd) {
   const { configs } = ulkaInfo
   const pagesFiles = allFiles(configs.pagesPath, ".ulka")
 
@@ -17,7 +18,7 @@ function createPagesMap(ulkaInfo, cwd) {
 
   for (const page of pagesFiles) {
     const raw = fs.readFileSync(page, "utf-8")
-    const uInstance = new Ulka(raw, page, { ulkaInfo }, cwd)
+    const uInstance = new Ulka(raw, page, { ulkaInfo, ...values }, cwd)
     uInstance.render()
     uInstance.createInfo(ulkaInfo)
     pagesMap[page] = {

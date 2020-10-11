@@ -1,8 +1,8 @@
 const fs = require("fs")
+const url = require("url")
 const path = require("path")
 const fm = require("front-matter")
 const { Remarkable } = require("remarkable")
-
 const Ulka = require("./Ulka")
 
 const md = new Remarkable({ html: true })
@@ -28,14 +28,13 @@ class Markdown {
   }
 
   /**
-   * @param {Boolean} ulka Support for ulka syntax inside markdown
+   * @param {Boolean} renderUlka Support for ulka syntax inside markdown
    * @return {String} html
    */
-  render(ulka = true) {
+  render(renderUlka = true) {
     let html = md.render(this.raw)
-
     // Support for ulka syntax markdown
-    if (ulka) {
+    if (renderUlka) {
       const uInstace = new Ulka(
         html,
         this.filepath,
@@ -58,9 +57,10 @@ class Markdown {
     const { configs } = ulkaInfo
     const { path: cPath, generatePath: genPath } = this.contentInfo
 
-    const fileStat = fs.statSync(this.filePath)
+    const filePath = this.filepath
+    const fileStat = fs.statSync(filePath)
 
-    const filePathFromPages = path.relative(cPath, this.filePath)
+    const filePathFromPages = path.relative(cPath, filePath)
 
     const parsedPath = path.parse(filePathFromPages)
 
@@ -72,11 +72,25 @@ class Markdown {
       buildPath = path.join(buildPath, parsedPath.name, "index.html")
     }
 
+    const link = path.relative(configs.buildPath, buildPath).slice(0, -10)
+
+    this.link = url.format(link)
+
+    if (!this.link.startsWith("/")) {
+      this.link = "/" + this.link
+    }
+
+    const cwd = this.cwd
+
     this.info = {
       buildPath,
       createdAt: fileStat.ctime,
       modifiedAt: fileStat.mtime,
-      html: this.html
+      html: this.html,
+      mdPath: path.relative(cwd, cPath),
+      link: this.link,
+      frontMatter: this.frontMatter,
+      values: this.values
     }
 
     return this.info
