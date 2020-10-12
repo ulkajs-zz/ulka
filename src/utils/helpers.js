@@ -95,9 +95,27 @@ function changeExtension(filePath, newExtention) {
   return path.join(parsedPath.dir, parsedPath.name, newExtention)
 }
 
+/**
+ * Spinner function
+ * @param {String} text
+ *@return {Function} Stop Spinner
+ */
+function spinner(text) {
+  const words = ["| ", "/ ", "- ", "\\ "]
+  let i = 0
+
+  const interval = setInterval(() => {
+    process.stdout.write(`\r${words[i++]} ${text}`)
+    i %= words.length
+  }, 100)
+
+  return () => clearInterval(interval)
+}
+
 module.exports = {
   absolutePath,
   getConfigs,
   generateHash,
-  changeExtension
+  changeExtension,
+  spinner
 }

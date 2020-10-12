@@ -5,6 +5,7 @@ const { program } = require("commander")
 const build = require("../src/ulka-cli/build")
 const serve = require("../src/ulka-cli/serve")
 const { getConfigs } = require("../src/utils/helpers")
+const create = require("../src/ulka-cli/create")
 
 program.version(require("../package.json").version)
 
@@ -44,8 +45,16 @@ program
     serve({ live: false, base: configs.buildPath, port: +port }, configs, cwd)
   })
 
-program.command("create").action(() => {
-  console.log("Creating project")
-})
+program
+  .command("create")
+  .option("-p --projectName [projectName]", "Name of project")
+  .option("-t --template [template]", "Template url")
+  .action(({ template, projectName }) => {
+    if (template && !template.startsWith("https://")) {
+      template = "https://github.com/" + template
+    }
+
+    create({ template: template, name: projectName })
+  })
 
 program.parse(process.argv)

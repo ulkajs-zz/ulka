@@ -9,7 +9,6 @@ const { createContentMap, createPagesMap } = require("../generate/create-map")
  */
 function build(cwd, configs) {
   try {
-    console.clear()
     const curTime = Date.now()
 
     log.success("Build process started")

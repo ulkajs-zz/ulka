@@ -38,6 +38,7 @@
     "commander": "^6.1.0",
     "front-matter": "^4.0.2",
     "get-port": "^5.1.1",
+    "prompts": "^2.3.2",
     "remarkable": "^2.0.1",
     "ulka-parser": "^0.4.0",
     "ws": "^7.3.1"
