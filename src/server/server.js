@@ -4,7 +4,7 @@ const http = require("http")
 const path = require("path")
 const getport = require("get-port")
 
-const log = require("../../utils/ulka-log")
+const log = require("../utils/ulka-log")
 
 /**
  * @typedef {{base: String, live: Boolean, port: Number}} Options
@@ -30,8 +30,9 @@ const mimeTypesMap = {
 }
 
 const liveReloadScript = `
-// Live Serve
 <script>
+// Ulka live server
+
 if ('WebSocket' in window) {
     const protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
     const address = protocol + window.location.host + window.location.pathname;
@@ -117,7 +118,7 @@ async function server(options) {
 
     return httpserver
   } catch (e) {
-    log.error(`Live server failed!!! ${e}`)
+    log.error(`Live server failed!!! ${e}`, true)
     process.exit(0)
   }
 }
