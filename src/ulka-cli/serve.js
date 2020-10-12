@@ -5,7 +5,7 @@ const build = require("./build")
 const path = require("path")
 const fs = require("fs")
 
-const watch = (dir, cwd, websocket) => {
+const watch = (dir, cwd, reload, configs) => {
   return chokidar
     .watch(dir, {
       ignoreInitial: true,
@@ -23,15 +23,9 @@ const watch = (dir, cwd, websocket) => {
         fs.unlinkSync(filePath)
       }
 
-      build(cwd)
+      build(cwd, configs)
 
-      if (websocket) {
-        if (filePath.endsWith(".css")) {
-          websocket.send("refresh-css")
-        } else {
-          websocket.send("reload-page")
-        }
-      }
+      reload()
     })
 }
 
@@ -56,10 +50,14 @@ async function serve(options, configs, cwd) {
     websocket = ws
   })
 
-  watch(configs.pagesPath, cwd, websocket)
+  const reload = () => {
+    websocket.send("reload-page")
+  }
+
+  watch(configs.pagesPath, cwd, reload, configs)
 
   for (const content of configs.contents) {
-    watch(content.path, cwd, websocket)
+    watch(content.path, cwd, reload, configs)
   }
 }
 

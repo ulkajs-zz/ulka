@@ -24,10 +24,7 @@ function generateContents(contentsMap, cwd) {
     Object.values(content).forEach(info => {
       mkdir(path.parse(info.buildPath).dir)
 
-      const templatePath = path.join(
-        info.configs.templatesPath,
-        info.instance.contentInfo.template
-      )
+      const templatePath = path.join(info.configs.templatesPath, info.template)
 
       const template = fs.readFileSync(templatePath, "utf-8")
 

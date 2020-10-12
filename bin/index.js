@@ -19,7 +19,7 @@ program
   })
 
 program
-  .command("serve")
+  .command("develop")
   .option("-p --port [port]", "server port", 3000)
   .description("Start dev server")
   .action(({ port }) => {
@@ -32,5 +32,20 @@ program
     port = +port || 3000
     serve({ live: true, base: configs.buildPath, port: +port }, configs, cwd)
   })
+
+program
+  .command("serve")
+  .option("-p --port [port]", "server port", 3000)
+  .description("Serve built static files")
+  .action(({ port }) => {
+    const configs = getConfigs(cwd)
+
+    port = +port || 3000
+    serve({ live: false, base: configs.buildPath, port: +port }, configs, cwd)
+  })
+
+program.command("create").action(() => {
+  console.log("Creating project")
+})
 
 program.parse(process.argv)

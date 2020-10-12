@@ -1,6 +1,7 @@
 const fs = require("fs")
 const path = require("path")
 const crypto = require("crypto")
+const log = require("./ulka-log")
 
 /** @typedef {{ buildPath: String; pagesPath: String; templatesPath: String; contents: any[]; plugins: any[] }} Configs */
 
@@ -39,6 +40,15 @@ function getConfigs(cwd) {
 
   if (configExists) {
     reqConfigs = require(path.join(cwd, "ulka-config.js"))
+  } else {
+    log.error("ERROR: ", true)
+    log.error("config file not found.", true)
+    log.info(
+      "Please make sure you have ulka-config.js file in your root directory.",
+      true
+    )
+
+    process.exit(0)
   }
 
   const configs = {

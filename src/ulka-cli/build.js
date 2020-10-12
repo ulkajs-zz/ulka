@@ -1,6 +1,6 @@
+const log = require("../utils/ulka-log")
 const generate = require("../generate/generate")
 const { createContentMap, createPagesMap } = require("../generate/create-map")
-const log = require("../utils/ulka-log")
 
 /**
  *
@@ -8,17 +8,26 @@ const log = require("../utils/ulka-log")
  * @param {Object} configs
  */
 function build(cwd, configs) {
-  const curTime = Date.now()
-  log.success("Build process started")
+  try {
+    console.clear()
+    const curTime = Date.now()
 
-  const contentsMap = createContentMap({ configs }, cwd)
+    log.success("Build process started")
 
-  const pagesMap = createPagesMap({ configs }, { contents: contentsMap }, cwd)
+    const contentsMap = createContentMap({ configs }, cwd)
 
-  log.success("Generating html files")
-  generate(pagesMap, contentsMap, cwd)
+    const pagesMap = createPagesMap({ configs }, { contents: contentsMap }, cwd)
 
-  log.info(`Build completed in ${Date.now() - curTime}ms`)
+    log.success("Generating html files")
+
+    generate(pagesMap, contentsMap, cwd)
+
+    log.info(`Build completed in ${Date.now() - curTime}ms`)
+  } catch (e) {
+    log.error(`Something went wrong. ${e}`)
+    console.log(e)
+    process.exit(0)
+  }
 }
 
 module.exports = build
