@@ -41,9 +41,9 @@ function getConfigs(cwd) {
   if (configExists) {
     reqConfigs = require(path.join(cwd, "ulka-config.js"))
   } else {
-    log.error("ERROR: ", true)
-    log.error("config file not found.", true)
-    log.info(
+    console.log("")
+    log.error("ERROR: config file not found.", true)
+    log.warning(
       "Please make sure you have ulka-config.js file in your root directory.",
       true
     )
