@@ -80,17 +80,25 @@ function createContentMap(info, cwd) {
         cwd
       )
 
-      const b = { raw: mInstance.raw, configs, cwd, values: mInstance.values }
+      const b = {
+        raw: mInstance.raw,
+        frontMatter: mInstance.frontMatter,
+        configs,
+        cwd,
+        values: { ...mInstance.values, fields: {} }
+      }
+
       for (const plugin of configs.plugins.beforeMdRender) {
         const values = plugin(b) || {}
         mInstance.raw = values.raw || b.raw
+        mInstance.frontMatter = values.frontMatter || b.frontMatter
         mInstance.values = values.values || b.values
       }
 
       mInstance.render(true)
 
       const a = { html: mInstance.html, cwd, configs }
-      for (const plugin of configs.plugins.beforeMdRender) {
+      for (const plugin of configs.plugins.afterMdRender) {
         const values = plugin(a) || {}
         mInstance.raw = values.raw || a.raw
       }
