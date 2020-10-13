@@ -7,6 +7,8 @@ const Ulka = require("./Ulka")
 
 const md = new Remarkable({ html: true })
 
+const { getConfigs } = require("../utils/helpers")
+
 /** Markdown Class */
 class Markdown {
   /**
@@ -32,7 +34,14 @@ class Markdown {
    * @return {String} html
    */
   render(renderUlka = true) {
+    const { plugins } = getConfigs()
+
     let html = md.render(this.raw)
+
+    for (const plugin of plugins.remarkablePlugin) {
+      md.use(plugin.plugin, plugin.options)
+    }
+
     // Support for ulka syntax markdown
     if (renderUlka) {
       const uInstace = new Ulka(
