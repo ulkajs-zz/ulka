@@ -2,6 +2,7 @@ const fs = require("fs")
 const path = require("path")
 const crypto = require("crypto")
 const log = require("./ulka-log")
+const { existsSync } = require("fs")
 
 /** @typedef {{ buildPath: String; pagesPath: String; templatesPath: String; contents: any[]; plugins: any[] }} Configs */
 
@@ -59,7 +60,7 @@ function getConfigs(cwd) {
   const pagesPath = absolutePath(configs.pagesPath, cwd)
   const buildPath = absolutePath(configs.buildPath, cwd)
   const templatesPath = absolutePath(configs.templatesPath, cwd)
-  const plugins = getPlugins(configs.plugins)
+  const plugins = getPlugins(configs.plugins, cwd)
   const contents = configs.contents.map(content => ({
     ...content,
     path: absolutePath(content.path, cwd)
@@ -114,7 +115,7 @@ function spinner(text = "") {
   return () => clearInterval(interval)
 }
 
-const getPlugins = pluginArr => {
+const getPlugins = (pluginArr, cwd) => {
   const plugins = {
     beforeBuild: [],
     afterBuild: [],
@@ -128,6 +129,10 @@ const getPlugins = pluginArr => {
   for (const plugin of pluginArr) {
     let pPath = ""
     let options = {}
+
+    if (existsSync(cwd, plugin)) {
+      plugin = path.join(cwd, plugin)
+    }
 
     if (typeof plugin === "string") {
       pPath = require.resolve(plugin)
