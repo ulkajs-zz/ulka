@@ -21,7 +21,23 @@ function createPagesMap(info, values, cwd) {
     try {
       const raw = fs.readFileSync(page, "utf-8")
       const uInstance = new Ulka(raw, page, { ulkaInfo: info, ...values }, cwd)
+
+      const b = { configs, cwd, raw: uInstance.raw, context: uInstance.context }
+      for (const plugin of configs.plugins.beforeUlkaRender) {
+        const values = plugin(b) || {}
+        uInstance.raw = values.raw || b.raw
+        uInstance.context = values.context || b.context
+      }
+
       uInstance.render()
+
+      const a = { configs, cwd, html: uInstance.html }
+
+      for (const plugin of configs.plugins.afterUlkaRender) {
+        const values = plugin(a) || {}
+        uInstance.html = values.html || a.html
+      }
+
       uInstance.createInfo(info)
       pagesMap[page] = {
         ...uInstance.info,
@@ -64,7 +80,21 @@ function createContentMap(info, cwd) {
         cwd
       )
 
+      const b = { raw: mInstance.raw, configs, cwd, values: mInstance.values }
+      for (const plugin of configs.plugins.beforeMdRender) {
+        const values = plugin(b) || {}
+        mInstance.raw = values.raw || b.raw
+        mInstance.values = values.values || b.values
+      }
+
       mInstance.render(true)
+
+      const a = { html: mInstance.html, cwd, configs }
+      for (const plugin of configs.plugins.beforeMdRender) {
+        const values = plugin(a) || {}
+        mInstance.raw = values.raw || a.raw
+      }
+
       mInstance.createInfo(info)
 
       contentMap[content] = {

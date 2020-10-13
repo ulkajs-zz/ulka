@@ -59,6 +59,7 @@ function getConfigs(cwd) {
   const pagesPath = absolutePath(configs.pagesPath, cwd)
   const buildPath = absolutePath(configs.buildPath, cwd)
   const templatesPath = absolutePath(configs.templatesPath, cwd)
+  const plugins = getPlugins(configs.plugins)
   const contents = configs.contents.map(content => ({
     ...content,
     path: absolutePath(content.path, cwd)
@@ -66,6 +67,7 @@ function getConfigs(cwd) {
 
   return {
     ...configs,
+    plugins,
     buildPath,
     pagesPath,
     templatesPath,
@@ -110,6 +112,48 @@ function spinner(text = "") {
   }, 100)
 
   return () => clearInterval(interval)
+}
+
+const getPlugins = pluginArr => {
+  const plugins = {
+    beforeBuild: [],
+    afterBuild: [],
+    remarkablePlugin: [],
+    beforeUlkaRender: [],
+    afterUlkaRender: [],
+    beforeMdRender: [],
+    afterMdRender: []
+  }
+
+  for (const plugin of pluginArr) {
+    let pPath = ""
+    let options = {}
+
+    if (typeof plugin === "string") {
+      pPath = require.resolve(plugin)
+    } else if (typeof plugin === "object" && plugin.resolve) {
+      pPath = require.resolve(plugin.resolve)
+      options = plugin.options || {}
+    } else {
+      log.error("Invalid plugin: ", true)
+      console.log(plugin)
+      process.exit(0)
+    }
+
+    const pluginObj = require(pPath)
+
+    for (const key in pluginObj) {
+      if (pluginObj.hasOwnProperty(key)) {
+        const somePlugin = pluginObj[key]
+        if (plugins[somePlugin.name]) {
+          const pluginFunc = (...args) => somePlugin(...args, options)
+          plugins[somePlugin.name].push(pluginFunc)
+        }
+      }
+    }
+  }
+
+  return plugins
 }
 
 module.exports = {

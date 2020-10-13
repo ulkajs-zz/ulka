@@ -16,7 +16,7 @@ program
   .description("Build html from .md and .ulka files")
   .action(() => {
     const configs = getConfigs(cwd)
-    build(cwd, configs)
+    build(cwd, { configs })
   })
 
 program
@@ -28,7 +28,7 @@ program
 
     configs.buildPath = path.join(cwd, ".debug")
 
-    build(cwd, configs)
+    build(cwd, { configs })
 
     port = +port || 3000
     serve({ live: true, base: configs.buildPath, port: +port }, configs, cwd)

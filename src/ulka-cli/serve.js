@@ -23,7 +23,7 @@ const watch = (dir, cwd, reload, configs) => {
         fs.unlinkSync(filePath)
       }
 
-      build(cwd, configs)
+      build(cwd, { configs })
 
       reload()
     })

@@ -28,11 +28,11 @@ class Ulka {
   }
 
   /**
-   * @param {Object} ulkaInfo Ulka Info
+   * @param {Object} info Ulka Info
    * @return {Object} info
    */
-  createInfo(ulkaInfo) {
-    const { configs } = ulkaInfo
+  createInfo(info) {
+    const { configs } = info
 
     const fileStat = fs.statSync(this.filePath)
     const filePathFromPages = path.relative(configs.pagesPath, this.filePath)

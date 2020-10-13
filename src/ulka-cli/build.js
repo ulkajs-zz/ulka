@@ -5,10 +5,12 @@ const { createContentMap, createPagesMap } = require("../generate/create-map")
 /**
  *
  * @param {String} cwd
- * @param {Object} configs
+ * @param {Object} info
  */
-function build(cwd, configs) {
+function build(cwd, info) {
   try {
+    const { configs } = info
+
     const curTime = Date.now()
 
     log.success("Build process started")
@@ -19,7 +21,13 @@ function build(cwd, configs) {
 
     log.success("Generating html files")
 
+    configs.plugins.beforeBuild.forEach(plugin =>
+      plugin({ info, pagesMap, contentsMap, cwd })
+    )
+
     generate(pagesMap, contentsMap, cwd)
+
+    configs.plugins.afterBuild.forEach(plugin => plugin({ info, cwd }))
 
     log.info(`Build completed in ${Date.now() - curTime}ms`)
   } catch (e) {
