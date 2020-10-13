@@ -42,7 +42,7 @@ function getConfigs(cwd) {
     reqConfigs = require(path.join(cwd, "ulka-config.js"))
   } else {
     console.log("")
-    log.error("ERROR: config file not found.", true)
+    log.error("ERROR: Config file not found.", true)
     log.warning(
       "Please make sure you have ulka-config.js file in your root directory.",
       true
@@ -100,7 +100,7 @@ function changeExtension(filePath, newExtention) {
  * @param {String} text
  *@return {Function} Stop Spinner
  */
-function spinner(text) {
+function spinner(text = "") {
   const words = ["| ", "/ ", "- ", "\\ "]
   let i = 0
 

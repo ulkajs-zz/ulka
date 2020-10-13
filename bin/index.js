@@ -46,15 +46,11 @@ program
   })
 
 program
-  .command("create")
-  .option("-p --projectName [projectName]", "Name of project")
-  .option("-t --template [template]", "Template url")
-  .action(({ template, projectName }) => {
-    if (template && !template.startsWith("https://")) {
-      template = "https://github.com/" + template
-    }
-
-    create({ template: template, name: projectName })
+  .command("create [projectName] [template]")
+  .option("-i --installer [installer]", "Installer to use npm|yarn")
+  .description("Create new ulka project")
+  .action((name, template, { installer }) => {
+    create({ template: template, name, installer })
   })
 
 program.parse(process.argv)
