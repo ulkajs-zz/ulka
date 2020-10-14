@@ -3,6 +3,7 @@ const path = require("path")
 const crypto = require("crypto")
 const log = require("./ulka-log")
 const { existsSync } = require("fs")
+const { allFiles, mkdir } = require("./ulka-fs")
 
 /** @typedef {{ buildPath: String; pagesPath: String; templatesPath: String; contents: any[]; plugins: any[] }} Configs */
 
@@ -162,10 +163,69 @@ const getPlugins = (pluginArr, cwd) => {
   return plugins
 }
 
+const changeCssUrlPath = (css, dir, info) => {
+  return css.replace(/ url\((.*?)\)/gs, (...args) => {
+    const pathGiven = args[1].replace(/'|"/gs, "")
+
+    if (
+      pathGiven.startsWith("http:") ||
+      pathGiven.startsWith("https:") ||
+      pathGiven.startsWith("//")
+    )
+      return ` url("${pathGiven}")`
+
+    const realPath = path.join(dir, pathGiven)
+
+    const salt = path.relative(info.cwd, realPath).split(path.sep).join("")
+
+    const fileName = generateHash(salt)
+
+    return ` url("${fileName + path.parse(pathGiven).ext}")`
+  })
+}
+
+/**
+ * @param {Object} info info
+ */
+function copyAssets(info) {
+  const allFilesinCwd = allFiles(info.cwd)
+
+  const ignoreExt = [".md", ".ulka"]
+
+  mkdir(path.join(info.configs.buildPath, "__assets__"))
+
+  for (const file of allFilesinCwd) {
+    const parsed = path.parse(file)
+    if (
+      !parsed.name.endsWith("ulka") &&
+      !ignoreExt.includes(parsed.ext) &&
+      !file.includes(info.configs.buildPath) &&
+      parsed.base !== "ulka-config.js"
+    ) {
+      const salt = path.relative(info.cwd, file).split(path.sep).join("")
+
+      const newName = generateHash(salt) + parsed.ext
+
+      const writepath = path.join(info.configs.buildPath, "__assets__", newName)
+
+      let readData = ""
+      if (parsed.ext === ".css") {
+        readData = fs.readFileSync(file, "utf-8")
+        readData = changeCssUrlPath(readData, parsed.dir, info)
+      } else {
+        readData = fs.readFileSync(file)
+      }
+
+      fs.writeFileSync(writepath, readData)
+    }
+  }
+}
+
 module.exports = {
   absolutePath,
   getConfigs,
   generateHash,
   changeExtension,
-  spinner
+  spinner,
+  copyAssets
 }

@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const path = require("path")
 const { program } = require("commander")
 const build = require("../src/ulka-cli/build")
 const serve = require("../src/ulka-cli/serve")
@@ -27,8 +26,6 @@ program
   .action(async ({ port }) => {
     const info = createInfo(cwd, "develop")
 
-    info.configs.buildPath = path.join(cwd, ".debug")
-
     await build(info)
 
     port = +port || 3000
@@ -46,11 +43,7 @@ program
     const info = createInfo(cwd, "build")
 
     port = +port || 3000
-    serve(
-      { live: false, base: info.configs.buildPath, port: +port },
-      info.configs,
-      cwd
-    )
+    serve({ live: false, base: info.configs.buildPath, port: +port }, info)
   })
 
 program

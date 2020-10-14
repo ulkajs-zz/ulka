@@ -1,6 +1,7 @@
 const { contentToHtml, pageToHtml } = require("../utils/generate-utils")
 const { createContentsMap, createPagesArray } = require("../utils/build-utils")
 const log = require("../utils/ulka-log")
+const { copyAssets } = require("../utils/helpers")
 
 /**
  * @param {Object} info Info
@@ -41,11 +42,14 @@ async function build(info) {
       await pageToHtml(pageData, pagesArray, contentsMap, info)
     }
 
+    log.info("Copying assets....")
+    copyAssets(info)
+
     for (const plugin of info.configs.plugins.afterBuild) {
       await plugin({ info, contentsMap, pagesArray })
     }
 
-    if ((info.task = "build")) {
+    if (info.task === "build") {
       console.log("")
       log.success(`Build completed in ${Date.now() - startTime}ms`, true)
     }

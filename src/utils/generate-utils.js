@@ -1,8 +1,8 @@
-const { info } = require("console")
 const fs = require("fs")
 const path = require("path")
 const { Remarkable } = require("remarkable")
 const { render } = require("ulka-parser")
+const { generateHash } = require("./helpers")
 const { mkdir } = require("./ulka-fs")
 const log = require("./ulka-log")
 
@@ -13,7 +13,7 @@ const md = new Remarkable({ html: true })
  *
  * @param {Object} values
  * @param {String} filePath
- * @param {String} info
+ * @param {Object} info
  * @return {Object} Context
  */
 function ulkaContext(values, filePath, info) {
@@ -21,7 +21,8 @@ function ulkaContext(values, filePath, info) {
     ...values,
     $import: (requirePath, $values = {}) => {
       return $import(requirePath, { ...values, ...$values }, filePath, info)
-    }
+    },
+    $assets: rPath => $assets(rPath, filePath, info)
   }
 
   return values
@@ -45,7 +46,7 @@ function $import(rPath, values, filePath, info) {
   const ext = path.parse(file).ext
   if (ext === ".ulka") {
     const raw = fs.readFileSync(file, "utf-8")
-    return renderUlka(raw, values, filePath)
+    return renderUlka(raw, values, filePath, info)
   } else if (ext === ".md") {
     const raw = fs.readFileSync(file, "utf-8")
     return renderMarkdown(raw, info)
@@ -55,6 +56,23 @@ function $import(rPath, values, filePath, info) {
   } else {
     return fs.readFileSync(file, "utf-8")
   }
+}
+
+/**
+ * Get assets path
+ * @param {String} rPath
+ * @param {String} filePath
+ * @param {Object} info
+ * @return {String} hash
+ */
+function $assets(rPath, filePath, info) {
+  const realPath = path.join(path.parse(filePath).dir, rPath)
+
+  const relPath = path.relative(info.cwd, realPath)
+
+  const salt = relPath.split(path.sep).join("")
+
+  return path.join(`/__assets__/${generateHash(salt)}`) + path.parse(rPath).ext
 }
 
 /**
@@ -75,9 +93,10 @@ function renderMarkdown(raw, info) {
  * @param {String} raw Raw ulka
  * @param {Object} context Context
  * @param {String} filePath filepath
+ * @param {Object} info
  * @return {String}
  */
-function renderUlka(raw, context, filePath) {
+function renderUlka(raw, context, filePath, info) {
   const nContext = ulkaContext(context, filePath, info)
   return render(raw, nContext, { base: filePath })
 }
@@ -105,7 +124,7 @@ const contentToHtml = async (contentData, contents, info) => {
 
     const context = { ...contentData, contents, info, data: contentData.html }
     const filePath = contentData.source || info.cwd
-    const html = renderUlka(contentData.template, context, filePath)
+    const html = renderUlka(contentData.template, context, filePath, info)
 
     mkdir(path.parse(contentData.buildPath).dir)
 
@@ -134,7 +153,7 @@ const pageToHtml = async (pageData, pages, contents, info) => {
     if (pageData.type === "raw") {
       const context = { ...pageData, contents, pages, info }
       const filePath = pageData.source || info.cwd
-      pageData.html = renderUlka(pageData.content, context, filePath)
+      pageData.html = renderUlka(pageData.content, context, filePath, info)
     } else {
       pageData.html = pageData.content
     }

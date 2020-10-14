@@ -40,7 +40,7 @@ const watch = (dir, info, reload) => {
  */
 async function serve(options, info) {
   const { port, live, base } = options
-  const { cwd, configs } = info
+  const { configs } = info
 
   if (!live) {
     server(options)
@@ -59,7 +59,7 @@ async function serve(options, info) {
     websocket.send("reload-page")
   }
 
-  watch(configs.pagesPath, cwd, reload, configs)
+  watch(configs.pagesPath, info, reload, configs)
 
   for (const content of configs.contents) {
     watch(content.path, info, reload)
