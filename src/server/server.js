@@ -114,8 +114,6 @@ async function server(options) {
 
     httpserver.listen(port)
 
-    log.success(`Server is listening on port ${port}`)
-
     return httpserver
   } catch (e) {
     log.error(`Live server failed!!! ${e}`, true)

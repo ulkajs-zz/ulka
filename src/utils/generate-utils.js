@@ -136,6 +136,7 @@ const contentToHtml = async (contentData, contents, info) => {
         true
       )
     }
+
     console.log(e)
   }
 }
@@ -168,9 +169,15 @@ const pageToHtml = async (pageData, pages, contents, info) => {
     fs.writeFileSync(pageData.buildPath, pageData.html)
   } catch (e) {
     if (pageData.source) {
+      console.log()
       log.error(`Error while generating html from ${pageData.source}\n`, true)
     }
-    console.log(e)
+
+    if (e.toString().startsWith("ReferenceError:")) {
+      log.error(e.toString() + "\n", true)
+    } else {
+      console.log(e)
+    }
   }
 }
 

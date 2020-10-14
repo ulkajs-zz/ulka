@@ -6,7 +6,6 @@ const build = require("./build")
 const log = require("../utils/ulka-log")
 const { wsServer, server } = require("../server")
 const { rmdir } = require("../utils/ulka-fs")
-const { existsSync } = require("fs")
 
 const watch = (dir, info, reload) => {
   const { cwd } = info
@@ -22,6 +21,7 @@ const watch = (dir, info, reload) => {
     .on("all", async (event, filePath) => {
       const relativeDir = path.relative(cwd, dir)
       const relativePath = path.relative(cwd, filePath)
+      console.clear()
       log.info(`Change detected in ${relativeDir}: ${event} - ${relativePath}`)
 
       if (event === "unlink" && filePath.startsWith(cwd)) {
@@ -44,6 +44,8 @@ async function serve(options, info) {
 
   if (!live) {
     server(options)
+
+    serverLog(port)
     return
   }
 
@@ -51,29 +53,34 @@ async function serve(options, info) {
 
   const wss = await wsServer({ port, live, base })
 
+  serverLog(port)
+
   wss.on("connection", ws => {
     websocket = ws
   })
 
   const reload = () => {
-    websocket.send("reload-page")
+    if (websocket) websocket.send("reload-page")
+    serverLog(port)
   }
 
-  watch(configs.pagesPath, info, reload, configs)
+  // watch(configs.pagesPath, info, reload, configs)
 
-  for (const content of configs.contents) {
-    watch(content.path, info, reload)
-  }
+  // for (const content of configs.contents) {
+  //   watch(content.path, info, reload)
+  // }
+
+  watch(path.join(info.cwd, "src"), info, reload)
 
   const exit = () => {
-    if (info.task === "develop" && existsSync(configs.buildPath)) {
+    if (info.task === "develop" && fs.existsSync(configs.buildPath)) {
       rmdir(configs.buildPath)
     }
     process.exit(0)
   }
 
   process.on("exit", () => {
-    if (info.task === "develop" && existsSync(configs.buildPath)) {
+    if (info.task === "develop" && fs.existsSync(configs.buildPath)) {
       rmdir(configs.buildPath)
     }
   })
@@ -82,6 +89,17 @@ async function serve(options, info) {
   process.on("SIGUSR1", exit)
   process.on("SIGUSR2", exit)
   process.on("uncaughtException", exit)
+}
+
+/**
+ * @param {Number} port
+ */
+function serverLog(port) {
+  console.log("=".repeat(process.stdout.columns))
+  log.normal("ULKA LIVE SERVER\n")
+  log.success(`Server is listening on port ${port}`, true)
+  log.info(`http://localhost:${port}`)
+  console.log("=".repeat(process.stdout.columns))
 }
 
 module.exports = serve

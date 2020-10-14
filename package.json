@@ -1,6 +1,6 @@
 {
   "name": "ulka",
-  "version": "0.6.1-rc.2",
+  "version": "0.6.1-rc.3",
   "description": "Ulka - static site generator",
   "main": "./src/index.js",
   "bin": {
@@ -42,7 +42,7 @@
     "node-fetch": "^2.6.1",
     "prompts": "^2.3.2",
     "remarkable": "^2.0.1",
-    "ulka-parser": "^0.4.0",
+    "ulka-parser": "^0.4.1",
     "ws": "^7.3.1"
   },
   "devDependencies": {

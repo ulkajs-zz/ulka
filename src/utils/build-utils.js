@@ -14,7 +14,7 @@ function createContentsMap(info) {
   const contentsMap = {}
 
   for (const content of contents) {
-    const files = allFiles(content.path)
+    const files = allFiles(content.path, ".md")
 
     const contentArr = []
 
@@ -68,7 +68,7 @@ function createContentsMap(info) {
  * @return {Array} pages
  */
 function createPagesArray(info, contents) {
-  const files = allFiles(info.configs.pagesPath)
+  const files = allFiles(info.configs.pagesPath, ".ulka")
 
   const pagesArray = []
   for (const file of files) {

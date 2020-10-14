@@ -25,7 +25,6 @@ async function build(info) {
       await plugin({ info, contentsMap, pagesArray })
     }
 
-    console.log("")
     log.info("Generating html from markdown files...")
     for (const key in contentsMap) {
       if (contentsMap.hasOwnProperty(key)) {

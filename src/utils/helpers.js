@@ -58,13 +58,14 @@ function getConfigs(cwd) {
     ...reqConfigs
   }
 
-  const pagesPath = absolutePath(configs.pagesPath, cwd)
   const buildPath = absolutePath(configs.buildPath, cwd)
-  const templatesPath = absolutePath(configs.templatesPath, cwd)
+  const pagesPath = absolutePath(`src/${configs.pagesPath}`, cwd)
+  const templatesPath = absolutePath(`src/${configs.templatesPath}`, cwd)
+
   const plugins = getPlugins(configs.plugins, cwd)
   const contents = configs.contents.map(content => ({
     ...content,
-    path: absolutePath(content.path, cwd),
+    path: absolutePath(`src/${content.path}`, cwd),
     template: path.join(templatesPath, content.template)
   }))
 
@@ -188,7 +189,7 @@ const changeCssUrlPath = (css, dir, info) => {
  * @param {Object} info info
  */
 function copyAssets(info) {
-  const allFilesinCwd = allFiles(info.cwd)
+  const allFilesinCwd = allFiles(path.join(info.cwd, "src"))
 
   const ignoreExt = [".md", ".ulka"]
 
@@ -196,27 +197,33 @@ function copyAssets(info) {
 
   for (const file of allFilesinCwd) {
     const parsed = path.parse(file)
-    if (
-      !parsed.name.endsWith("ulka") &&
-      !ignoreExt.includes(parsed.ext) &&
-      !file.includes(info.configs.buildPath) &&
-      parsed.base !== "ulka-config.js"
-    ) {
-      const salt = path.relative(info.cwd, file).split(path.sep).join("")
 
-      const newName = generateHash(salt) + parsed.ext
+    if (!parsed.name.endsWith("ulka") && !ignoreExt.includes(parsed.ext)) {
+      try {
+        const salt = path.relative(info.cwd, file).split(path.sep).join("")
 
-      const writepath = path.join(info.configs.buildPath, "__assets__", newName)
+        const newName = generateHash(salt) + parsed.ext
 
-      let readData = ""
-      if (parsed.ext === ".css") {
-        readData = fs.readFileSync(file, "utf-8")
-        readData = changeCssUrlPath(readData, parsed.dir, info)
-      } else {
-        readData = fs.readFileSync(file)
+        const writepath = path.join(
+          info.configs.buildPath,
+          "__assets__",
+          newName
+        )
+
+        let readData = ""
+        if (parsed.ext === ".css") {
+          readData = fs.readFileSync(file, "utf-8")
+          readData = changeCssUrlPath(readData, parsed.dir, info)
+        } else {
+          readData = fs.readFileSync(file)
+        }
+
+        fs.writeFileSync(writepath, readData)
+      } catch (e) {
+        log.error(`Error while copying assets: ${file}\n`, true)
+
+        console.log(e)
       }
-
-      fs.writeFileSync(writepath, readData)
     }
   }
 }
