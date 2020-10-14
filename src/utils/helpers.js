@@ -63,7 +63,8 @@ function getConfigs(cwd) {
   const plugins = getPlugins(configs.plugins, cwd)
   const contents = configs.contents.map(content => ({
     ...content,
-    path: absolutePath(content.path, cwd)
+    path: absolutePath(content.path, cwd),
+    template: path.join(templatesPath, content.template)
   }))
 
   return {
@@ -120,10 +121,10 @@ const getPlugins = (pluginArr, cwd) => {
     beforeBuild: [],
     afterBuild: [],
     remarkablePlugin: [],
-    beforeUlkaRender: [],
-    afterUlkaRender: [],
-    beforeMdRender: [],
-    afterMdRender: []
+    beforeContentRender: [],
+    afterContentRender: [],
+    beforePageRender: [],
+    afterPageRender: []
   }
 
   for (const plugin of pluginArr) {

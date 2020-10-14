@@ -1,9 +1,10 @@
-const chokidar = require("chokidar")
-const { wsServer, server } = require("../server")
-const log = require("../utils/ulka-log")
-const build = require("./build")
-const path = require("path")
 const fs = require("fs")
+const path = require("path")
+const chokidar = require("chokidar")
+
+const build = require("./build")
+const log = require("../utils/ulka-log")
+const { wsServer, server } = require("../server")
 
 const watch = (dir, cwd, reload, configs) => {
   return chokidar

@@ -3,6 +3,7 @@
 const path = require("path")
 const { program } = require("commander")
 const build = require("../src/ulka-cli/build")
+const build2 = require("../src/ulka-cli/build2")
 const serve = require("../src/ulka-cli/serve")
 const { getConfigs } = require("../src/utils/helpers")
 const create = require("../src/ulka-cli/create")
@@ -17,6 +18,23 @@ program
   .action(() => {
     const configs = getConfigs(cwd)
     build(cwd, { configs })
+  })
+
+program
+  .command("buildnext")
+  .description("Build html from .md and .ulka files")
+  .action(async () => {
+    const info = {
+      configs: getConfigs(cwd),
+      cwd: cwd,
+      task: "building"
+    }
+    try {
+      await build2(info)
+    } catch (e) {
+      console.log(e.message)
+      console.log(e)
+    }
   })
 
 program

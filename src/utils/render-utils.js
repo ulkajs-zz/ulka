@@ -1,19 +1,26 @@
+const { info } = require("console")
 const fs = require("fs")
 const path = require("path")
+const { Remarkable } = require("remarkable")
+const { render } = require("ulka-parser")
+const { mkdir } = require("./ulka-fs")
+const log = require("./ulka-log")
+
+const md = new Remarkable({ html: true })
 
 /**
  * Create context for ulka-parser from given values and default values
  *
  * @param {Object} values
  * @param {String} filePath
- * @param {String} cwd
+ * @param {String} info
  * @return {Object} Context
  */
-function ulkaContext(values, filePath, cwd) {
+function ulkaContext(values, filePath, info) {
   values = {
     ...values,
     $import: (requirePath, $values = {}) => {
-      return $import(requirePath, { ...values, ...$values }, filePath, cwd)
+      return $import(requirePath, { ...values, ...$values }, filePath, info)
     }
   }
 
@@ -29,23 +36,19 @@ function ulkaContext(values, filePath, cwd) {
  * @param {String} rPath Require path
  * @param {Object} values Variables to be available inside ulka
  * @param {any} filePath Path to file
- * @param {String} cwd
+ * @param {String} info
  * @return {any}
  */
-function $import(rPath, values, filePath, cwd) {
+function $import(rPath, values, filePath, info) {
   const imgExts = [".jpeg", ".jpg", ".png", ".gif", ".bmp", ".svg", ".webp"]
   const file = path.join(path.parse(filePath).dir, rPath)
   const ext = path.parse(file).ext
   if (ext === ".ulka") {
     const raw = fs.readFileSync(file, "utf-8")
-    const Ulka = require("../generate/Ulka")
-    const uInstance = new Ulka(raw, file, values, cwd)
-    return uInstance.render()
+    return renderUlka(raw, values, filePath)
   } else if (ext === ".md") {
     const raw = fs.readFileSync(file, "utf-8")
-    const Markdown = require("../generate/Markdown")
-    const mInstance = new Markdown(raw, file, values, {}, cwd)
-    return mInstance.render(true)
+    return renderMarkdown(raw, info)
   } else if (imgExts.includes(ext)) {
     const imgContent = fs.readFileSync(file, "base64")
     return `data:image/${ext.substr(1)};base64,` + imgContent
@@ -54,7 +57,109 @@ function $import(rPath, values, filePath, cwd) {
   }
 }
 
+/**
+ * markdown to html
+ * @param {String} raw Raw markdown
+ * @param {Object} info Info
+ * @return {String} html
+ */
+function renderMarkdown(raw, info) {
+  info.configs.plugins.remarkablePlugin.forEach(plugin => {
+    plugin({ md, info })
+  })
+
+  return md.render(raw)
+}
+
+/**
+ * @param {String} raw Raw ulka
+ * @param {Object} context Context
+ * @param {String} filePath filepath
+ * @return {String}
+ */
+function renderUlka(raw, context, filePath) {
+  const nContext = ulkaContext(context, filePath, info)
+  return render(raw, nContext, { base: filePath })
+}
+
+const contentToHtml = async (contentData, contents, info) => {
+  try {
+    const beforeContentRenderPlugin = info.configs.plugins.beforeContentRender
+    const afterContentRenderPlugin = info.configs.plugins.afterContentRender
+
+    // BeforeContentRender Plugins
+    for (const plugin of beforeContentRenderPlugin) {
+      await plugin({ contentData, contents, info })
+    }
+
+    if (contentData.type === "raw") {
+      contentData.html = renderMarkdown(contentData.content, info)
+    } else {
+      contentData.html = contentData.content
+    }
+
+    // AfterContentRender Plugins
+    for (const plugin of afterContentRenderPlugin) {
+      await plugin({ contentData, contents, info })
+    }
+
+    const context = { ...contentData, contents, info, data: contentData.html }
+    const filePath = contentData.source || info.cwd
+    const html = renderUlka(contentData.template, context, filePath)
+
+    mkdir(path.parse(contentData.buildPath).dir)
+
+    fs.writeFileSync(contentData.buildPath, html)
+  } catch (e) {
+    if (contentData.source) {
+      log.error(
+        `Error while generating html from ${contentData.source}\n`,
+        true
+      )
+    }
+    console.log(e)
+  }
+}
+
+const pageToHtml = async (pageData, pages, contents, info) => {
+  try {
+    const beforePageRenderPlugins = info.configs.plugins.beforeContentRender
+    const afterPageRenderPlugins = info.configs.plugins.afterContentRender
+
+    // BefrePageRender Plugins
+    for (const plugin of beforePageRenderPlugins) {
+      await plugin({ pageData, pages, contents, info })
+    }
+
+    if (pageData.type === "raw") {
+      const context = { ...pageData, contents, pages, info }
+      const filePath = pageData.source || info.cwd
+      pageData.html = renderUlka(pageData.content, context, filePath)
+    } else {
+      pageData.html = pageData.content
+    }
+
+    // AfterPageRender Plugins
+    for (const plugin of afterPageRenderPlugins) {
+      await plugin({ pageData, pages, contents, info })
+    }
+
+    mkdir(path.parse(pageData.buildPath).dir)
+
+    fs.writeFileSync(pageData.buildPath, pageData.html)
+  } catch (e) {
+    if (pageData.source) {
+      log.error(`Error while generating html from ${pageData.source}\n`, true)
+    }
+    console.log(e)
+  }
+}
+
 module.exports = {
   $import,
-  ulkaContext
+  ulkaContext,
+  pageToHtml,
+  renderUlka,
+  renderMarkdown,
+  contentToHtml
 }

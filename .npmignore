@@ -1,6 +1,8 @@
 /tests
 /.github
 /coverage
+/example
+/examples
 .prettierrc
 .prettierignore
 .eslintignore
