@@ -1,38 +1,48 @@
+const { contentToHtml, pageToHtml } = require("../utils/generate-utils")
+const { createContentsMap, createPagesArray } = require("../utils/build-utils")
 const log = require("../utils/ulka-log")
-const generate = require("../generate/generate")
-const { createContentMap, createPagesMap } = require("../generate/create-map")
 
 /**
- *
- * @param {String} cwd
- * @param {Object} info
+ * @param {Object} info Info
  */
-function build(cwd, info) {
+async function build(info) {
   try {
-    const { configs } = info
+    let contentsMap = {}
+    let pagesArray = []
 
-    const curTime = Date.now()
+    if (info.configs.pagesPath) {
+      pagesArray = createPagesArray(info, contentsMap)
+    }
 
-    log.success("Build process started")
+    if (info.configs.contents.length > 0) {
+      contentsMap = createContentsMap(info)
+    }
 
-    const contentsMap = createContentMap({ configs }, cwd)
+    for (const plugin of info.configs.plugins.beforeBuild) {
+      await plugin({ info, contentsMap, pagesArray })
+    }
 
-    const pagesMap = createPagesMap({ configs }, { contents: contentsMap }, cwd)
+    for (const key in contentsMap) {
+      if (contentsMap.hasOwnProperty(key)) {
+        const contentsArray = contentsMap[key]
 
-    log.success("Generating html files")
+        for (const contentData of contentsArray) {
+          await contentToHtml(contentData, contentsMap, info)
+        }
+      }
+    }
 
-    configs.plugins.beforeBuild.forEach(plugin =>
-      plugin({ info, pagesMap, contentsMap, cwd })
-    )
+    for (const pageData of pagesArray) {
+      await pageToHtml(pageData, pagesArray, contentsMap, info)
+    }
 
-    generate(pagesMap, contentsMap, cwd)
-
-    configs.plugins.afterBuild.forEach(plugin => plugin({ info, cwd }))
-
-    log.info(`Build completed in ${Date.now() - curTime}ms`)
+    for (const plugin of info.configs.plugins.afterBuild) {
+      await plugin({ info, contentsMap, pagesArray })
+    }
   } catch (e) {
-    log.error(`Something went wrong. ${e}`)
     console.log(e)
+    console.log("")
+    log.error("Build filed")
     process.exit(0)
   }
 }

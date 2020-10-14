@@ -5,8 +5,12 @@ const chokidar = require("chokidar")
 const build = require("./build")
 const log = require("../utils/ulka-log")
 const { wsServer, server } = require("../server")
+const { rmdir } = require("../utils/ulka-fs")
+const { existsSync } = require("fs")
 
-const watch = (dir, cwd, reload, configs) => {
+const watch = (dir, info, reload) => {
+  const { cwd } = info
+
   return chokidar
     .watch(dir, {
       ignoreInitial: true,
@@ -15,7 +19,7 @@ const watch = (dir, cwd, reload, configs) => {
         pollInterval: 100
       }
     })
-    .on("all", (event, filePath) => {
+    .on("all", async (event, filePath) => {
       const relativeDir = path.relative(cwd, dir)
       const relativePath = path.relative(cwd, filePath)
       log.info(`Change detected in ${relativeDir}: ${event} - ${relativePath}`)
@@ -24,7 +28,7 @@ const watch = (dir, cwd, reload, configs) => {
         fs.unlinkSync(filePath)
       }
 
-      build(cwd, { configs })
+      await build(info)
 
       reload()
     })
@@ -32,11 +36,11 @@ const watch = (dir, cwd, reload, configs) => {
 
 /**
  * @param {Object} options
- * @param {Object} configs
- * @param {Object} cwd
+ * @param {Object} info
  */
-async function serve(options, configs, cwd) {
+async function serve(options, info) {
   const { port, live, base } = options
+  const { cwd, configs } = info
 
   if (!live) {
     server(options)
@@ -58,8 +62,26 @@ async function serve(options, configs, cwd) {
   watch(configs.pagesPath, cwd, reload, configs)
 
   for (const content of configs.contents) {
-    watch(content.path, cwd, reload, configs)
+    watch(content.path, info, reload)
   }
+
+  const exit = () => {
+    if (info.task === "develop" && existsSync(configs.buildPath)) {
+      rmdir(configs.buildPath)
+    }
+    process.exit(0)
+  }
+
+  process.on("exit", () => {
+    if (info.task === "develop" && existsSync(configs.buildPath)) {
+      rmdir(configs.buildPath)
+    }
+  })
+
+  process.on("SIGINT", exit)
+  process.on("SIGUSR1", exit)
+  process.on("SIGUSR2", exit)
+  process.on("uncaughtException", exit)
 }
 
 module.exports = serve
