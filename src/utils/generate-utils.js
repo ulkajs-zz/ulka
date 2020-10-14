@@ -9,26 +9,6 @@ const log = require("./ulka-log")
 const md = new Remarkable({ html: true })
 
 /**
- * Create context for ulka-parser from given values and default values
- *
- * @param {Object} values
- * @param {String} filePath
- * @param {Object} info
- * @return {Object} Context
- */
-function ulkaContext(values, filePath, info) {
-  values = {
-    ...values,
-    $import: (requirePath, $values = {}) => {
-      return $import(requirePath, { ...values, ...$values }, filePath, info)
-    },
-    $assets: rPath => $assets(rPath, filePath, info)
-  }
-
-  return values
-}
-
-/**
  * $import function
  * - return ulka and md as html
  * - return images as base64 url
@@ -97,8 +77,14 @@ function renderMarkdown(raw, info) {
  * @return {String}
  */
 function renderUlka(raw, context, filePath, info) {
-  const nContext = ulkaContext(context, filePath, info)
-  return render(raw, nContext, { base: filePath })
+  context = {
+    ...context,
+    $assets: rPath => $assets(rPath, filePath, info),
+    $import: (rPath, $values = {}) => {
+      return $import(rPath, { ...context, ...$values }, filePath, info)
+    }
+  }
+  return render(raw, context, { base: filePath })
 }
 
 const contentToHtml = async (contentData, contents, info) => {
@@ -199,7 +185,6 @@ const pageToHtml = async (pageData, pages, contents, info) => {
 
 module.exports = {
   $import,
-  ulkaContext,
   pageToHtml,
   renderUlka,
   renderMarkdown,
