@@ -10,6 +10,8 @@ async function build(info) {
     let contentsMap = {}
     let pagesArray = []
 
+    const startTime = Date.now()
+
     if (info.configs.pagesPath) {
       pagesArray = createPagesArray(info, contentsMap)
     }
@@ -22,6 +24,8 @@ async function build(info) {
       await plugin({ info, contentsMap, pagesArray })
     }
 
+    console.log("")
+    log.info("Generating html from markdown files...")
     for (const key in contentsMap) {
       if (contentsMap.hasOwnProperty(key)) {
         const contentsArray = contentsMap[key]
@@ -32,12 +36,18 @@ async function build(info) {
       }
     }
 
+    log.info("Generating html from pages files...")
     for (const pageData of pagesArray) {
       await pageToHtml(pageData, pagesArray, contentsMap, info)
     }
 
     for (const plugin of info.configs.plugins.afterBuild) {
       await plugin({ info, contentsMap, pagesArray })
+    }
+
+    if ((info.task = "build")) {
+      console.log("")
+      log.success(`Build completed in ${Date.now() - startTime}ms`, true)
     }
   } catch (e) {
     console.log(e)
