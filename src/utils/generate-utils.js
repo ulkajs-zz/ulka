@@ -124,7 +124,23 @@ const contentToHtml = async (contentData, contents, info) => {
 
     const context = { ...contentData, contents, info, data: contentData.html }
     const filePath = contentData.source || info.cwd
-    const html = renderUlka(contentData.template, context, filePath, info)
+
+    if (!contentData.template && contentData.templatePath) {
+      try {
+        contentData.template = fs.readFileSync(contentData.templatePath)
+      } catch (e) {
+        log.error(e.message, true)
+        log.error(`Error while reading ${contentData.templatePath}`)
+        process.exit(0)
+      }
+    }
+
+    const html = renderUlka(
+      contentData.template,
+      context,
+      contentData.templatePath || filePath,
+      info
+    )
 
     mkdir(path.parse(contentData.buildPath).dir)
 

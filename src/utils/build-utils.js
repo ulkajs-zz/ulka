@@ -46,6 +46,7 @@ function createContentsMap(info) {
         info: info,
         type: "raw",
         template: template,
+        templatePath: content.template,
         values: { frontMatter: attributes, stat, fields: {} },
         content: body,
         source: relativePath,
