@@ -86,7 +86,9 @@ function getConfigs(cwd) {
  * @return {String} Hex hash from given string
  */
 function generateHash(str = "") {
-  return crypto.scryptSync(str.toString(), str.toString(), 15).toString("hex")
+  let hash = crypto.getHashes()
+  hash = crypto.createHash("sha1").update(str.toString()).digest("hex")
+  return hash
 }
 
 /**

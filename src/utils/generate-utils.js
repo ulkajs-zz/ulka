@@ -171,7 +171,7 @@ const pageToHtml = async (pageData, pages, contents, info) => {
     fs.writeFileSync(pageData.buildPath, pageData.html)
   } catch (e) {
     if (pageData.source) {
-      console.log()
+      console.log("")
       log.error(`Error while generating html from ${pageData.source}\n`, true)
     }
 

@@ -59,7 +59,6 @@ function createContentsMap(info) {
 
     contentsMap[content.name] = contentArr
   }
-
   return contentsMap
 }
 
