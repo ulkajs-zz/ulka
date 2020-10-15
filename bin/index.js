@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
+const path = require("path")
 const { program } = require("commander")
+
 const build = require("../src/ulka-cli/build")
 const serve = require("../src/ulka-cli/serve")
-const { getConfigs } = require("../src/utils/helpers")
 const create = require("../src/ulka-cli/create")
 const log = require("../src/utils/ulka-log")
+const { getConfigs } = require("../src/utils/helpers")
 
 program.version(require("../package.json").version)
 
@@ -25,6 +27,8 @@ program
   .description("Start dev server")
   .action(async ({ port }) => {
     const info = createInfo(cwd, "develop")
+    console.clear()
+    info.configs.buildPath = path.join(cwd, ".debug")
 
     await build(info)
 

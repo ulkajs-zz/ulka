@@ -1,5 +1,10 @@
-const { contentToHtml, pageToHtml } = require("../utils/generate-utils")
-const { createContentsMap, createPagesArray } = require("../utils/build-utils")
+const {
+  createContentsMap,
+  createPagesArray,
+  contentToHtml,
+  pageToHtml
+} = require("../utils/build-utils")
+
 const log = require("../utils/ulka-log")
 const { copyAssets } = require("../utils/helpers")
 
