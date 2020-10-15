@@ -11,6 +11,20 @@ const { allFiles, mkdir } = require("./ulka-fs")
 
 const md = new Remarkable({ html: true })
 
+const imageSupportPlugin = md => {
+  const original = md.renderer.rules.image
+  md.renderer.rules.image = (tokens, idx, ...rest) => {
+    const oldSrc = tokens[idx].src
+
+    const newsrc = `{% $assets('${oldSrc}') %}`
+
+    tokens[idx].src = newsrc
+    return original(tokens, idx, ...rest)
+  }
+}
+
+md.use(imageSupportPlugin)
+
 /**
  * @param {Object} info Info
  * @return {Object} contentsMap
@@ -243,7 +257,10 @@ async function contentToHtml(contentData, contents, info) {
     }
 
     if (contentData.type === "raw") {
-      contentData.html = renderMarkdown(contentData.content, info)
+      const html = renderMarkdown(contentData.content, info)
+      const base = contentData.source || info.cwd
+
+      contentData.html = renderUlka(html, { ...contentData, info }, base, info)
     } else {
       contentData.html = contentData.content
     }

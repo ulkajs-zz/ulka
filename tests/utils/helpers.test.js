@@ -1,7 +1,9 @@
-const { absolutePath, generateHash } = require("../../src/utils/helpers")
+const helpers = require("../../src/utils/helpers")
 const path = require("path")
 
 const cwd = process.cwd()
+
+const { absolutePath, generateHash } = helpers
 
 describe("Absolute path function", () => {
   test("Should return the absolute path", () => {
@@ -32,4 +34,16 @@ describe("generateHash function", () => {
   test("should return hash for empty string if noting provided", () => {
     expect(generateHash()).not.toBe("")
   })
+})
+
+describe("Should export the expected helpers function", () => {
+  expect(helpers).toMatchInlineSnapshot(`
+    Object {
+      "absolutePath": [Function],
+      "copyAssets": [Function],
+      "generateHash": [Function],
+      "getConfigs": [Function],
+      "spinner": [Function],
+    }
+  `)
 })

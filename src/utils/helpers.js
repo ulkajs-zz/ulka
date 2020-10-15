@@ -92,18 +92,6 @@ function generateHash(str = "") {
 }
 
 /**
- * Change the extension of filePath
- *
- * @param {String} filePath File Path
- * @param {String} newExtention New extension
- * @return {String} FilePath with new extension
- */
-function changeExtension(filePath, newExtention) {
-  const parsedPath = path.parse(filePath)
-  return path.join(parsedPath.dir, parsedPath.name, newExtention)
-}
-
-/**
  * Spinner function
  * @param {String} text
  *@return {Function} Stop Spinner
@@ -234,7 +222,6 @@ module.exports = {
   absolutePath,
   getConfigs,
   generateHash,
-  changeExtension,
   spinner,
   copyAssets
 }
