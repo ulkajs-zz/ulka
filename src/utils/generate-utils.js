@@ -131,6 +131,8 @@ const contentToHtml = async (contentData, contents, info) => {
     mkdir(path.parse(contentData.buildPath).dir)
 
     fs.writeFileSync(contentData.buildPath, html)
+
+    log.success(contentData.link + "index.html")
   } catch (e) {
     if (contentData.source) {
       log.error(

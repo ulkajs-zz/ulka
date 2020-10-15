@@ -36,7 +36,8 @@ async function build(info) {
       }
     }
 
-    log.info("Generating html from pages files...")
+    console.log("")
+    log.info("Generating html from ulka files...")
     for (const pageData of pagesArray) {
       await pageToHtml(pageData, pagesArray, contentsMap, info)
     }
@@ -50,7 +51,7 @@ async function build(info) {
 
     if (info.task === "build") {
       console.log("")
-      log.success(`Build completed in ${Date.now() - startTime}ms`, true)
+      log.success(`Build completed in ${(Date.now() - startTime) / 100}s`, true)
     }
   } catch (e) {
     console.log(e)
