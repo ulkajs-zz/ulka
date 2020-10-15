@@ -11,7 +11,7 @@ async function build(info) {
     let contentsMap = {}
     let pagesArray = []
 
-    const startTime = Date.now()
+    const startTime = new Date().getTime()
 
     if (info.configs.pagesPath) {
       pagesArray = createPagesArray(info, contentsMap)
@@ -51,7 +51,10 @@ async function build(info) {
 
     if (info.task === "build") {
       console.log("")
-      log.success(`Build completed in ${(Date.now() - startTime) / 100}s`, true)
+      log.success(
+        `Build completed in ${(new Date().getTime() - startTime) / 1000}s`,
+        true
+      )
     }
   } catch (e) {
     console.log(e)
