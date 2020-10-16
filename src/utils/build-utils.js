@@ -202,8 +202,9 @@ function $assets(rPath, filePath, info) {
   const relPath = path.join(path.parse(filePath).dir, rPath)
 
   const salt = relPath.split(path.sep).join("")
+  const p = path.join("__assets__", generateHash(salt)) + path.parse(rPath).ext
 
-  return path.join(`/__assets__/${generateHash(salt)}`) + path.parse(rPath).ext
+  return "/" + url.format(p)
 }
 
 /**
