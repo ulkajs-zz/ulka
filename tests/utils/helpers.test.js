@@ -3,7 +3,19 @@ const path = require("path")
 
 const cwd = process.cwd()
 
-const { absolutePath, generateHash } = helpers
+const { absolutePath, generateHash, getConfigs } = helpers
+
+describe("Should export the expected helpers function", () => {
+  expect(helpers).toMatchInlineSnapshot(`
+    Object {
+      "absolutePath": [Function],
+      "copyAssets": [Function],
+      "generateHash": [Function],
+      "getConfigs": [Function],
+      "spinner": [Function],
+    }
+  `)
+})
 
 describe("Absolute path function", () => {
   test("Should return the absolute path", () => {
@@ -36,14 +48,53 @@ describe("generateHash function", () => {
   })
 })
 
-describe("Should export the expected helpers function", () => {
-  expect(helpers).toMatchInlineSnapshot(`
-    Object {
-      "absolutePath": [Function],
-      "copyAssets": [Function],
-      "generateHash": [Function],
-      "getConfigs": [Function],
-      "spinner": [Function],
-    }
-  `)
+describe("getConfigs function", () => {
+  const configs = getConfigs(path.join(__dirname, "resources"))
+  test("should return configs with expected keys", () => {
+    expect(Object.keys(configs)).toEqual([
+      "buildPath",
+      "pagesPath",
+      "templatesPath",
+      "contents",
+      "plugins"
+    ])
+  })
+
+  test("Should have the plugin mentioned in ulka-config.js", () => {
+    const spy = jest.spyOn(console, "log")
+
+    configs.plugins.beforeBuild[0]()
+
+    expect(spy.mock.calls).toEqual([["Hi"]])
+    spy.mockRestore()
+  })
+
+  test("Should return the configs with absolute path", () => {
+    const isAbs = path.isAbsolute
+    const truthyArray = [
+      isAbs(configs.buildPath),
+      isAbs(configs.templatesPath),
+      isAbs(configs.pagesPath),
+      isAbs(configs.contents[0].path),
+      isAbs(configs.contents[0].template)
+    ]
+
+    expect(truthyArray.filter(el => el !== false).length).toBe(5)
+  })
+
+  test("Should exit with status 0 if config not found", () => {
+    const spy = jest.spyOn(process, "exit").mockImplementation(() => {})
+    getConfigs(__dirname)
+    expect(spy).toHaveBeenCalledWith(0)
+    spy.mockRestore()
+  })
+
+  test("Should exit on invalid plugin", () => {
+    const spy = jest.spyOn(process, "exit").mockImplementation(() => {})
+
+    getConfigs(path.join(__dirname, "resources", "invalid-plugins"))
+
+    expect(spy).toHaveBeenCalledWith(0)
+    spy.mockRestore()
+  })
 })

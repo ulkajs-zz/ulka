@@ -109,49 +109,56 @@ function spinner(text = "") {
 }
 
 const getPlugins = (pluginArr, cwd) => {
-  const plugins = {
-    beforeBuild: [],
-    afterBuild: [],
-    remarkablePlugin: [],
-    beforeContentRender: [],
-    afterContentRender: [],
-    beforePageRender: [],
-    afterPageRender: []
-  }
-
-  for (const plugin of pluginArr) {
-    let pPath = ""
-    let options = {}
-
-    if (existsSync(cwd, plugin)) {
-      plugin = path.join(cwd, plugin)
+  try {
+    const plugins = {
+      beforeBuild: [],
+      afterBuild: [],
+      remarkablePlugin: [],
+      beforeContentRender: [],
+      afterContentRender: [],
+      beforePageRender: [],
+      afterPageRender: []
     }
 
-    if (typeof plugin === "string") {
-      pPath = require.resolve(plugin)
-    } else if (typeof plugin === "object" && plugin.resolve) {
-      pPath = require.resolve(plugin.resolve)
-      options = plugin.options || {}
-    } else {
-      log.error("Invalid plugin: ", true)
-      console.log(plugin)
-      process.exit(0)
-    }
+    for (let plugin of pluginArr) {
+      let pPath = ""
+      let options = {}
 
-    const pluginObj = require(pPath)
+      if (typeof plugin === "string") {
+        if (existsSync(cwd, plugin)) plugin = path.join(cwd, plugin)
 
-    for (const key in pluginObj) {
-      if (pluginObj.hasOwnProperty(key)) {
-        const somePlugin = pluginObj[key]
-        if (plugins[somePlugin.name]) {
-          const pluginFunc = (...args) => somePlugin(...args, options)
-          plugins[somePlugin.name].push(pluginFunc)
+        pPath = require.resolve(plugin)
+      } else if (typeof plugin === "object" && plugin.resolve) {
+        if (existsSync(cwd, plugin.resolve))
+          plugin.resolve = path.join(cwd, plugin.resolve)
+
+        pPath = require.resolve(plugin.resolve)
+        options = plugin.options || {}
+      } else {
+        log.error("Invalid plugin: ", true)
+        console.log(plugin)
+        process.exit(0)
+      }
+
+      const pluginObj = require(pPath)
+
+      for (const key in pluginObj) {
+        if (pluginObj.hasOwnProperty(key)) {
+          const somePlugin = pluginObj[key]
+          if (plugins[somePlugin.name]) {
+            const pluginFunc = (...args) => somePlugin(...args, options)
+            plugins[somePlugin.name].push(pluginFunc)
+          }
         }
       }
     }
-  }
 
-  return plugins
+    return plugins
+  } catch (e) {
+    log.error("Error while getting plugins")
+    console.log(e)
+    process.exit(0)
+  }
 }
 
 const changeCssUrlPath = (css, dir, info) => {

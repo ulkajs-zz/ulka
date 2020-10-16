@@ -8,5 +8,12 @@ module.exports = {
       template: "blog.ulka"
     }
   ],
-  plugins: ["test-plugin"]
+  // bad-plugin doesn't exist
+  plugins: [
+    {
+      resolve: "nice-plugin"
+    },
+    () => {},
+    "bad-plugin"
+  ]
 }
