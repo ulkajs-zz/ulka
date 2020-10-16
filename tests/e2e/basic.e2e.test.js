@@ -12,7 +12,7 @@ beforeAll(async () => {
 })
 
 describe("pages - index.html", () => {
-  let $ = cheerio.load("")
+  let $
   beforeAll(() => {
     const html = fs.readFileSync(
       path.join(__dirname, "resources", "basic", "build", "index.html")
@@ -32,10 +32,16 @@ describe("pages - index.html", () => {
 
     expect(links).toEqual(["/post-1/", "/post-2/"])
   })
+
+  test("href in stylesheet should be changed", () => {
+    expect($("link").attr("href")).toBe(
+      "\\__assets__\\ad93a0249bdc177de39605f299ffff77f1bddaa3.css"
+    )
+  })
 })
 
 describe("contents - post-1/index.html", () => {
-  let $ = cheerio.load("")
+  let $
   beforeAll(() => {
     const html = fs.readFileSync(
       path.join(

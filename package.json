@@ -1,13 +1,15 @@
 {
   "name": "ulka",
-  "version": "0.6.1-rc.8",
+  "version": "0.6.1-rc.9",
   "description": "Ulka - static site generator",
   "main": "./src/index.js",
   "bin": {
     "ulka": "./bin/index.js"
   },
   "scripts": {
-    "test": "cross-env FORCE_COLOR=1 jest",
+    "test": "cross-env FORCE_COLOR=1 jest tests",
+    "test:e2e": "cross-env FORCE_COLOR=1 jest tests/e2e",
+    "test:unit": "cross-env FORCE_COLOR=1 jest tests/unit",
     "eslint": "eslint \"**/*.js\" --color",
     "eslint:fix": "eslint \"**/*.js\" --fix --color",
     "prettier": "prettier \"**/*.js\"",
