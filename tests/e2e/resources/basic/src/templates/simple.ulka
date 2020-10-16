@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>{% values.frontMatter.title %}</title>
+        <link rel="stylesheet" href="{% $assets('../pages/index.css') %}" />
     </head>
     <body>
         <h1 id="template-heading">This is from template</h1>

@@ -199,6 +199,10 @@ function $import(rPath, values, filePath, info) {
  * @return {String} hash
  */
 function $assets(rPath, filePath, info) {
+  if (filePath.startsWith(info.cwd)) {
+    filePath = path.relative(info.cwd, filePath)
+  }
+
   const relPath = path.join(path.parse(filePath).dir, rPath)
 
   const salt = relPath.split(path.sep).join("")
