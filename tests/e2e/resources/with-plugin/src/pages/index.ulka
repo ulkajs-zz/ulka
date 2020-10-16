@@ -1,0 +1,22 @@
+{% const title = "BASIC PROJECT" %}
+<html>
+    <head>
+        <title>{% title %}</title>
+    </head>
+    <body>
+        <div class="links">
+            {% contents.blog.map(content => {
+                return `
+                <div>
+                    <a href="${content.link}">
+                        ${content.values.frontMatter.title}
+                    </a>
+                    <span class="reading-time">${content.values.fields.readingTime}</span>
+                </div>
+                `
+            }) %}
+        </div>
+
+        <h1 id="my-name">{% values.myData.name %}</h1>
+    </body>
+</html>

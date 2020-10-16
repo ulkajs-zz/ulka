@@ -316,8 +316,8 @@ async function contentToHtml(contentData, contents, info) {
  */
 async function pageToHtml(pageData, pages, contents, info) {
   try {
-    const beforePageRenderPlugins = info.configs.plugins.beforeContentRender
-    const afterPageRenderPlugins = info.configs.plugins.afterContentRender
+    const beforePageRenderPlugins = info.configs.plugins.beforePageRender
+    const afterPageRenderPlugins = info.configs.plugins.afterPageRender
 
     // BefrePageRender Plugins
     for (const plugin of beforePageRenderPlugins) {
