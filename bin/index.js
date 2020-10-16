@@ -6,8 +6,7 @@ const { program } = require("commander")
 const build = require("../src/ulka-cli/build")
 const serve = require("../src/ulka-cli/serve")
 const create = require("../src/ulka-cli/create")
-const log = require("../src/utils/ulka-log")
-const { getConfigs } = require("../src/utils/helpers")
+const { createInfo } = require("../src/utils/build-utils")
 
 program.version(require("../package.json").version)
 
@@ -59,21 +58,3 @@ program
   })
 
 program.parse(process.argv)
-
-/**
- * @param {String} cwd cwd
- * @param {String} task current rask
- * @return {Object} info
- */
-function createInfo(cwd, task) {
-  try {
-    return {
-      configs: getConfigs(cwd),
-      cwd,
-      task
-    }
-  } catch (e) {
-    log.error(e.message, true)
-    process.exit(0)
-  }
-}

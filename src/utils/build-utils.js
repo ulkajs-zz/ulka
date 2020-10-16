@@ -6,7 +6,7 @@ const { render } = require("ulka-parser")
 const { Remarkable } = require("remarkable")
 
 const log = require("./ulka-log")
-const { generateHash } = require("./helpers")
+const { generateHash, getConfigs } = require("./helpers")
 const { allFiles, mkdir } = require("./ulka-fs")
 
 const md = new Remarkable({ html: true })
@@ -158,7 +158,7 @@ function getLink(configs, buildPath) {
     this.link = "/" + this.link
   }
 
-  return link
+  return this.link
 }
 
 /**
@@ -354,9 +354,28 @@ async function pageToHtml(pageData, pages, contents, info) {
   }
 }
 
+/**
+ * @param {String} cwd cwd
+ * @param {String} task current rask
+ * @return {Object} info
+ */
+function createInfo(cwd, task) {
+  try {
+    return {
+      configs: getConfigs(cwd),
+      cwd,
+      task
+    }
+  } catch (e) {
+    log.error(e.message, true)
+    process.exit(0)
+  }
+}
+
 module.exports = {
   createContentsMap,
   createPagesArray,
   contentToHtml,
-  pageToHtml
+  pageToHtml,
+  createInfo
 }

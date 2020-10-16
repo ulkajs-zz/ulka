@@ -39,24 +39,31 @@ function mkdir(pathToDirectory) {
  * @return {String[]} Array of files
  */
 function allFiles(dirPath, ext, arrayOfFiles = []) {
-  if (!fs.statSync(dirPath).isDirectory()) {
-    return [dirPath]
-  }
+  try {
+    const stat = fs.statSync(dirPath)
 
-  const files = fs.readdirSync(dirPath)
-
-  files.forEach(file => {
-    const pathTo = path.join(dirPath, file)
-    if (fs.statSync(pathTo).isDirectory()) {
-      if (!pathTo.includes("node_modules")) {
-        arrayOfFiles = allFiles(pathTo, ext, arrayOfFiles)
-      }
-    } else {
-      if (!ext || file.endsWith(ext)) arrayOfFiles.push(pathTo)
+    if (!stat.isDirectory()) {
+      return [dirPath]
     }
-  })
 
-  return arrayOfFiles
+    const files = fs.readdirSync(dirPath)
+
+    files.forEach(file => {
+      const pathTo = path.join(dirPath, file)
+      if (fs.statSync(pathTo).isDirectory()) {
+        if (!pathTo.includes("node_modules")) {
+          arrayOfFiles = allFiles(pathTo, ext, arrayOfFiles)
+        }
+      } else {
+        if (!ext || file.endsWith(ext)) arrayOfFiles.push(pathTo)
+      }
+    })
+
+    return arrayOfFiles
+  } catch (e) {
+    console.log(e.message)
+    throw new Error(`Error while finding all ${ext} files in ${dirPath}`)
+  }
 }
 
 module.exports = {

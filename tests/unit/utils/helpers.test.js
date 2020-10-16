@@ -1,4 +1,4 @@
-const helpers = require("../../src/utils/helpers")
+const helpers = require("../../../src/utils/helpers")
 const path = require("path")
 
 const cwd = process.cwd()

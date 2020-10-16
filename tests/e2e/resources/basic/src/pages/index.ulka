@@ -1,0 +1,13 @@
+{% const title = "BASIC PROJECT" %}
+<html>
+    <head>
+        <title>{% title %}</title>
+    </head>
+    <body>
+        <div class="links">
+            {% contents.blog.map(content => {
+                return `<a href="${content.link}">${content.values.frontMatter.title}</a>`
+            }) %}
+        </div>
+    </body>
+</html>

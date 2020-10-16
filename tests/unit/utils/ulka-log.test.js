@@ -1,4 +1,4 @@
-const log = require("../../src/utils/ulka-log")
+const log = require("../../../src/utils/ulka-log")
 
 describe("Log Object", () => {
   test("should have all the functions", () => {

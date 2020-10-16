@@ -1,6 +1,6 @@
 const path = require("path")
 const fs = require("fs")
-const { allFiles, mkdir, rmdir } = require("../../src/utils/ulka-fs")
+const { allFiles, mkdir, rmdir } = require("../../../src/utils/ulka-fs")
 
 const replaceSepWithSlash = file =>
   path.relative(__dirname, file).split(path.sep).join("/")

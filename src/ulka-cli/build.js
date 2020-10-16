@@ -64,7 +64,7 @@ async function build(info) {
   } catch (e) {
     console.log(e)
     console.log("")
-    log.error("Build filed")
+    log.error("Build failed")
     process.exit(0)
   }
 }
