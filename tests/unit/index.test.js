@@ -10,6 +10,11 @@ test("Should exported the expected value", () => {
         "success": [Function],
         "warning": [Function],
       },
+      "ulkaFs": Object {
+        "allFiles": [Function],
+        "mkdir": [Function],
+        "rmdir": [Function],
+      },
     }
   `)
 })
