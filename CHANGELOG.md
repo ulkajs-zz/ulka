@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.6.2
+
+- Bug fix for plugins.
+- Log whole error if error is due to plugins.
+
 ## v0.6.0 - v0.6.1
 
 - Used remarkable to parser markdown.

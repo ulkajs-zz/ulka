@@ -125,11 +125,13 @@ const getPlugins = (pluginArr, cwd) => {
       let options = {}
 
       if (typeof plugin === "string") {
-        if (existsSync(cwd, plugin)) plugin = path.join(cwd, plugin)
+        if (existsSync(path.join(cwd, plugin))) {
+          plugin = path.join(cwd, plugin)
+        }
 
         pPath = require.resolve(plugin)
       } else if (typeof plugin === "object" && plugin.resolve) {
-        if (existsSync(cwd, plugin.resolve))
+        if (existsSync(path.join(cwd, plugin.resolve)))
           plugin.resolve = path.join(cwd, plugin.resolve)
 
         pPath = require.resolve(plugin.resolve)
@@ -155,6 +157,7 @@ const getPlugins = (pluginArr, cwd) => {
 
     return plugins
   } catch (e) {
+    console.log(e)
     log.error("Error while getting plugins")
     process.exit(0)
   }
