@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.6.0 - v0.6.1
+
+- Used remarkable to parser markdown.
+- Build logic changed.
+  - collect data.
+  - render to html.
+  - generate html files.
+  - copy assets.
+- Hash function changed to use sha1.
+- Async support removed.
+- Build speed increased.
+- Plugins logic changed.
+- Commands changed.
+  - serve: serve already built files.
+  - develop: built, serve and watch.
+  - create: create new project.
+- starter template verification before creating new project.
+
 ## v0.5.3
 
 - ulka-parser -> 0.3.1

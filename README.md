@@ -20,7 +20,7 @@
 1. Create new ulka site
 
    ```
-   npx ulka create <app-name>
+   npx ulka create <app-name> <template_url> -i npm
    ```
 
 2. Navigate to app name and start server

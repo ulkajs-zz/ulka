@@ -196,9 +196,9 @@ function copyAssets(info) {
 
     if (!parsed.name.endsWith("ulka") && !ignoreExt.includes(parsed.ext)) {
       try {
-        const salt = path.relative(info.cwd, file).split(path.sep).join("")
+        const strToHash = path.relative(info.cwd, file).split(path.sep).join("")
 
-        const newName = generateHash(salt) + parsed.ext
+        const newName = generateHash(strToHash) + parsed.ext
 
         const writepath = path.join(
           info.configs.buildPath,

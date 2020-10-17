@@ -22,62 +22,26 @@ In order to create a pull request for `ulka`, follow the GitHub instructions for
 
 Description of the project files and directories.
 
-```
 📦ulka
- ┣ 📂@types
- ┃ ┗ 📜better-opn.d.ts
- ┣ 📂src
- ┃ ┣ 📂bin
- ┃ ┃ ┣ 📜build.ts
- ┃ ┃ ┣ 📜index.ts
- ┃ ┃ ┗ 📜serve.ts
- ┃ ┣ 📂data
- ┃ ┃ ┣ 📜configs.ts
- ┃ ┃ ┣ 📜mime-types.ts
- ┃ ┃ ┗ 📜plugins.ts
- ┃ ┣ 📂fs
- ┃ ┃ ┣ 📜all-files.ts
- ┃ ┃ ┣ 📜copy-assets.ts
- ┃ ┃ ┣ 📜index.ts
- ┃ ┃ ┣ 📜mkdir.ts
- ┃ ┃ ┗ 📜rmdir.ts
- ┃ ┣ 📂generate
- ┃ ┃ ┗ 📜index.ts
- ┃ ┣ 📂source
- ┃ ┃ ┣ 📜index.ts
- ┃ ┃ ┣ 📜md-source.ts
- ┃ ┃ ┗ 📜ulka-source.ts
- ┃ ┣ 📂utils
- ┃ ┃ ┣ 📂cli-utils
- ┃ ┃ ┃ ┣ 📜create-project.ts
- ┃ ┃ ┃ ┣ 📜create-server.ts
- ┃ ┃ ┃ ┗ 📜line-print.ts
- ┃ ┃ ┣ 📂ulka-source-utils
- ┃ ┃ ┃ ┣ 📜$assets.ts
- ┃ ┃ ┃ ┗ 📜$import.ts
- ┃ ┃ ┣ 📜absolute-path.ts
- ┃ ┃ ┣ 📜generate-file-name.ts
- ┃ ┃ ┗ 📜unified-processor.ts
- ┃ ┣ 📜globalInfo.ts
- ┃ ┗ 📜index.ts
- ┣ 📂tests
- ┃  ┗ (...tests)
- ┣ 📜.eslintignore
- ┣ 📜.eslintrc.json
- ┣ 📜.gitignore
- ┣ 📜.npmignore
- ┣ 📜.prettierignore
- ┣ 📜.prettierrc
- ┣ 📜CHANGELOG.md
- ┣ 📜CONTRIBUTING.md
- ┣ 📜CODE_OF_CONDUCT.md
- ┣ 📜LICENSE
- ┣ 📜README.md
- ┣ 📜jest.config.js
- ┣ 📜package-lock.json
- ┣ 📜package.json
- ┗ 📜tsconfig.json
-```
+┣ 📂bin
+┃ ┗ 📜server.js
+┣ 📂src
+┃ ┣ 📂server
+┃ ┃ ┣ 📜index.js
+┃ ┃ ┗ 📜server.js
+┃ ┣ 📂ulka-cli
+┃ ┃ ┣ 📜build.js
+┃ ┃ ┣ 📜create.js
+┃ ┃ ┗ 📜serve.js
+┃ ┣ 📂utils
+┃ ┃ ┣ 📜build-utils.js
+┃ ┃ ┣ 📜helpers.js
+┃ ┃ ┣ 📜ulka-fs.js
+┃ ┃ ┗ 📜ulka-log.js
+┃ ┗ 📜index.js
+┣ 📂tests
+┃ ┣ 📂e2e
+┃ ┗ 📂unit
 
 ## License
 

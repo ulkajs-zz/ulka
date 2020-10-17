@@ -8,6 +8,7 @@
 .eslintignore
 .eslintrc.json
 jest.config.js
+.huskyrc.json
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 CHANGELOG.md
