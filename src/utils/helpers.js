@@ -145,9 +145,9 @@ const getPlugins = (pluginArr, cwd) => {
       for (const key in pluginObj) {
         if (pluginObj.hasOwnProperty(key)) {
           const somePlugin = pluginObj[key]
-          if (plugins[somePlugin.name]) {
+          if (plugins[key]) {
             const pluginFunc = (...args) => somePlugin(...args, options)
-            plugins[somePlugin.name].push(pluginFunc)
+            plugins[key].push(pluginFunc)
           }
         }
       }
