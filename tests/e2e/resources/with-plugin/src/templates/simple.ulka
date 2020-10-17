@@ -1,0 +1,11 @@
+<html>
+    <head>
+        <title>{% values.frontMatter.title %}</title>
+    </head>
+    <body>
+        <h1 id="template-heading">This is from template</h1>
+        <a id="current-link" href="{% link %}">Current page</a>
+        <span id="reading-time">{% values.fields.readingTime %}</span>
+        {% data %}
+    </body>
+</html>

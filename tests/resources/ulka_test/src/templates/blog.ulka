@@ -1,8 +1,0 @@
-<html>
-    <head>
-        <title>Ulka Js</title>
-    </head>
-    <body>
-        {% data %}
-    </body>
-</html>
