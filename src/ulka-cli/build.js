@@ -26,6 +26,9 @@ async function build(info) {
       contentsMap = createContentsMap(info)
     }
 
+    if (info.configs.plugins.beforeBuild.length > 0)
+      log.info("Executing beforeBuild plugins")
+
     for (const plugin of info.configs.plugins.beforeBuild) {
       await plugin({ info, contentsMap, pagesArray })
     }
@@ -49,6 +52,9 @@ async function build(info) {
 
     log.info("Copying assets....")
     copyAssets(info)
+
+    if (info.configs.plugins.afterBuild.length > 0)
+      log.info("Executing afterBuild plugins")
 
     for (const plugin of info.configs.plugins.afterBuild) {
       await plugin({ info, contentsMap, pagesArray })

@@ -1,11 +1,12 @@
+const path = require("path")
 const prompts = require("prompts")
+const fetch = require("node-fetch")
+const { unlinkSync } = require("fs")
+const GitHost = require("hosted-git-info")
 const { execSync } = require("child_process")
+
 const log = require("../utils/ulka-log")
 const { rmdir } = require("../utils/ulka-fs")
-const path = require("path")
-const { unlinkSync } = require("fs")
-const fetch = require("node-fetch")
-const GitHost = require("hosted-git-info")
 const { spinner } = require("../utils/helpers")
 
 /**
