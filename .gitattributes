@@ -1,2 +1,2 @@
-*.ulka linguist-language=html
+*.ulka linguist-generated=true
 *.css linguist-generated=true
