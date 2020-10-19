@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.6.3
+
+- Bug fix for async plugins
+- Cache hash generate and ulka render
+
 ## v0.6.2
 
 - Bug fix for plugins.
