@@ -79,6 +79,7 @@ function getConfigs(cwd) {
   }
 }
 
+const hashCache = {}
 /**
  * Generates hex hash from a string
  *
@@ -86,8 +87,11 @@ function getConfigs(cwd) {
  * @return {String} Hex hash from given string
  */
 function generateHash(str = "") {
-  let hash = crypto.getHashes()
-  hash = crypto.createHash("sha1").update(str.toString()).digest("hex")
+  if (hashCache[str]) return hashCache[str]
+
+  const hash = crypto.createHash("sha1").update(str.toString()).digest("hex")
+
+  hashCache[str] = hash
   return hash
 }
 
