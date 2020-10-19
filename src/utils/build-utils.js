@@ -175,7 +175,8 @@ function getLink(configs, buildPath) {
  */
 function $import(rPath, values, filePath, info) {
   const imgExts = [".jpeg", ".jpg", ".png", ".gif", ".bmp", ".svg", ".webp"]
-  const file = path.join(path.parse(filePath).dir, rPath)
+  const file = path.join(info.cwd, path.parse(filePath).dir, rPath)
+
   const ext = path.parse(file).ext
   if (ext === ".ulka") {
     const raw = fs.readFileSync(file, "utf-8")
