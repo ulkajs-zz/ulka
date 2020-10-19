@@ -148,7 +148,9 @@ const getPlugins = (pluginArr, cwd) => {
         if (pluginObj.hasOwnProperty(key)) {
           const somePlugin = pluginObj[key]
           if (plugins[key]) {
-            const pluginFunc = (...args) => somePlugin(...args, options)
+            const pluginFunc = async (...args) => {
+              return await somePlugin(...args, options)
+            }
             plugins[key].push(pluginFunc)
           }
         }
