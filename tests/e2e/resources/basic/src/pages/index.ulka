@@ -12,3 +12,7 @@
         </div>
     </body>
 </html>
+
+{% $import('../snippets/test-snippet.ulka', {
+    something: "nothing"
+}) %}

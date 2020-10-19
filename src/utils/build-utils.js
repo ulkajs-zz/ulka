@@ -175,11 +175,12 @@ function getLink(configs, buildPath) {
  */
 function $import(rPath, values, filePath, info) {
   const imgExts = [".jpeg", ".jpg", ".png", ".gif", ".bmp", ".svg", ".webp"]
-  const file = path.join(path.parse(filePath).dir, rPath)
+  const file = path.join(info.cwd, path.parse(filePath).dir, rPath)
+
   const ext = path.parse(file).ext
   if (ext === ".ulka") {
     const raw = fs.readFileSync(file, "utf-8")
-    return renderUlka(raw, values, filePath, info)
+    return renderUlka(raw, values, file, info)
   } else if (ext === ".md") {
     const raw = fs.readFileSync(file, "utf-8")
     return renderMarkdown(raw, info)
@@ -225,6 +226,7 @@ function renderMarkdown(raw, info) {
   return md.render(raw)
 }
 
+const renderUlkaCache = {}
 /**
  * @param {String} raw Raw ulka
  * @param {Object} context Context
@@ -233,6 +235,14 @@ function renderMarkdown(raw, info) {
  * @return {String}
  */
 function renderUlka(raw, context, filePath, info) {
+  // while in development mode return cache if exists
+  if (info.task === "develop") {
+    const cache = renderUlkaCache[filePath]
+    if (cache && cache.raw === raw && JSON.stringify(context) === raw.context) {
+      return cache.html
+    }
+  }
+
   context = {
     ...context,
     $assets: rPath => $assets(rPath, filePath, info),
@@ -240,7 +250,12 @@ function renderUlka(raw, context, filePath, info) {
       return $import(rPath, { ...context, ...$values }, filePath, info)
     }
   }
-  return render(raw, context, { base: filePath })
+
+  const html = render(raw, context, { base: filePath })
+
+  renderUlkaCache[filePath] = { html, raw, context: JSON.stringify(context) }
+
+  return html
 }
 
 /**
