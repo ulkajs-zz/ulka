@@ -179,7 +179,7 @@ function $import(rPath, values, filePath, info) {
   const ext = path.parse(file).ext
   if (ext === ".ulka") {
     const raw = fs.readFileSync(file, "utf-8")
-    return renderUlka(raw, values, filePath, info)
+    return renderUlka(raw, values, file, info)
   } else if (ext === ".md") {
     const raw = fs.readFileSync(file, "utf-8")
     return renderMarkdown(raw, info)
