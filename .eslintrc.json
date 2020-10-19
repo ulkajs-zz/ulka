@@ -13,6 +13,7 @@
   "rules": {
     "prettier/prettier": ["error"],
     "no-console": "off",
-    "no-undef": "error"
+    "no-undef": "error",
+    "linebreak-style": "off"
   }
 }
