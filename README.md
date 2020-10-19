@@ -41,12 +41,12 @@ Coming soon...
 
 ## 🤗 Contributing
 
-We welcome you to join the development of Ulka. Please see [Contributing](https://github.com/ulkajs/ulka/blob/master/CONTRIBUTING.md) Guidelines.
+We welcome you to join the development of ulka. Please see [contributing](https://github.com/ulkajs/ulka/blob/master/CONTRIBUTING.md) guidelines.
 
 ## LICENSE
 
-<a href="https://github.com/nuxt/nuxt.js/blob/dev/LICENSE">MIT</a>
+<a href="https://opensource.org/licenses/MIT">MIT</a>
 
 ---
 
-<a href="https://www.buymeacoffee.com/coderosh" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="200" alt="Buy Me A Coffee"></a>
+[<img alt="Buy me a Coffee" width="200" src="https://cdn.buymeacoffee.com/buttons/default-yellow.png">](https://www.buymeacoffee.com/coderosh)
