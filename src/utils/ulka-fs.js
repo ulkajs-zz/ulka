@@ -51,9 +51,7 @@ function allFiles(dirPath, ext, arrayOfFiles = []) {
     files.forEach(file => {
       const pathTo = path.join(dirPath, file)
       if (fs.statSync(pathTo).isDirectory()) {
-        if (!pathTo.includes("node_modules")) {
-          arrayOfFiles = allFiles(pathTo, ext, arrayOfFiles)
-        }
+        arrayOfFiles = allFiles(pathTo, ext, arrayOfFiles)
       } else {
         if (!ext || file.endsWith(ext)) arrayOfFiles.push(pathTo)
       }

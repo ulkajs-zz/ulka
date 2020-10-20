@@ -194,13 +194,13 @@ const changeCssUrlPath = (css, dir, info) => {
  * @param {Object} info info
  */
 function copyAssets(info) {
-  const allFilesinCwd = allFiles(path.join(info.cwd, "src"))
+  const allFilesinSrc = allFiles(path.join(info.cwd, "src"))
 
   const ignoreExt = [".md", ".ulka"]
 
   mkdir(path.join(info.configs.buildPath, "__assets__"))
 
-  for (const file of allFilesinCwd) {
+  for (const file of allFilesinSrc) {
     const parsed = path.parse(file)
 
     if (!parsed.name.endsWith("ulka") && !ignoreExt.includes(parsed.ext)) {

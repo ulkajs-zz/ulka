@@ -47,13 +47,6 @@ describe("all files function", () => {
         ]
       `)
   })
-
-  test("should ignore node_modules", () => {
-    const files = allFiles(process.cwd()).filter(file =>
-      file.includes("node_modules")
-    )
-    expect(files.length).toBe(0)
-  })
 })
 
 describe("mkdir and rmdir function", () => {
