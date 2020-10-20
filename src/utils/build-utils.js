@@ -407,6 +407,7 @@ function createInfo(cwd, task) {
       configs: getConfigs(cwd),
       cwd,
       task,
+      ignoreExtensions: [".ulka", ".md"],
       renderer: {}
     }
   } catch (e) {

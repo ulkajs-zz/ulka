@@ -33,7 +33,7 @@ async function build(info) {
       await plugin({ info, contentsMap, pagesArray })
     }
 
-    log.info("Generating html from markdown files...")
+    log.info("Generating html from contents...")
     for (const key in contentsMap) {
       if (contentsMap.hasOwnProperty(key)) {
         const contentsArray = contentsMap[key]
@@ -45,12 +45,12 @@ async function build(info) {
     }
 
     console.log("")
-    log.info("Generating html from ulka files...")
+    log.info("Generating html from pages...")
     for (const pageData of pagesArray) {
       await pageToHtml(pageData, pagesArray, contentsMap, info)
     }
 
-    log.info("Copying assets....")
+    log.info("Copying assets....\n")
     copyAssets(info)
 
     if (info.configs.plugins.afterBuild.length > 0)

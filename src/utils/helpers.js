@@ -215,7 +215,7 @@ function copyAssets(info) {
     }
   }
 
-  const ignoreExt = [".md", ".ulka"]
+  const ignoreExt = info.ignoreExtensions
 
   mkdir(path.join(info.configs.buildPath, "__assets__"))
 
