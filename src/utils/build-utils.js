@@ -306,6 +306,13 @@ async function contentToHtml(contentData, contents, info) {
         info
       )
     } else {
+      context = {
+        ...context,
+        $assets: rPath => $assets(rPath, filePath, info),
+        $import: (rPath, $values = {}) => {
+          return $import(rPath, { ...context, ...$values }, filePath, info)
+        }
+      }
       html = info.renderer[ext](contentData.template, context, info)
     }
 
