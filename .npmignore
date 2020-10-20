@@ -6,7 +6,9 @@
 .prettierrc
 .prettierignore
 .eslintignore
+.gitattributes
 .eslintrc.json
+jsconfig.json
 jest.config.js
 .huskyrc.json
 CODE_OF_CONDUCT.md
