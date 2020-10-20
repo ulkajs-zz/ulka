@@ -292,12 +292,22 @@ async function contentToHtml(contentData, contents, info) {
       }
     }
 
-    const html = renderUlka(
-      contentData.template,
-      context,
-      contentData.templatePath || filePath,
-      info
-    )
+    const ext = path.parse(contentData.templatePath || "").ext
+
+    const useUlka =
+      ext === "" || ext === ".ulka" || typeof info.renderer[ext] !== "function"
+
+    let html = ""
+    if (useUlka) {
+      html = renderUlka(
+        contentData.template,
+        context,
+        contentData.templatePath || filePath,
+        info
+      )
+    } else {
+      html = info.renderer[ext](contentData.template, context, info)
+    }
 
     mkdir(path.parse(contentData.buildPath).dir)
 
@@ -336,7 +346,16 @@ async function pageToHtml(pageData, pages, contents, info) {
     if (pageData.type === "raw") {
       const context = { ...pageData, contents, pages, info }
       const filePath = pageData.source || info.cwd
-      pageData.html = renderUlka(pageData.content, context, filePath, info)
+
+      const ext = path.parse(filePath).ext
+
+      const extRenderer = info.renderer[ext]
+
+      if (ext === "" || ext === ".ulka" || typeof extRenderer !== "function") {
+        pageData.html = renderUlka(pageData.content, context, filePath, info)
+      } else {
+        pageData.html = extRenderer(pageData.content, context, info)
+      }
     } else {
       pageData.html = pageData.content
     }
@@ -373,7 +392,8 @@ function createInfo(cwd, task) {
     return {
       configs: getConfigs(cwd),
       cwd,
-      task
+      task,
+      renderer: {}
     }
   } catch (e) {
     log.error(e.message, true)
