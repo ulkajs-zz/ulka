@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.4
+
+- Removed cache from ulka render
+- Allow plugin to add renderer to info.
+
 ## v0.6.3
 
 - Bug fix for async plugins
