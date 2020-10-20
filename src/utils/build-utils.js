@@ -230,7 +230,6 @@ function renderMarkdown(raw, info) {
   return md.render(raw)
 }
 
-const renderUlkaCache = {}
 /**
  * @param {String} raw Raw ulka
  * @param {Object} context Context
@@ -239,14 +238,6 @@ const renderUlkaCache = {}
  * @return {String}
  */
 function renderUlka(raw, context, filePath, info) {
-  // while in development mode return cache if exists
-  if (info.task === "develop") {
-    const cache = renderUlkaCache[filePath]
-    if (cache && cache.raw === raw && JSON.stringify(context) === raw.context) {
-      return cache.html
-    }
-  }
-
   context = {
     ...context,
     $assets: rPath => $assets(rPath, filePath, info),
@@ -255,11 +246,7 @@ function renderUlka(raw, context, filePath, info) {
     }
   }
 
-  const html = render(raw, context, { base: filePath })
-
-  renderUlkaCache[filePath] = { html, raw, context: JSON.stringify(context) }
-
-  return html
+  return render(raw, context, { base: filePath })
 }
 
 /**
