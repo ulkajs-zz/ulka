@@ -196,6 +196,25 @@ const changeCssUrlPath = (css, dir, info) => {
 function copyAssets(info) {
   const allFilesinSrc = allFiles(path.join(info.cwd, "src"))
 
+  const staticPath = path.join(info.cwd, "static")
+
+  if (existsSync(staticPath)) {
+    const allStaticFiles = allFiles(staticPath)
+
+    for (const file of allStaticFiles) {
+      const generateP = path.join(
+        info.configs.buildPath,
+        path.relative(staticPath, file)
+      )
+      const parsedBP = path.parse(generateP)
+      if (!fs.existsSync(parsedBP.dir)) {
+        mkdir(parsedBP.dir)
+      }
+
+      fs.copyFileSync(file, generateP)
+    }
+  }
+
   const ignoreExt = [".md", ".ulka"]
 
   mkdir(path.join(info.configs.buildPath, "__assets__"))
