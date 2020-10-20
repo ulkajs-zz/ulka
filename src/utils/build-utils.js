@@ -279,7 +279,7 @@ async function contentToHtml(contentData, contents, info) {
       await plugin({ contentData, contents, info })
     }
 
-    const context = { ...contentData, contents, info, data: contentData.html }
+    let context = { ...contentData, contents, info, data: contentData.html }
     const filePath = contentData.source || info.cwd
 
     if (!contentData.template && contentData.templatePath) {
@@ -351,7 +351,7 @@ async function pageToHtml(pageData, pages, contents, info) {
     }
 
     if (pageData.type === "raw") {
-      const context = { ...pageData, contents, pages, info }
+      let context = { ...pageData, contents, pages, info }
       const filePath = pageData.source || info.cwd
 
       const ext = path.parse(filePath).ext
@@ -361,6 +361,13 @@ async function pageToHtml(pageData, pages, contents, info) {
       if (ext === "" || ext === ".ulka" || typeof extRenderer !== "function") {
         pageData.html = renderUlka(pageData.content, context, filePath, info)
       } else {
+        context = {
+          ...context,
+          $assets: rPath => $assets(rPath, filePath, info),
+          $import: (rPath, $values = {}) => {
+            return $import(rPath, { ...context, ...$values }, filePath, info)
+          }
+        }
         pageData.html = extRenderer(pageData.content, context, info)
       }
     } else {
