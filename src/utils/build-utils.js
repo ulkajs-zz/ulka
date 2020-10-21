@@ -332,8 +332,8 @@ async function contentToHtml(contentData, contents, info) {
 
     const parsedBuildPath = path.parse(contentData.buildPath)
 
-    if (parsedBuildPath.dir === path.join(info.cwd, "404")) {
-      contentData.buildPath = path.join(info.cwd, "404.html")
+    if (parsedBuildPath.dir === path.join(info.configs.buildPath, "404")) {
+      contentData.buildPath = path.join(info.configs.buildPath, "404.html")
     } else {
       mkdir(parsedBuildPath.dir)
     }
@@ -399,7 +399,13 @@ async function pageToHtml(pageData, pages, contents, info) {
       await plugin({ pageData, pages, contents, info })
     }
 
-    mkdir(path.parse(pageData.buildPath).dir)
+    const parsedBuildPath = path.parse(pageData.buildPath)
+
+    if (parsedBuildPath.dir === path.join(info.configs.buildPath, "404")) {
+      pageData.buildPath = path.join(info.configs.buildPath, "404.html")
+    } else {
+      mkdir(parsedBuildPath.dir)
+    }
 
     fs.writeFileSync(pageData.buildPath, pageData.html)
   } catch (e) {
