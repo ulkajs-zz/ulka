@@ -427,17 +427,7 @@ function createInfo(cwd, task) {
   try {
     const configs = getConfigs(cwd)
 
-    let prefix = configs.prefixUrl || ""
-
-    if (
-      !configs.prefixUrl &&
-      configs.siteMetaData &&
-      configs.siteMetaData.domain
-    ) {
-      const parsedDomain = url.parse(configs.siteMetaData.domain)
-
-      prefix = parsedDomain.pathname
-    }
+    let prefix = configs.prefixUrl || "/"
 
     if (!prefix.endsWith("/")) {
       prefix += "/"
