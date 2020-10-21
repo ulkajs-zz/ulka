@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.5
+
+- Added prefix link support
+- Added context to external renderers
+- Added static files support.
+- Made ignore extensions avaiable in info. So that ignore extension can be easily through plugins.
+- Bug fix for 404 page. Create 404.html instead of 404/index.html.
+
 ## 0.6.4
 
 - Removed cache from ulka render

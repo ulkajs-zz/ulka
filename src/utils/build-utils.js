@@ -56,7 +56,7 @@ function createContentsMap(info) {
 
       buildPath = createBuildPath(parsedPath, buildPath)
 
-      const link = getLink(info.configs, buildPath)
+      const link = getLink(info, buildPath)
 
       const { attributes, body } = fm(raw)
 
@@ -105,7 +105,7 @@ function createPagesArray(info, contents) {
 
     buildPath = createBuildPath(parsedPath, buildPath)
 
-    const link = getLink(info.configs, buildPath)
+    const link = getLink(info, buildPath)
 
     const pageData = {
       type: "raw",
@@ -145,20 +145,22 @@ function createBuildPath(parsedPath, buildPath) {
 
 /**
  * Get link from buildpath
- * @param {Object} configs
+ * @param {Object} info
  * @param {String} buildPath
  * @return {String} link
  */
-function getLink(configs, buildPath) {
-  const link = path.relative(configs.buildPath, buildPath).slice(0, -10)
+function getLink(info, buildPath) {
+  let link = path.relative(info.configs.buildPath, buildPath).slice(0, -10)
 
-  this.link = url.format(link)
+  const forMattedlink = url.format(link)
 
-  if (!this.link.startsWith("/")) {
-    this.link = "/" + this.link
+  link = info.prefix + forMattedlink
+
+  if (!link.startsWith("/")) {
+    link = "/" + link
   }
 
-  return this.link
+  return link
 }
 
 /**
@@ -204,13 +206,7 @@ function $import(rPath, values, filePath, info) {
  * @return {String} hash
  */
 function $assets(rPath, filePath, info) {
-  let PREFIX_PATH = "__assets__"
-
-  if (info.configs.siteMetaData && info.configs.siteMetaData.domain) {
-    const parsedDomain = url.parse(info.configs.siteMetaData.domain)
-
-    PREFIX_PATH = path.join(parsedDomain.pathname, PREFIX_PATH)
-  }
+  const PREFIX_PATH = info.prefix + "__assets__"
 
   if (filePath.startsWith(info.cwd)) {
     filePath = path.relative(info.cwd, filePath)
@@ -429,12 +425,23 @@ async function pageToHtml(pageData, pages, contents, info) {
  */
 function createInfo(cwd, task) {
   try {
+    const configs = getConfigs(cwd)
+
+    let prefix = configs.prefixUrl || ""
+
+    if (!prefix && configs.siteMetaData && configs.siteMetaData.domain) {
+      const parsedDomain = url.parse(configs.siteMetaData.domain)
+
+      prefix = path.join(parsedDomain.pathname)
+    }
+
     return {
-      configs: getConfigs(cwd),
+      configs,
       cwd,
       task,
       ignoreExtensions: [".ulka", ".md"],
-      renderer: {}
+      renderer: {},
+      prefix
     }
   } catch (e) {
     log.error(e.message, true)
