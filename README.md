@@ -43,10 +43,6 @@ Coming soon...
 
 We welcome you to join the development of ulka. Please see [contributing](https://github.com/ulkajs/ulka/blob/master/CONTRIBUTING.md) guidelines.
 
-## LICENSE
-
-<a href="https://opensource.org/licenses/MIT">MIT</a>
-
 ---
 
 [<img alt="Buy me a Coffee" width="200" src="https://cdn.buymeacoffee.com/buttons/default-yellow.png">](https://www.buymeacoffee.com/coderosh)

@@ -1,6 +1,6 @@
 {
   "name": "ulka",
-  "version": "0.6.5-rc.9",
+  "version": "0.6.5-rc.10",
   "description": "Ulka - A simpler static site generator written in JavaScript",
   "main": "./src/index.js",
   "bin": {
@@ -28,7 +28,11 @@
     "blog",
     "ssg",
     "gatsby",
-    "11ty"
+    "11ty",
+    "html",
+    "markdown",
+    "templates",
+    "static-site"
   ],
   "author": "Roshan Acharya",
   "license": "MIT",
