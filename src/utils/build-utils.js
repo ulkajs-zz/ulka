@@ -429,7 +429,11 @@ function createInfo(cwd, task) {
 
     let prefix = configs.prefixUrl || ""
 
-    if (!prefix && configs.siteMetaData && configs.siteMetaData.domain) {
+    if (
+      !configs.prefixUrl &&
+      configs.siteMetaData &&
+      configs.siteMetaData.domain
+    ) {
       const parsedDomain = url.parse(configs.siteMetaData.domain)
 
       prefix = path.join(parsedDomain.pathname)
