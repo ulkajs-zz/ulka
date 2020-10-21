@@ -37,7 +37,9 @@ A simpler static site generator written in JavaScript to transform ulka and mark
 
 ## 📖 Documentation
 
-Coming soon...
+ulka template guide: [https://github.com/ulkajs/ulka-parser](https://github.com/ulkajs/ulka-parser#-usage)
+
+Complete documentation coming soon...
 
 ## 🤗 Contributing
 
