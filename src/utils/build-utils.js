@@ -439,7 +439,7 @@ function createInfo(cwd, task) {
       prefix = parsedDomain.pathname
     }
 
-    if (prefix.endsWith("/")) {
+    if (!prefix.endsWith("/")) {
       prefix += "/"
     }
 
