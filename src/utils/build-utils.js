@@ -441,5 +441,7 @@ module.exports = {
   createPagesArray,
   contentToHtml,
   pageToHtml,
-  createInfo
+  createInfo,
+  createBuildPath,
+  getLink
 }
