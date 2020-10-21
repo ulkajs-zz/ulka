@@ -436,7 +436,11 @@ function createInfo(cwd, task) {
     ) {
       const parsedDomain = url.parse(configs.siteMetaData.domain)
 
-      prefix = path.join(parsedDomain.pathname)
+      prefix = parsedDomain.pathname
+    }
+
+    if (prefix.endsWith("/")) {
+      prefix += "/"
     }
 
     return {
