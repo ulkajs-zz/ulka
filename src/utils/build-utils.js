@@ -330,7 +330,13 @@ async function contentToHtml(contentData, contents, info) {
       html = info.renderer[ext](contentData.template, context, info)
     }
 
-    mkdir(path.parse(contentData.buildPath).dir)
+    const parsedBuildPath = path.parse(contentData.buildPath)
+
+    if (parsedBuildPath.dir === path.join(info.cwd, "404")) {
+      contentData.buildPath = path.join(info.cwd, "404.html")
+    } else {
+      mkdir(parsedBuildPath.dir)
+    }
 
     fs.writeFileSync(contentData.buildPath, html)
 
