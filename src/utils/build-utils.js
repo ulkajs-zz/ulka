@@ -204,6 +204,14 @@ function $import(rPath, values, filePath, info) {
  * @return {String} hash
  */
 function $assets(rPath, filePath, info) {
+  let PREFIX_PATH = "__assets__"
+
+  if (info.configs.siteMetaData && info.configs.siteMetaData.domain) {
+    const parsedDomain = url.parse(info.configs.siteMetaData.domain)
+
+    PREFIX_PATH = path.join(parsedDomain.pathname, PREFIX_PATH)
+  }
+
   if (filePath.startsWith(info.cwd)) {
     filePath = path.relative(info.cwd, filePath)
   }
@@ -211,9 +219,15 @@ function $assets(rPath, filePath, info) {
   const relPath = path.join(path.parse(filePath).dir, rPath)
 
   const salt = relPath.split(path.sep).join("")
-  const p = path.join("__assets__", generateHash(salt)) + path.parse(rPath).ext
+  const p = path.join(PREFIX_PATH, generateHash(salt)) + path.parse(rPath).ext
 
-  return "/" + url.format(p)
+  let link = url.format(p)
+
+  if (!link.startsWith("/")) {
+    link = "/" + link
+  }
+
+  return link
 }
 
 /**
