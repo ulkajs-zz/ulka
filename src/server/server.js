@@ -68,7 +68,7 @@ function createServer(req, res, options) {
       res.statusCode = 404
       let message = `<!DOCTYPE html><html><head><title>404 Page</title><style>body{font-family:cursive;color:#888;margin:0}#main{display:flex;justify-content:center;align-items:center;text-align:center;min-height:100vh}h1{font-size:50px}a{text-decoration:none;color:#333;background-color:#ccc;padding:10px 20px}</style></head><body><div id="main"><div><h1>404</h1><p>Look's like you are lost. Let's return to your home.</p> <br /> <a href="/">Press this when you are ready.</a></div></div> <script>console.info("This is a default 404 page of ulka live server. This won't be exported with the build.")</script> </body></html>`
 
-      const possible404File = path.join(options.base, "404.html")
+      const possible404File = path.join(options.base, "404", "index.html")
 
       if (fs.existsSync(possible404File)) {
         message = fs.readFileSync(possible404File)
