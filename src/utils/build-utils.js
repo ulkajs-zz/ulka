@@ -35,7 +35,7 @@ function createContentsMap(info) {
   const contentsMap = {}
 
   for (const content of contents) {
-    const files = allFiles(content.path, info.contentsExtesnions || ".md")
+    const files = allFiles(content.path, info.contentsExtensions || ".md")
 
     const contentArr = []
 
