@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.6
+
+- Assets with format \*.ignore.[ext] are ignored while copying.
+- More tests and coverage
+- Supported beforeSetup plugin (beforeSetup plugins run before setting map contents map and pages array).
+- Removed support for getting prefix from domain in siteMetaData.
+- Bug fixes
+- Now it's more easy to add templating engines
+- Supported use of templating files inside contents (also supports frontmatter).
+
 ## 0.6.5
 
 - Added prefix link support

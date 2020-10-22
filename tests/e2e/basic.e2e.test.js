@@ -3,12 +3,18 @@ const path = require("path")
 const cheerio = require("cheerio")
 const build = require("../../src/ulka-cli/build")
 const { createInfo } = require("../../src/utils/build-utils")
+const { rmdir } = require("../../src/utils/ulka-fs")
 
 beforeAll(async () => {
   const cwd = path.join(__dirname, "resources", "basic")
   const info = createInfo(cwd, "build")
 
   await build(info)
+})
+
+afterAll(async () => {
+  const buildDir = path.join(__dirname, "resources", "basic", "build")
+  rmdir(buildDir)
 })
 
 describe("pages - index.html", () => {

@@ -36,6 +36,22 @@ describe("all files function", () => {
       `)
   })
 
+  test("should return the list of all files in ext array", () => {
+    const files = allFiles(allFilesTestDir, [".js", ".json"]).map(
+      replaceSepWithSlash
+    )
+    expect(files).toMatchInlineSnapshot(`
+      Array [
+        "resources/test-all-files/1-dir/1-1-dir/1-1.js",
+        "resources/test-all-files/1-dir/1-1-dir/1-1.json",
+        "resources/test-all-files/1-dir/1.js",
+        "resources/test-all-files/1-dir/1.json",
+        "resources/test-all-files/2-dir/2.js",
+        "resources/test-all-files/2-dir/2.json",
+      ]
+    `)
+  })
+
   test("should return filePath in a string of path to file is provided", () => {
     const files = allFiles(path.join(allFilesTestDir, "1-dir", "1.js")).map(
       replaceSepWithSlash
@@ -46,6 +62,10 @@ describe("all files function", () => {
           "resources/test-all-files/1-dir/1.js",
         ]
       `)
+  })
+
+  test("should throw error on fail", () => {
+    expect(() => allFiles(path.join(allFilesTestDir, "hehe"))).toThrowError()
   })
 })
 
