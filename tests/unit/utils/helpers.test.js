@@ -1,5 +1,6 @@
 const helpers = require("../../../src/utils/helpers")
 const path = require("path")
+const { spinner } = require("../../../src/utils/helpers")
 
 const cwd = process.cwd()
 
@@ -96,5 +97,18 @@ describe("getConfigs function", () => {
 
     expect(spy).toHaveBeenCalledWith(0)
     spy.mockRestore()
+  })
+})
+
+describe("spinner function", () => {
+  test("should be called after 1s of calling it", done => {
+    const stop = spinner()
+    const spy = jest.spyOn(process.stdout, "write")
+    setTimeout(() => {
+      stop()
+      expect(spy.mock.calls[0].length).toEqual(1)
+      spy.mockRestore()
+      done()
+    }, 100)
   })
 })
