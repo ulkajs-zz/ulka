@@ -223,7 +223,7 @@ function copyAssets(info) {
   for (const file of allFilesinSrc) {
     const parsed = path.parse(file)
 
-    if (!parsed.name.endsWith("ulka") && !ignoreExt.includes(parsed.ext)) {
+    if (!parsed.name.endsWith("ignore") && !ignoreExt.includes(parsed.ext)) {
       try {
         const strToHash = path.relative(info.cwd, file).split(path.sep).join("")
 

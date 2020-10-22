@@ -279,7 +279,7 @@ async function contentToHtml(contentData, contents, info) {
     }
 
     if (contentData.type === "raw") {
-      const context = { ...contentData, info }
+      let context = { ...contentData, info }
       const filePath = contentData.source || info.cwd
 
       const ext = path.parse(filePath).ext
@@ -442,14 +442,14 @@ function createInfo(cwd, task) {
     }
 
     const pagesExtensions = [".ulka"]
-    const contentsExtesnions = [".md"]
+    const contentsExtensions = [".md"]
 
     return {
       configs,
       cwd,
       task,
       pagesExtensions,
-      contentsExtesnions,
+      contentsExtensions,
       ignoreExtensions: [".ulka", ".md"],
       renderer: {},
       prefix
