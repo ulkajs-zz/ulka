@@ -1,3 +1,8 @@
 * {
   font-family: Arial, Helvetica, sans-serif;
+  background: url(./something.png);
+}
+
+div {
+  background: url("https://image.com/to/thepath.png");
 }

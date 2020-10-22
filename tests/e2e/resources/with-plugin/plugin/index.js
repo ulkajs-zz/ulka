@@ -7,5 +7,11 @@ module.exports = {
       name: "Roshan Acharya",
       age: 20
     }
-  }
+  },
+  beforeBuild() {},
+  afterBuild() {},
+  beforeSetup() {},
+  remarkablePlugin() {},
+  afterContentRender() {},
+  afterPageRender() {}
 }
