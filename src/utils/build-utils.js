@@ -290,7 +290,7 @@ async function contentToHtml(contentData, contents, info) {
         contentData.html = renderUlka(html, context, filePath, info)
       } else {
         context = createContext(context, filePath, info)
-        contentData.html = extRenderer(contentData.content, context, info)
+        contentData.html = extRenderer(contentData.content, context, filePath)
       }
     } else {
       contentData.html = contentData.content
@@ -333,7 +333,11 @@ async function contentToHtml(contentData, contents, info) {
         contentData.templatePath || filePath,
         info
       )
-      html = info.renderer[ext](contentData.template, context, info)
+      html = info.renderer[ext](
+        contentData.template,
+        context,
+        contentData.templatePath || filePath
+      )
     }
 
     const parsedBuildPath = path.parse(contentData.buildPath)
@@ -388,7 +392,7 @@ async function pageToHtml(pageData, pages, contents, info) {
         pageData.html = renderUlka(pageData.content, context, filePath, info)
       } else {
         context = createContext(context, filePath, info)
-        pageData.html = extRenderer(pageData.content, context, info)
+        pageData.html = extRenderer(pageData.content, context, filePath)
       }
     } else {
       pageData.html = pageData.content
