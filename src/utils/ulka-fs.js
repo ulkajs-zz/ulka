@@ -34,7 +34,7 @@ function mkdir(pathToDirectory) {
  * Find all files is a directory using recursion
  *
  * @param {String} dirPath path to the directory to search files.
- * @param {String} [ext] extension of the files to search.
+ * @param {String|String[]} [ext] extension of the files to search.
  * @param {String[]} [arrayOfFiles]
  * @return {String[]} Array of files
  */
@@ -53,7 +53,14 @@ function allFiles(dirPath, ext, arrayOfFiles = []) {
       if (fs.statSync(pathTo).isDirectory()) {
         arrayOfFiles = allFiles(pathTo, ext, arrayOfFiles)
       } else {
-        if (!ext || file.endsWith(ext)) arrayOfFiles.push(pathTo)
+        const fileExt = path.parse(file).ext
+
+        const shouldPushToFilesArray =
+          !ext ||
+          (typeof ext === "string" && ext === fileExt) ||
+          (Array.isArray(ext) && ext.includes(fileExt))
+
+        if (shouldPushToFilesArray) arrayOfFiles.push(pathTo)
       }
     })
 
