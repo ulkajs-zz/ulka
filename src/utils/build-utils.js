@@ -35,7 +35,7 @@ function createContentsMap(info) {
   const contentsMap = {}
 
   for (const content of contents) {
-    const files = allFiles(content.path, ".md")
+    const files = allFiles(content.path, info.contentsExtesnions || ".md")
 
     const contentArr = []
 
@@ -89,7 +89,10 @@ function createContentsMap(info) {
  * @return {Array} pages
  */
 function createPagesArray(info, contents) {
-  const files = allFiles(info.configs.pagesPath, ".ulka")
+  const files = allFiles(
+    info.configs.pagesPath,
+    info.pagesExtensions || ".ulka"
+  )
 
   const pagesArray = []
   for (const file of files) {
@@ -276,10 +279,19 @@ async function contentToHtml(contentData, contents, info) {
     }
 
     if (contentData.type === "raw") {
-      const html = renderMarkdown(contentData.content, info)
-      const base = contentData.source || info.cwd
+      const context = { ...contentData, info }
+      const filePath = contentData.source || info.cwd
 
-      contentData.html = renderUlka(html, { ...contentData, info }, base, info)
+      const ext = path.parse(filePath).ext
+      const extRenderer = info.renderer[ext]
+
+      if (ext === "" || ext === ".md" || typeof extRenderer !== "function") {
+        const html = renderMarkdown(contentData.content, info)
+        contentData.html = renderUlka(html, context, filePath, info)
+      } else {
+        context = createContext(context, filePath, info)
+        contentData.html = extRenderer(contentData.content, context, info)
+      }
     } else {
       contentData.html = contentData.content
     }
@@ -316,13 +328,11 @@ async function contentToHtml(contentData, contents, info) {
         info
       )
     } else {
-      context = {
-        ...context,
-        $assets: rPath => $assets(rPath, filePath, info),
-        $import: (rPath, $values = {}) => {
-          return $import(rPath, { ...context, ...$values }, filePath, info)
-        }
-      }
+      context = createContext(
+        context,
+        contentData.templatePath || filePath,
+        info
+      )
       html = info.renderer[ext](contentData.template, context, info)
     }
 
@@ -377,13 +387,7 @@ async function pageToHtml(pageData, pages, contents, info) {
       if (ext === "" || ext === ".ulka" || typeof extRenderer !== "function") {
         pageData.html = renderUlka(pageData.content, context, filePath, info)
       } else {
-        context = {
-          ...context,
-          $assets: rPath => $assets(rPath, filePath, info),
-          $import: (rPath, $values = {}) => {
-            return $import(rPath, { ...context, ...$values }, filePath, info)
-          }
-        }
+        context = createContext(context, filePath, info)
         pageData.html = extRenderer(pageData.content, context, info)
       }
     } else {
@@ -433,10 +437,15 @@ function createInfo(cwd, task) {
       prefix += "/"
     }
 
+    const pagesExtensions = [".ulka"]
+    const contentsExtesnions = [".md"]
+
     return {
       configs,
       cwd,
       task,
+      pagesExtensions,
+      contentsExtesnions,
       ignoreExtensions: [".ulka", ".md"],
       renderer: {},
       prefix
@@ -445,6 +454,25 @@ function createInfo(cwd, task) {
     log.error(e.message, true)
     process.exit(0)
   }
+}
+
+/**
+ * All values to contet
+ * @param {Object} context
+ * @param {String} filePath
+ * @param {Object} info
+ * @return {Object} context
+ */
+function createContext(context, filePath, info) {
+  context = {
+    ...context,
+    $assets: rPath => $assets(rPath, filePath, info),
+    $import: (rPath, $values = {}) => {
+      return $import(rPath, { ...context, ...$values }, filePath, info)
+    }
+  }
+
+  return context
 }
 
 module.exports = {
