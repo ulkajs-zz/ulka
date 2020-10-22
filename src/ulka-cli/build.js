@@ -18,6 +18,10 @@ async function build(info) {
 
     const startTime = new Date().getTime()
 
+    for (const plugin of info.configs.plugins.beforeSetup) {
+      await plugin({ info })
+    }
+
     if (info.configs.pagesPath) {
       pagesArray = createPagesArray(info, contentsMap)
     }

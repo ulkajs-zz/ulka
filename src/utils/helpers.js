@@ -115,6 +115,7 @@ function spinner(text = "") {
 const getPlugins = (pluginArr, cwd) => {
   try {
     const plugins = {
+      beforeSetup: [],
       beforeBuild: [],
       afterBuild: [],
       remarkablePlugin: [],
