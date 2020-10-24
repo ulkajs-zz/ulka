@@ -286,8 +286,8 @@ async function contentToHtml(contentData, contents, info) {
       const extRenderer = info.renderer[ext]
 
       if (ext === "" || ext === ".md" || typeof extRenderer !== "function") {
-        const html = renderMarkdown(contentData.content, info)
-        contentData.html = renderUlka(html, context, filePath, info)
+        const html = renderUlka(contentData.content, context, filePath, info)
+        contentData.html = renderMarkdown(html, info)
       } else {
         context = createContext(context, filePath, info)
         contentData.html = extRenderer(contentData.content, context, filePath)
