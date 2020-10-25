@@ -173,12 +173,13 @@ function getLink(info, buildPath) {
  * - return the utf-8 content for other files
  *
  * @param {String} rPath Require path
- * @param {Object|Boolean} values Variables to be available inside ulka
+ * @param {Object} values Variables to be available inside ulka
+ * @param {Boolean} raw
  * @param {any} filePath Path to file
  * @param {String} info
  * @return {any}
  */
-function $import(rPath, values, filePath, info) {
+function $import(rPath, values, raw, filePath, info) {
   const imgExts = [".jpeg", ".jpg", ".png", ".gif", ".bmp", ".svg", ".webp"]
   let file = path.join(path.parse(filePath).dir, rPath)
 
@@ -186,7 +187,7 @@ function $import(rPath, values, filePath, info) {
     file = path.join(info.cwd, file)
   }
 
-  if (values === false) {
+  if (raw === true) {
     return fs.readFileSync(file, "utf-8")
   }
 
@@ -264,8 +265,8 @@ function renderUlka(raw, context, filePath, info) {
   context = {
     ...context,
     $assets: rPath => $assets(rPath, filePath, info),
-    $import: (rPath, $values = {}) => {
-      return $import(rPath, { ...context, ...$values }, filePath, info)
+    $import: (rPath, $values = {}, raw = false) => {
+      return $import(rPath, { ...context, ...$values }, raw, filePath, info)
     }
   }
 
@@ -481,8 +482,8 @@ function createContext(context, filePath, info) {
   context = {
     ...context,
     $assets: rPath => $assets(rPath, filePath, info),
-    $import: (rPath, $values = {}) => {
-      return $import(rPath, { ...context, ...$values }, filePath, info)
+    $import: (rPath, $values = {}, raw = false) => {
+      return $import(rPath, { ...context, ...$values }, raw, filePath, info)
     }
   }
 
