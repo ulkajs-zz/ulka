@@ -173,7 +173,7 @@ function getLink(info, buildPath) {
  * - return the utf-8 content for other files
  *
  * @param {String} rPath Require path
- * @param {Object} values Variables to be available inside ulka
+ * @param {Object|Boolean} values Variables to be available inside ulka
  * @param {any} filePath Path to file
  * @param {String} info
  * @return {any}
@@ -186,6 +186,10 @@ function $import(rPath, values, filePath, info) {
     file = path.join(info.cwd, file)
   }
 
+  if (values === false) {
+    return fs.readFileSync(file, "utf-8")
+  }
+
   const ext = path.parse(file).ext
   if (ext === ".ulka") {
     const raw = fs.readFileSync(file, "utf-8")
@@ -195,7 +199,13 @@ function $import(rPath, values, filePath, info) {
     return renderMarkdown(raw, info)
   } else if (imgExts.includes(ext)) {
     const imgContent = fs.readFileSync(file, "base64")
-    return `data:image/${ext.substr(1)};base64,` + imgContent
+
+    let imgExt = ext.substr(1)
+    if (imgExt === "svg") {
+      imgExt += "+xml"
+    }
+
+    return `data:image/${imgExt};base64,` + imgContent
   } else {
     return fs.readFileSync(file, "utf-8")
   }
