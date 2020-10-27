@@ -17,6 +17,10 @@ async function create(args) {
   try {
     const questions = []
 
+    if (!yarnExists()) {
+      args.installer = "npm"
+    }
+
     if (!args.name) {
       questions.push({
         name: "name",
@@ -154,6 +158,19 @@ async function createProject({ template, name, installer }) {
     console.log("")
     log.error("Creating project failed", true)
     process.exit(0)
+  }
+}
+
+/**
+ * Check if yarn exists on system
+ * @return {Boolean}
+ */
+function yarnExists() {
+  try {
+    execSync("yarnpkg --version", { stdio: "ignore" })
+    return true
+  } catch (e) {
+    return false
   }
 }
 
