@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.7
+
+- Make installer option optional if yarn isn't installed.
+- Add charset=utf-8 in Content-Type.
+- Fixed svg import.
+- Fixed log for server
+- Option to return raw data in \$import function.
+
 ## 0.6.6
 
 - Assets with format \*.ignore.[ext] are ignored while copying.

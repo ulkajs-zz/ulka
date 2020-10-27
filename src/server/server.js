@@ -2,7 +2,7 @@ const fs = require("fs")
 const url = require("url")
 const http = require("http")
 const path = require("path")
-const getport = require("get-port")
+const portfinder = require("portfinder")
 
 const log = require("../utils/ulka-log")
 
@@ -109,9 +109,10 @@ function createServer(req, res, options) {
  */
 async function server(options) {
   try {
-    const port = await getport({ port: options.port || 3000 })
+    const port = await portfinder.getPortPromise({ port: options.port || 3000 })
+
     const httpserver = http.createServer((req, res) =>
-      createServer(req, res, options)
+      createServer(req, res, { ...options, port })
     )
 
     httpserver.listen(port)

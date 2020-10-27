@@ -1,6 +1,6 @@
 {
   "name": "ulka",
-  "version": "0.6.7-rc.6",
+  "version": "0.6.7-rc.7",
   "description": "Ulka - A simpler static site generator written in JavaScript",
   "main": "./src/index.js",
   "bin": {
@@ -45,9 +45,9 @@
     "chokidar": "^3.4.2",
     "commander": "^6.1.0",
     "front-matter": "^4.0.2",
-    "get-port": "^5.1.1",
     "hosted-git-info": "^3.0.6",
     "node-fetch": "^2.6.1",
+    "portfinder": "^1.0.28",
     "prompts": "^2.3.2",
     "remarkable": "^2.0.1",
     "ulka-parser": "^0.4.1",
