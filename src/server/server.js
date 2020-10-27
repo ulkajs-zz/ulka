@@ -87,7 +87,9 @@ function createServer(req, res, options) {
 
     const ext = path.parse(pathname).ext
 
-    res.setHeader("Content-type", mimeTypesMap[ext] || "text/plain")
+    const contentType = (mimeTypesMap[ext] || "text/plain") + "; charset=utf-8"
+
+    res.setHeader("Content-type", contentType)
 
     if (ext === ".html" && options.live !== false) {
       data += liveReloadScript

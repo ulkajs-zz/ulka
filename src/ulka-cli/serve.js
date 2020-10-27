@@ -59,8 +59,8 @@ async function serve(options, info) {
     websocket = ws
   })
 
-  const reload = () => {
-    if (websocket) websocket.send("reload-page")
+  const reload = (message = "reload-page") => {
+    if (websocket) websocket.send(message)
     serverLog(port)
   }
 
