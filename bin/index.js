@@ -2,6 +2,7 @@
 
 const path = require("path")
 const { program } = require("commander")
+const portfinder = require("portfinder")
 
 const build = require("../src/ulka-cli/build")
 const serve = require("../src/ulka-cli/serve")
@@ -42,11 +43,14 @@ program
   .command("serve")
   .option("-p --port [port]", "server port", 3000)
   .description("Serve built static files")
-  .action(({ port }) => {
+  .action(async ({ port }) => {
     const info = createInfo(cwd, "build")
 
     port = +port || 3000
-    serve({ live: false, base: info.configs.buildPath, port: +port }, info)
+
+    const newPort = await portfinder.getPortPromise({ port: port })
+
+    serve({ live: false, base: info.configs.buildPath, port: newPort }, info)
   })
 
 program
