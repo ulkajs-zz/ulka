@@ -34,7 +34,9 @@ program
 
     port = +port || 3000
 
-    const options = { live: true, base: info.configs.buildPath, port: +port }
+    const newPort = await portfinder.getPortPromise({ port: port })
+
+    const options = { live: true, base: info.configs.buildPath, port: newPort }
 
     serve(options, info)
   })
