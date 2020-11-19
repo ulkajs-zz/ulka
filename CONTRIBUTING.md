@@ -21,7 +21,7 @@ In order to create a pull request for `ulka`, follow the GitHub instructions for
 ## Folder Structure
 
 Description of the project files and directories.
-
+```
 📦ulka
 ┣ 📂bin
 ┃ ┗ 📜server.js
@@ -42,7 +42,7 @@ Description of the project files and directories.
 ┣ 📂tests
 ┃ ┣ 📂e2e
 ┃ ┗ 📂unit
-
+```
 ## License
 
 By contributing, you agree that your contributions will be licensed under its [MIT License](./LICENSE).
