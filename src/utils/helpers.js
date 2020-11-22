@@ -164,7 +164,7 @@ const getPlugins = (pluginArr, cwd) => {
 
     return plugins
   } catch (e) {
-    console.log(e)
+    console.log(e.message)
     log.error("Error while getting plugins")
     process.exit(0)
   }

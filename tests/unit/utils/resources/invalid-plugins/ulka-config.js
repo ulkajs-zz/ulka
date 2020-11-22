@@ -8,12 +8,11 @@ module.exports = {
       template: "blog.ulka"
     }
   ],
-  // bad-plugin doesn't exist
+  // function cannot be used as plugin
   plugins: [
     {
       resolve: "nice-plugin"
     },
-    () => {},
-    "bad-plugin"
+    () => {}
   ]
 }

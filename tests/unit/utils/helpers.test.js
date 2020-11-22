@@ -98,6 +98,15 @@ describe("getConfigs function", () => {
     expect(spy).toHaveBeenCalledWith(0)
     spy.mockRestore()
   })
+
+  test("Should exit if plugin not found", () => {
+    const spy = jest.spyOn(process, "exit").mockImplementation(() => {})
+
+    getConfigs(path.join(__dirname, "resources", "plugin-not-found"))
+
+    expect(spy).toHaveBeenCalledWith(0)
+    spy.mockRestore()
+  })
 })
 
 describe("spinner function", () => {
