@@ -24,7 +24,7 @@ Description of the project files and directories.
 ```
 📦ulka
 ┣ 📂bin
-┃ ┗ 📜server.js
+┃ ┗ 📜index.js
 ┣ 📂src
 ┃ ┣ 📂server
 ┃ ┃ ┣ 📜index.js
