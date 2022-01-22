@@ -46,7 +46,7 @@
     "commander": "^6.1.0",
     "front-matter": "^4.0.2",
     "hosted-git-info": "^3.0.6",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "portfinder": "^1.0.28",
     "prompts": "^2.3.2",
     "remarkable": "^2.0.1",
